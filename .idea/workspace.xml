@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5cf478d9-788e-4dba-897f-7f63629f3244" name="Changes" comment="dada" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitLabMergeRequestFiltersHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPENED",
+    "assignee": {
+      "type": "org.jetbrains.plugins.gitlab.mergerequest.ui.filters.GitLabMergeRequestsFiltersValue.MergeRequestsMemberFilterValue.MergeRequestsAssigneeFilterValue",
+      "username": "david.degonz",
+      "fullname": "David Escarre"
+    }
+  }
+}]]></component>
+  <component name="GitLabMergeRequestsSettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "first": "https://david.degonz@gitlab.com/david.degonz/proyecte4_km.git",
+    "second": "0e719f77-1555-45a2-af9d-d616ca5fc89e"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 3
+}]]></component>
+  <component name="ProjectId" id="2uFqfvXHbwOSKJJnEG36SnZmR7I" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "FirsBranch",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/alpep/Documents/NetBeansProjects/Proyecte4_Km"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5cf478d9-788e-4dba-897f-7f63629f3244" name="Changes" comment="" />
+      <created>1741854776840</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1741854776840</updated>
+    </task>
+    <task id="LOCAL-00001" summary="dada">
+      <option name="closed" value="true" />
+      <created>1741854817581</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1741854817581</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="dada" />
+    <option name="LAST_COMMIT_MESSAGE" value="dada" />
+  </component>
+</project>
