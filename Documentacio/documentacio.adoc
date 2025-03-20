@@ -207,17 +207,17 @@ A continuació es detallaran els guions per actors del sistema de la plataforma.
 [[administrador]]
 === *4.1. Administrador*
 
-image::images\GuionsActorsAdmin.png[]
+image::GuionsActorsAdmin.png[]
 
 [[ciclista]]
 === *4.2. Ciclista*
 
-image::images\GuionsActorsCiclista.png[]
+image::GuionsActorsCiclista.png[]
 
 [[sistema]]
 === *4.3. Sistema*
 
-image::images\GuionsActorsSistema.png[]
+image::GuionsActorsSistema.png[]
 
 [[diagrama-arquitectura]]
 == *5. Diagrama d’arquitectura*
@@ -225,7 +225,7 @@ En aquest apartat es detalla el diagrama d'arquitectura, on es pot trobar l'arqu
 
 https://drive.google.com/file/d/1FFTBRLNxNqVkMnnztqAt2KEmMyf3Feh2/view?usp=sharing[*Enllaç diagrama arquitectura*]
 
-image::images\DiagramaArquitectura.png[]
+image::DiagramaArquitectura.png[]
 
 [[disseny-del-diagrama-E-R]]
 == *6. Disseny del diagrama E-R*
@@ -233,14 +233,14 @@ En l'apartat següent es presenta el Diagrama Entitat-Relació, on s'inclouen le
 
 https://drive.google.com/file/d/1qOWaauBc114wIMlZ8f8lJ9HPNjEPTvby/view?usp=sharing[*Enllaç diagrama E-R*]
 
-image::images\Diagrama_E-R.png[]
+image::Diagrama_E-R.png[]
 
 [[disseny-de-la-base-de-dades]]
 == *7. Disseny de la base de dades*
 En aquest apartat es mostra el disseny de la base de dades, és el diagrama de la pròpia BBDD a MySQL, conte les taules, els seus atributs així com relacions entre elles.
 
 
-image::images\Disseny_BBDD.png[]
+image::Disseny_BBDD.png[]
 
 
 [[diagrama-de-casos-ús]]
@@ -249,7 +249,7 @@ Aquí podem veure el diagrama de casos d'ús identificant actors, herència i re
 
 https://drive.google.com/file/d/1s1IA2pIXk6tfNUx5RkuzHoEYzfNlG6hL/view?usp=sharing[*Enllaç diagrama de casos d'ús*]
 
-image::images\DiagramaCasosUs.png[]
+image::DiagramaCasosUs.png[]
 
 [[disseny-interficies-usuari-i-navegacio]]
 == *9. Disseny d’interfícies d’usuari i navegació*
@@ -259,67 +259,67 @@ image::images\DiagramaCasosUs.png[]
 
 Inici Sessió
 
-image::images\IniciarSessio.png[]
+image::IniciarSessio.png[]
 
 Recuperar contrasenya
 
-image::images\RecuperarContraseña.png[]
+image::RecuperarContraseña.png[]
 
-image::images\RecuperarContraseña2.png[]
+image::RecuperarContraseña2.png[]
 
-image::images\RecuperarContraseña3.png[]
+image::RecuperarContraseña3.png[]
 
 Mapa/Home
 
-image::images\Mapa1.png[]
+image::Mapa1.png[]
 
-image::images\Mapa2.png[]
+image::Mapa2.png[]
 
-image::images\Mapa3.png[]
+image::Mapa3.png[]
 
 Llista rutes
 
-image::images\LlistaRutes.png[]
+image::LlistaRutes.png[]
 
 Llista Recompenses
 
-image::images\LlistaRecompensa.png[]
+image::LlistaRecompensa.png[]
 
 Detalls ruta
 
-image::images\DetallsRuta.png[]
+image::DetallsRuta.png[]
 
 Detalls recompensa
 
-image::images\DetallsRecompensa.png[]
+image::DetallsRecompensa.png[]
 
 Recollir recompensa
 
-image::images\DetallsRecompensaEntregar.png[]
+image::DetallsRecompensaEntregar.png[]
 
 Perfil
 
-image::images\Perfil1.png[]
+image::Perfil1.png[]
 
-image::images\Perfil2.png[]
+image::Perfil2.png[]
 
 Historial rutes
 
-image::images\LlistaRutes.png[]
+image::LlistaRutes.png[]
 
 Historial Recompenses
 
-image::images\HistorialRecompenses.png[]
+image::HistorialRecompenses.png[]
 
 Editar perfil
 
-image::images\EditarPerfil.png[]
+image::EditarPerfil.png[]
 
 === *9.2 Pantalles web*
 
 Inici Sessio
 
-image::images\IniciarSessioWeb.png[]
+image::IniciarSessioWeb.png[]
 
 Modificar parametres del sistema
 
@@ -366,11 +366,11 @@ image::EditarUsuari.png[]
 
 Fonts i Colors
 
-image::images\FontsYColors.png[]
+image::FontsYColors.png[]
 
 Components
 
-image::images\COMPONENTS.png[]
+image::COMPONENTS.png[]
 
 
 === *9.4 Enllaç*
@@ -385,17 +385,17 @@ https://www.figma.com/proto/OGsn1FBVYPyfROpLIogZwV/Km%2B?node-id=0-1&t=sCjk1CqXo
 
 La planificació de les tasques del projecte s'ha fet amb Trello:
 
-image::images\Trello1.png[]
+image::Trello1.png[]
 
-image::images\Trello2.png[]
+image::Trello2.png[]
 
-image::images\Trello3.png[]
+image::Trello3.png[]
 
-image::images\Trello4.png[]
+image::Trello4.png[]
 
-image::images\Trello5.png[]
+image::Trello5.png[]
 
-image::images\Trello6.png[]
+image::Trello6.png[]
 
 
 https://trello.com/invite/b/67d2bb31bdeeafab5739043d/ATTI01a1de41486edc7420d39504157a257eDFF8C943/proyecte4km[*Enllaç al Trello*]
