@@ -1,4 +1,4 @@
-package com.example.km.ui.Screens
+package com.example.km.main.screens
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -49,6 +49,7 @@ fun MainScreen() {
             return LocationViewModel(context.applicationContext as Application) as T
         }
     })
+
     Column(modifier = Modifier.fillMaxSize().background(Color.White)) {
             Box(modifier = Modifier.border(2.dp, Color.Black, RectangleShape).size(700.dp)){
                 var hasPermission by remember { mutableStateOf(false) }
