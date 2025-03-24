@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Users List</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+       
+        <main class="main-container">
+            <section class="table-container">
+                <h2>Llista de Clients</h2>
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nom</th>
+                            <th scope="col">Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <div th:each="user, rowStat : ${users}">
+                        <tr th:id="${rowStat.index}" class="expandable-row">
+                            <td th:text="${user.nom}" scope="row"></td>
+                            <td th:text="${client.email}"></td>
+                        </tr>
+                    </tbody>
+            </section>
+        </main>
+    </body>
+</html>
