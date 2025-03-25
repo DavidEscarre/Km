@@ -59,10 +59,11 @@ public class UserApiController {
         try {
             
             llista = userLogic.findAllUsers();
+            logger.info("Trobada llista de tots els usuaris", "trobats: "+llista.size());
             return new ResponseEntity<>(llista, headers, HttpStatus.OK);
             
         } catch (Exception e) {
-           
+            logger.error("Llista de tots els usuaris no trobada, error del servidor", "Error message: "+e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         
@@ -79,25 +80,28 @@ public class UserApiController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cache-Control", "no-store"); //no usar caché
         
-        logger.info("Buscando usuario con email: {}", userEmail);
-        user = userLogic.getUser(userEmail);
-        logger.info("Usuario encontrado: {}", user);
+        
+      
         try {
             
             user = userLogic.getUser(userEmail);
-            logger.info("Usuario encontrado: {}", user);       
+            logger.info("Cercant usuari amb email: {}", userEmail);
+          
             
             if (user == null)
             {
+                logger.info("Usuari no trobat: {}", userEmail);       
                 response = new ResponseEntity<>(headers, HttpStatus.NOT_FOUND);
             }
             else
             {
+                logger.info("Usuari trobat: {}", userEmail);    
                 response = new ResponseEntity<>(user, headers, HttpStatus.OK);
             }
             
         } catch (Exception e) {
            
+            logger.error("Error intern del servidor al intentar trobar l'usuari {}", "Error mesage: "+e.getMessage());
             response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         
@@ -141,8 +145,8 @@ public class UserApiController {
     }
     
     
-    @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<Void> deleteUserById(@PathVariable String userEmail){
+    @DeleteMapping("/delete/{userEmail}")
+    public ResponseEntity<Void> deleteUserByEmail(@PathVariable String userEmail){
         
         ResponseEntity<Void> response;
         
