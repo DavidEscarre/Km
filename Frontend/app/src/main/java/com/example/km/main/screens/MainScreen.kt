@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.km.GoogleMapsMap.GoogleMapScreen
 import com.example.km.GoogleMapsMap.LocationViewModel
 import com.google.android.gms.location.LocationServices
@@ -41,7 +42,7 @@ import com.google.android.gms.maps.model.LatLng
 
 
 @Composable
-fun MainScreen() {
+fun MainScreen(navController: NavController) {
     val context = LocalContext.current
     var rutaActiva by remember { mutableStateOf(false) }
     val viewModel: LocationViewModel = viewModel(factory = object : ViewModelProvider.Factory {
