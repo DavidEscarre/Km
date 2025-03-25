@@ -21,7 +21,7 @@
                     <div th:each="user, rowStat : ${users}">
                         <tr th:id="${rowStat.index}" class="expandable-row">
                             <td th:text="${user.nom}" scope="row"></td>
-                            <td th:text="${client.email}"></td>
+                            <td th:text="${user.email}"></td>
                         </tr>
                     </tbody>
             </section>
