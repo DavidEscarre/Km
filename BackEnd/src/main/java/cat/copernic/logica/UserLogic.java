@@ -5,10 +5,13 @@
 package cat.copernic.logica;
 
 import cat.copernic.Entity.User;
+import cat.copernic.controllers.API.UserApiController;
 import cat.copernic.repository.UserRepo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.SecurityConfig;
@@ -26,7 +29,7 @@ public class UserLogic {
     
     @Autowired
     private UserRepo userRepo;
-    
+    Logger logger = LoggerFactory.getLogger(UserApiController.class);
     
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     
@@ -76,17 +79,17 @@ public class UserLogic {
         if (passwordEncoder.matches(rawPassword, user.getWord())) {
             
             if (user.isEstat()== true) {
-                System.out.println("✅ Autenticación exitosa");
+                System.out.println("✅ Autenticació exitosa");
                 return user.getEmail();
             }
             else {
-                System.out.println("inactivo");
+                System.out.println("❌ Usuari inactiu");
                 return "INACTIVE";
             }
             
         }
 
-        System.out.println("❌ Autenticación fallida");
+        System.out.println("❌ Autenticació fallida");
         return "INCORRECT";
         }else{
             System.out.println("❌ Usuari no trobat");
