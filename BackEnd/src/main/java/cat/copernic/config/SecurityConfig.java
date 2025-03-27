@@ -32,25 +32,25 @@ public class SecurityConfig {
     @Autowired
     private UserRepo userRepo;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .authorizeHttpRequests(auth -> auth
-               
-                .anyRequest().authenticated()
-            )
-            .formLogin(login -> login
-                .loginPage("/login")                      // Página de login personalizada
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .defaultSuccessUrl("/")
-                .failureUrl("/login?error=true")
-                .permitAll()
-            );
-            
-    
-        return http.build();
-    }
+   @Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(csrf -> csrf.disable())  // Deshabilitar CSRF (recomendado solo para APIs REST)
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/api/auth/login").permitAll()  // Permitir acceso sin autenticación
+            .anyRequest().authenticated()  // El resto de rutas requieren autenticación
+        )
+        .formLogin(login -> login
+            .loginPage("/login")  // Página de login web
+            .usernameParameter("username")
+            .passwordParameter("password")
+            .defaultSuccessUrl("/")
+            .failureUrl("/login?error=true")
+            .permitAll()
+        );
+
+    return http.build();
+}
 
    @Bean
     public AuthenticationManager authManager(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {

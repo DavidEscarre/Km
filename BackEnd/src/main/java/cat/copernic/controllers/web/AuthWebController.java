@@ -5,6 +5,7 @@
 package cat.copernic.controllers.web;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,5 +28,9 @@ public class AuthWebController {
         // Redirige a la página de login (se puede modificar para que redirija según el resultado)
         return "login";
     }
-
+    
+    @GetMapping
+    public String redirigirLoging() {
+        return "login"; // Vista del login
+    }
 }

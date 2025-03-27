@@ -25,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author alpep
  */
 @RestController
-@RequestMapping("/rest/auth")
+@RequestMapping("/api/auth")
 public class AuthApiController {
 
     @Autowired
@@ -52,7 +52,7 @@ public class AuthApiController {
             logger.info("credencials incorrectes ");
             return ResponseEntity.status(401).body("Credencials incorrectes");
         }
-        else if(!res.equals("INACTIVE")){
+        else if(res.equals("INACTIVE")){
             logger.info("usuari no actiu");
             return ResponseEntity.badRequest().body("Usuari no activat");
         }else{
@@ -70,27 +70,4 @@ public class AuthApiController {
     }
         
     
-    
-        @PostMapping("/register")
-        public ResponseEntity<?> registerUser(@RequestParam String nom, @RequestParam String email,
-                @RequestParam int telefon, @RequestParam String word,
-                @RequestParam String adreca, @RequestParam String observacions,
-                @RequestParam(value = "image", required = false) MultipartFile imageFile) {
-
-            User createdUser = new User (email, nom, observacions, Rol.CICLISTA, true, 0.00, now(), word, null, telefon, adreca);
-
-            if (userLogic.userIsUnique(createdUser)) {
-                String res = userLogic.createUser(createdUser, imageFile);
-                if(res!=null){
-                    return ResponseEntity.ok(createdUser);
-                }else{
-                    return ResponseEntity.internalServerError().body("Usuari no creat");
-                }
-                
-            }else{
-                 return ResponseEntity.status(401).body("Email ya existemt");
-            }
-
-           
-        }
 }

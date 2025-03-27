@@ -14,9 +14,9 @@ public class Ruta {
     private EstatRuta estat = EstatRuta.PENDENT;
 
 
-    private LocalDateTime dataInici;
+    private String dataInici;
 
-    private LocalDateTime dataFinal;
+    private String dataFinal;
 
 
     private double saldo = 0.00;
@@ -33,14 +33,14 @@ public class Ruta {
     public Ruta() {
     }
 
-    public Ruta(Long id, User ciclista, LocalDateTime dataInici, LocalDateTime dataFinal) {
+    public Ruta(Long id, User ciclista, String dataInici, String dataFinal) {
         this.id = id;
         this.ciclista = ciclista;
         this.dataInici = dataInici;
         this.dataFinal = dataFinal;
     }
 
-    public Ruta(User ciclista, LocalDateTime dataInici, LocalDateTime dataFinal) {
+    public Ruta(User ciclista, String dataInici, String dataFinal) {
         this.ciclista = ciclista;
         this.dataInici = dataInici;
         this.dataFinal = dataFinal;
@@ -70,19 +70,19 @@ public class Ruta {
         this.estat = estat;
     }
 
-    public LocalDateTime getDataInici() {
+    public String getDataInici() {
         return dataInici;
     }
 
-    public void setDataInici(LocalDateTime dataInici) {
+    public void setDataInici(String dataInici) {
         this.dataInici = dataInici;
     }
 
-    public LocalDateTime getDataFinal() {
+    public String getDataFinal() {
         return dataFinal;
     }
 
-    public void setDataFinal(LocalDateTime dataFinal) {
+    public void setDataFinal(String dataFinal) {
         this.dataFinal = dataFinal;
     }
 

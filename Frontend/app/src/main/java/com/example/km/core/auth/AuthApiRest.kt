@@ -14,20 +14,8 @@ interface AuthApiRest {
     @POST("login")
     suspend fun loginUser(
         @Query("email") email: String,
-        @Query("password") password: String
-    ): Response<User>
-
-    @Multipart
-    @POST("register")
-    suspend fun registerUser(
-        @Part("nom") nom: RequestBody,
-        @Part("email") email: RequestBody,
-        @Part("telefon") telefon: RequestBody,
-        @Part("word") word: RequestBody,
-        @Part("adreca") adreca: RequestBody,
-        @Part("observacions") observacions: RequestBody,
-        @Part image: MultipartBody.Part?
-    ): Response<User>
+        @Query("word") word: String
+    ): Response<User?>
 
 }
 

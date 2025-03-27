@@ -7,7 +7,7 @@ object AuthRetrofitInstance {
     //Cuando se usa el emulador de movil desde AndroidStudio, la 10.0.2.2 de la red virtual apunta a localhost de la máquina anfitrion
     private val retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/rest/auth/")
+            .baseUrl("http://10.0.2.2:8080/api/auth/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

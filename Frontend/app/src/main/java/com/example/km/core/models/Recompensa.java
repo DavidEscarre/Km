@@ -20,10 +20,10 @@ public class Recompensa {
     private EstatRecompensa estat = EstatRecompensa.DISPONIBLE;
 
 
-    private LocalDateTime dataCreacio;
+    private String dataCreacio;
 
-    private LocalDateTime dataAssignacio;
-    private LocalDateTime dataRecollida;
+    private String dataAssignacio;
+    private String dataRecollida;
 
 
     private User ciclista;
@@ -34,7 +34,7 @@ public class Recompensa {
     public Recompensa() {
     }
 
-    public Recompensa(String descripcio, String observacions, double preu, LocalDateTime dataCreacio, LocalDateTime dataAssignacio, LocalDateTime dataRecollida, User ciclista, String puntBescanvi) {
+    public Recompensa(String descripcio, String observacions, double preu, String dataCreacio, String dataAssignacio, String dataRecollida, User ciclista, String puntBescanvi) {
         this.descripcio = descripcio;
         this.observacions = observacions;
         this.preu = preu;
@@ -45,7 +45,7 @@ public class Recompensa {
         this.puntBescanvi = puntBescanvi;
     }
 
-    public Recompensa(Long id, String descripcio, String observacions, double preu, LocalDateTime dataCreacio, LocalDateTime dataAssignacio, LocalDateTime dataRecollida, User ciclista, String puntBescanvi) {
+    public Recompensa(Long id, String descripcio, String observacions, double preu, String dataCreacio, String dataAssignacio, String dataRecollida, User ciclista, String puntBescanvi) {
         this.id = id;
         this.descripcio = descripcio;
         this.observacions = observacions;
@@ -97,27 +97,27 @@ public class Recompensa {
         this.estat = estat;
     }
 
-    public LocalDateTime getDataCreacio() {
+    public String getDataCreacio() {
         return dataCreacio;
     }
 
-    public void setDataCreacio(LocalDateTime dataCreacio) {
+    public void setDataCreacio(String dataCreacio) {
         this.dataCreacio = dataCreacio;
     }
 
-    public LocalDateTime getDataAssignacio() {
+    public String getDataAssignacio() {
         return dataAssignacio;
     }
 
-    public void setDataAssignacio(LocalDateTime dataAssignacio) {
+    public void setDataAssignacio(String dataAssignacio) {
         this.dataAssignacio = dataAssignacio;
     }
 
-    public LocalDateTime getDataRecollida() {
+    public String getDataRecollida() {
         return dataRecollida;
     }
 
-    public void setDataRecollida(LocalDateTime dataRecollida) {
+    public void setDataRecollida(String dataRecollida) {
         this.dataRecollida = dataRecollida;
     }
 
