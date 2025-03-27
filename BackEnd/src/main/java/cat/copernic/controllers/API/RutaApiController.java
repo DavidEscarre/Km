@@ -7,6 +7,7 @@ package cat.copernic.controllers.API;
 import cat.copernic.Entity.Ruta;
 import cat.copernic.logica.RutaLogic;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,7 +53,7 @@ public class RutaApiController {
        
     }
     
-    @GetMapping("byId/{rutaId}")
+    @GetMapping("/byId/{rutaId}")
     public ResponseEntity<Ruta> getRutaById(@PathVariable Long rutaId){
         Ruta ruta;
         
@@ -82,4 +85,54 @@ public class RutaApiController {
         
         return response;        
     }
+    
+    @PostMapping("/create")
+    public ResponseEntity<Long> createRuta(@RequestBody Ruta ruta) {
+        try {
+            if (ruta == null) {
+                logger.error("❌ Ruta received is null");
+                return ResponseEntity.badRequest().build();
+            }
+
+            Long rutaId = rutaLogic.saveRuta(ruta);
+            logger.info("✅ Ruta created with ID: {}", rutaId);
+            return new ResponseEntity<>(rutaId, HttpStatus.CREATED);
+        } catch (Exception e) {
+            logger.error("❌ Error creating ruta", e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+    
+    @PostMapping("/update")
+    public ResponseEntity<Void> updateRuta(@RequestBody Ruta ruta) {
+        try {
+            if (ruta == null || ruta.getId() == null) {
+                return ResponseEntity.badRequest().build();
+            }
+
+           Ruta OldRuta = rutaLogic.getRuta(ruta.getId());
+            if (OldRuta == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            
+
+            
+            
+
+            Long rutaId = rutaLogic.updateRuta(ruta);
+            if(rutaId != null){
+                 return ResponseEntity.ok().build();
+            }else{
+                 return ResponseEntity.notFound().build();
+            }
+           
+
+        } catch (Exception e) {
+            logger.error("❌ Error updating ad", e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }
+    
+

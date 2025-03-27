@@ -28,7 +28,7 @@ public class User {
     private double saldoDisponible = 0.00;
 
 
-    private LocalDateTime dataAlta;
+    private String dataAlta;
 
     private String word;
 
@@ -46,7 +46,7 @@ public class User {
     public User() {
     }
 
-    public User(String email, String nom, String observacions, Rol rol, boolean estat, double saldoDisponible, LocalDateTime dataAlta, String word, byte[] foto, int telefon, String adreca) {
+    public User(String email, String nom, String observacions, Rol rol, boolean estat, double saldoDisponible, String dataAlta, String word, byte[] foto, int telefon, String adreca) {
         this.email = email;
         this.nom = nom;
         this.observacions = observacions;
@@ -108,11 +108,11 @@ public class User {
         this.saldoDisponible = saldoDisponible;
     }
 
-    public LocalDateTime getDataAlta() {
+    public String getDataAlta() {
         return dataAlta;
     }
 
-    public void setDataAlta(LocalDateTime dataAlta) {
+    public void setDataAlta(String dataAlta) {
         this.dataAlta = dataAlta;
     }
 

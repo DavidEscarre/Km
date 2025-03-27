@@ -4,6 +4,7 @@
  */
 package cat.copernic.logica;
 
+import cat.copernic.Entity.PuntGPS;
 import cat.copernic.Entity.Ruta;
 import cat.copernic.controllers.API.UserApiController;
 import cat.copernic.repository.RutaRepo;
@@ -48,4 +49,33 @@ public class RutaLogic {
         
         return (r != null);
     }    
+    
+    
+    public Long saveRuta(Ruta ruta)throws Exception{
+
+        Long rutaId = rutaRepo.save(ruta).getId();
+            
+        return rutaId;
+
+    }
+    public Long updateRuta(Ruta ruta)throws Exception{
+       
+        Ruta OldRuta = rutaRepo.findById(ruta.getId()).orElse(null);
+        
+        if(OldRuta==null){
+            return null;
+        }
+        
+       OldRuta.setCiclista(ruta.getCiclista());
+       OldRuta.setDataFinal(ruta.getDataFinal());
+       OldRuta.setDataInici(ruta.getDataInici());
+       OldRuta.setDistancia(ruta.getDistancia());
+       OldRuta.setEstat(ruta.getEstat());
+       OldRuta.setSaldo(ruta.getSaldo());
+       OldRuta.setVelocitatMax(ruta.getVelocitatMax());
+       OldRuta.setVelocitatMitjana(ruta.getVelocitatMitjana());
+       
+       return rutaRepo.save(OldRuta).getId();
+        
+    }
 }

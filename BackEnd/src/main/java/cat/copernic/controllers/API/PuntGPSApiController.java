@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,7 +52,7 @@ public class PuntGPSApiController {
        
     }
     
-    @GetMapping("byId/{puntGPSId}")
+    @GetMapping("/byId/{puntGPSId}")
     public ResponseEntity<PuntGPS> getPuntGPSById(@PathVariable Long puntGPSId){
         PuntGPS puntGPS;
         
@@ -82,4 +84,22 @@ public class PuntGPSApiController {
         
         return response;        
     }
+    
+    @PostMapping("/create")
+    public ResponseEntity<Long> createPuntGPS(@RequestBody PuntGPS puntGPS) {
+        try {
+            if (puntGPS == null) {
+                logger.error("❌ puntGPS received is null");
+                return ResponseEntity.badRequest().build();
+            }
+            
+            Long puntGPSId = puntGPSLogic.savePuntGPS(puntGPS);
+            logger.info("✅ puntGPS created with ID: {}", puntGPSId);
+            return new ResponseEntity<>(puntGPSId, HttpStatus.CREATED);
+        } catch (Exception e) {
+            logger.error("❌ Error creating puntGPS", e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+    
 }

@@ -399,3 +399,35 @@ image::Trello6.png[]
 
 
 https://trello.com/invite/b/67d2bb31bdeeafab5739043d/ATTI01a1de41486edc7420d39504157a257eDFF8C943/proyecte4km[*Enllaç al Trello*]
+
+[[Sprint1]]
+== *11. Sprint 1*
+
+En aquest primer Sprint s'han reorganitzat les tasques de cada sprint, aprofitant l'experiència obtinguda durant el desenvolupament del sprint.
+
+=== *Nova planificació*
+Sprint 1
+
+image::image\Sprint1_tasques1.png[]
+image::image\Sprint1_tasques2.png[]
+
+Sprint 2
+
+image::image\Sprint2_tasques.png[]
+
+Sprint 3
+
+image::image\Sprint3_tasques.png[]
+
+Sprint 4
+
+image::image\Sprint4_tasques.png[]
+
+Sprint 5
+
+image::image\Sprint5_tasques.png[]
+
+
+Sprint 6
+
+Es deixarà per les tasques que no s'acabin en els anteriors sprints.

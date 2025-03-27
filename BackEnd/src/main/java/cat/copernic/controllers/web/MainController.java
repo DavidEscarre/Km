@@ -25,9 +25,6 @@ public class MainController {
 
         return "index";
     }
-        
-    @GetMapping("/login")
-    public String redirigirLoging() {
-        return "login"; // Vista del login
-    }
+    
+    
 }

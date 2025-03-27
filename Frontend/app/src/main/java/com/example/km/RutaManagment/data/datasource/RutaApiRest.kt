@@ -2,7 +2,9 @@ package com.example.km.RutaManagment.data.datasource
 
 import com.example.km.core.models.Ruta
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface RutaApiRest {
@@ -12,6 +14,12 @@ interface RutaApiRest {
 
     @GET("byId/{rutaId}")
     suspend fun getRutaById(@Path("rutaId") rutaId: Long): Response<Ruta>
+
+    @POST("create")
+    suspend fun createRuta(@Body ruta: Ruta): Response<Long>
+
+    @POST("update")
+    suspend fun updateRuta(@Body ruta: Ruta): Response<Long>
 }
 
 
