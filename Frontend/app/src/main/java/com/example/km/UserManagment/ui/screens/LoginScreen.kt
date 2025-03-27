@@ -35,6 +35,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -73,16 +74,17 @@ import java.io.IOException
 @Composable
 fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel, userState: MutableState<User?>) {
 
-    var email by remember { mutableStateOf("") }
-    var word by remember { mutableStateOf("") }
+
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
-
+    val email by loginViewModel.email .collectAsState()
+    val word by loginViewModel.word.collectAsState()
 
     // Reinicia los valores cuando se entra en la pantalla
-    LaunchedEffect(email, word) {
-        loginViewModel.email.value = email
-        loginViewModel.word.value = word
+   LaunchedEffect(Unit) {
+
+
+
     }
 
     Box(
@@ -100,7 +102,7 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel, us
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .offset(0.dp,-60.dp)
+                   // .offset(0.dp,-60.dp)
                     .size(284.dp)
                     .clip(CircleShape)
                     .background(Color.White)
@@ -131,7 +133,7 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel, us
             Box(
 
                 contentAlignment = Alignment.Center,
-                modifier = Modifier .size(179.dp, 66.dp).offset(0.dp,-22.dp)
+                modifier = Modifier .size(179.dp, 66.dp)//.offset(0.dp,-22.dp)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.kmlogoname),
@@ -149,9 +151,10 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel, us
             )
             Spacer(modifier = Modifier.height(16.dp))
 
+
             OutlinedTextField(
                 value = email,
-                onValueChange = { email = it },
+                onValueChange = {loginViewModel.onEmailChange(it) },
                 label = { Text("Email", color= Color.White) },
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth(),
@@ -170,7 +173,7 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel, us
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = word,
-                onValueChange = { word = it },
+                onValueChange = {loginViewModel.onPasswordChange(it) },
                 label = { Text("Contrasenya", color= Color.White) },
                 visualTransformation = PasswordVisualTransformation(),
                 shape = RoundedCornerShape(12.dp),
@@ -276,7 +279,23 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel, us
                 fontSize = 14.sp,
                 modifier = Modifier.clickable { navController.navigate("passwordRecover") }
             )
+            Button(
+                onClick = {
+                    coroutineScope.launch {
+                        Handler(Looper.getMainLooper()).post {
+                            Toast.makeText(
+                                context,
+                                "Hola subnormal",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            navController.navigate("home")
+                        }
+                    }
+                }
+            ){
+                Text("Entrar sin login", color = Color.Black, fontSize = 21.sp, fontWeight = FontWeight(900))
 
+            }
         }
     }
 

@@ -40,10 +40,21 @@ public class PuntGPSLogic {
         
         return ret;
     }
-    public boolean existsById(Long id)throws Exception
+    public boolean existsById(Long id)
     {
         PuntGPS p = puntGPSRepo.findById(id).orElse(null);
         
         return (p != null);
     }    
+    
+    public Long savePuntGPS(PuntGPS puntGPS)throws Exception{
+       
+            
+        Long puntGPSId = puntGPSRepo.save(puntGPS).getId();
+            
+        return puntGPSId;
+       
+        
+        
+    }
 }
