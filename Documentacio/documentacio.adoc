@@ -408,24 +408,24 @@ En aquest primer Sprint s'han reorganitzat les tasques de cada sprint, aprofitan
 === *Nova planificació*
 Sprint 1
 
-image::image\Sprint1_tasques1.png[]
-image::image\Sprint1_tasques2.png[]
+image::Sprint1_tasques1.png[]
+image::Sprint1_tasques2.png[]
 
 Sprint 2
 
-image::image\Sprint2_tasques.png[]
+image::Sprint2_tasques.png[]
 
 Sprint 3
 
-image::image\Sprint3_tasques.png[]
+image::Sprint3_tasques.png[]
 
 Sprint 4
 
-image::image\Sprint4_tasques.png[]
+image::Sprint4_tasques.png[]
 
 Sprint 5
 
-image::image\Sprint5_tasques.png[]
+image::Sprint5_tasques.png[]
 
 
 Sprint 6
