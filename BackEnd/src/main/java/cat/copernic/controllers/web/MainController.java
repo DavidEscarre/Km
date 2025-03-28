@@ -8,7 +8,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties.Authentication;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +22,7 @@ public class MainController {
     
     @GetMapping("/")
     public String homePage(Model model, Authentication authentication) {
-
+        
         return "index";
     }
     

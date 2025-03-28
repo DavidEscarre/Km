@@ -21,14 +21,19 @@ class LoginViewModel: ViewModel()  {
     private val _wordError = MutableStateFlow<String?>(null)
     val wordError: StateFlow<String?> get() = _wordError
 
+    private val _loginError = MutableStateFlow<String?>(null)
+    val loginError: StateFlow<String?> get() = _loginError
+
     val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$".toRegex()
 
     fun onEmailChange(newEmail: String) {
         _email.value = newEmail
+        validateFields()
     }
 
     fun onPasswordChange(newPassword: String) {
         _word.value = newPassword
+        validateFields()
     }
 
     fun validateFields(): Boolean {
@@ -36,15 +41,15 @@ class LoginViewModel: ViewModel()  {
         Log.d("VALIDATE_FIELDS", "EMAIL: ${_email.value}")
         Log.d("VALIDATE_FIELDS", "word: ${_word.value}")
 
-        /*//Esta desavilitat per a proves
+        //Esta desavilitat per a proves
 
         if(!email.value.matches(emailRegex)){
-            emailError.value = "Correu electronic inválid."
+            _emailError.value = "Correu electronic inválid."
             isValid = false
-        }else  emailError.value = null*/
+        }else  _emailError.value = null
 
         if(_word.value.length == 0){
-            _wordError.value = "La contrasenya no pot esta vuida"
+            _wordError.value = "La contrasenya no pot esta vuida."
             isValid = false
         }else  _wordError.value = null
 
@@ -64,13 +69,16 @@ class LoginViewModel: ViewModel()  {
 
                     Log.d("Login", "✅ login correcte")
                     onSuccess()
+                    _loginError.value = null
                 } else {
+
                     Log.e("Login", "❌ Error en el Login ")
                     val errorBody = response.errorBody()?.string()
                     val errorMessage =
-                        "❌ ${response.code()} - $errorBody"
+                        "$errorBody"
+                   // _loginError.value = errorBody
                     onError(errorMessage)
-
+                    _loginError.value = errorMessage
                 }
             }catch(e: Exception){
                 e.printStackTrace()

@@ -4,15 +4,19 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Login</title>
+        <link rel="stylesheet" href="/styles/stylesMain.css">
+        
     </head>
     <body>
         <h1>Iniciar sessió</h1>
          <form th:action="@{/login}" method="post">
-            <label for="username">Usuari:</label>
-            <input type="text" id="username" name="username" required />
+            <label for="username">Email</label>
+            <input type="email" id="username" name="username" required />
             <br />
             <label for="password">Contrasenya:</label>
             <input type="password" id="password" name="password" required />
+            <p th:if="${param.error}" class="error">Usuari o contrasenya incorrectes.</p>
+          
             <br />
             <button type="submit">Iniciar sessió</button>
         </form>

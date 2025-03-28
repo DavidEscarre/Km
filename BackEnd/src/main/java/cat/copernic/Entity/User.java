@@ -6,6 +6,8 @@
 package cat.copernic.Entity;
 
 import cat.copernic.enums.Rol;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,6 +16,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -71,6 +74,10 @@ public class User implements UserDetails{
     @Column(nullable = true)
     private String adreca;
     
+    @OneToMany(mappedBy = "ciclista", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JsonIgnore
+    private List<Ruta> rutes = new ArrayList<>();
+   
     //constructors
     
     public User() {

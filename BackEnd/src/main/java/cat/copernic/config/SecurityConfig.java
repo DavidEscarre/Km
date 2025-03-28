@@ -14,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -37,15 +38,21 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
     http
         .csrf(csrf -> csrf.disable())  // Deshabilitar CSRF (recomendado solo para APIs REST)
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/api/auth/login").permitAll()  // Permitir acceso sin autenticación
+            .requestMatchers("/api/auth/login").permitAll()
+           .requestMatchers("/login/**").permitAll() // Acceso público
+                .requestMatchers("/styles/**", "/scripts/**").permitAll()   // Acceso público a recursos estáticos
             .anyRequest().authenticated()  // El resto de rutas requieren autenticación
         )
-        .formLogin(login -> login
+       
+        .formLogin(form -> form
             .loginPage("/login")  // Página de login web
             .usernameParameter("username")
             .passwordParameter("password")
             .defaultSuccessUrl("/")
-            .failureUrl("/login?error=true")
+            //.failureUrl("/login?error=true")
+                .failureHandler((request, response, exception) -> {
+                 response.sendRedirect("/login?error=true");
+                })
             .permitAll()
         );
 
