@@ -1,0 +1,28 @@
+/* General Reset */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+/* Encabezado (h1) cerca de la parte superior */
+h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #444;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #0078d7;
+    color: white;
+}
+
+.error {
+        color: red;
+        font-weight: bold;
+    }

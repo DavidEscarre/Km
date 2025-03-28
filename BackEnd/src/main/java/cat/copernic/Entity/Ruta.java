@@ -6,6 +6,8 @@
 package cat.copernic.Entity;
 
 import cat.copernic.enums.EstatRuta;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,8 +18,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 
 /**
@@ -56,6 +61,12 @@ public class Ruta {
     @Column(nullable = false)
     private double velocitatMax = 0.00;
 
+    
+    @OneToMany(mappedBy = "ruta", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JsonIgnore
+    private List<PuntGPS> puntsGPS = new ArrayList<>();
+    
+    
     public Ruta() {
     }
 

@@ -6,6 +6,7 @@ package cat.copernic.logica;
 
 import cat.copernic.Entity.User;
 import cat.copernic.controllers.API.UserApiController;
+import cat.copernic.enums.Rol;
 import cat.copernic.repository.UserRepo;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -97,7 +98,37 @@ public class UserLogic {
         }
        
       }
-    
+    public String authenticateWebAdmin(String email, String rawPassword) {
+        
+       
+        User user = userRepo.findById(email).orElse(null);
+        if(user != null){
+            if(user.getRol()== Rol.ADMIN){
+                if (passwordEncoder.matches(rawPassword, user.getWord())) {
+
+                    if (user.isEstat()== true) {
+                        System.out.println("✅ Autenticació exitosa");
+                        return user.getEmail();
+                    }
+                    else {
+                        System.out.println("❌ Usuari inactiu");
+                        return "INACTIVE";
+                    }
+
+                }else{
+                    System.out.println("❌ Autenticació fallida");
+                    return "INCORRECT";
+                }
+            }else{
+                 return "NOADMIN";
+            }
+
+        }else{
+            System.out.println("❌ Usuari no trobat");
+        return "NOTFOUND";
+        }
+       
+      }
     public boolean userIsUnique(User user){
         
         if(userRepo.existsById(user.getEmail())){
