@@ -30,8 +30,9 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-
+@RequiresApi(Build.VERSION_CODES.O)
 class PuntGPSViewModel(application: Application) : AndroidViewModel(application) {
+
     val rutaViewModel: RutaViewModel = RutaViewModel()
     var rutaIniciada = rutaViewModel.rutaIniciada
 
@@ -63,7 +64,7 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
                     val formattedDate = dataMarcaTemps.format(formatter)
 
                     create(
-                        PuntGPS(rutaIniciada.value, location.latitude.toLong(), location.longitude.toLong(), formattedDate),
+                        PuntGPS(rutaIniciada.value, location.latitude.toLong(), location.longitude.toLong(), dataMarcaTemps),
 
                             onSuccess = { response ->
                             val puntGPSCreat = findById(response,onSuccess = {}, onError = {})
