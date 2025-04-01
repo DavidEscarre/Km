@@ -74,6 +74,7 @@ public class RutaLogic {
        OldRuta.setSaldo(ruta.getSaldo());
        OldRuta.setVelocitatMax(ruta.getVelocitatMax());
        OldRuta.setVelocitatMitjana(ruta.getVelocitatMitjana());
+       OldRuta.setPuntsGPS(ruta.getPuntsGPS());
        
        return rutaRepo.save(OldRuta).getId();
         

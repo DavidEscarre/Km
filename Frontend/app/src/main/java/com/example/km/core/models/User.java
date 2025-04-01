@@ -3,6 +3,8 @@ package com.example.km.core.models;
 import com.example.km.core.utils.enums.Rol;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class User {
 
@@ -28,7 +30,7 @@ public class User {
     private double saldoDisponible = 0.00;
 
 
-    private String dataAlta;
+    private LocalDateTime dataAlta;
 
     private String word;
 
@@ -41,12 +43,15 @@ public class User {
 
     private String adreca;
 
+    private List<Recompensa> recompenses = new ArrayList<>();
+    private List<Ruta> rutes = new ArrayList<>();
     //constructors
+
 
     public User() {
     }
 
-    public User(String email, String nom, String observacions, Rol rol, boolean estat, double saldoDisponible, String dataAlta, String word, byte[] foto, int telefon, String adreca) {
+    public User(String email, String nom, String observacions, Rol rol, boolean estat, double saldoDisponible, LocalDateTime dataAlta, String word, byte[] foto, int telefon, String adreca, List<Ruta> rutes, List<Recompensa> recompenses) {
         this.email = email;
         this.nom = nom;
         this.observacions = observacions;
@@ -58,6 +63,24 @@ public class User {
         this.foto = foto;
         this.telefon = telefon;
         this.adreca = adreca;
+        this.rutes = rutes;
+        this.recompenses = recompenses;
+    }
+
+    public List<Recompensa> getRecompenses() {
+        return recompenses;
+    }
+
+    public void setRecompenses(List<Recompensa> recompenses) {
+        this.recompenses = recompenses;
+    }
+
+    public List<Ruta> getRutes() {
+        return rutes;
+    }
+
+    public void setRutes(List<Ruta> rutes) {
+        this.rutes = rutes;
     }
 
     public String getEmail() {
@@ -108,11 +131,11 @@ public class User {
         this.saldoDisponible = saldoDisponible;
     }
 
-    public String getDataAlta() {
+    public LocalDateTime getDataAlta() {
         return dataAlta;
     }
 
-    public void setDataAlta(String dataAlta) {
+    public void setDataAlta(LocalDateTime dataAlta) {
         this.dataAlta = dataAlta;
     }
 

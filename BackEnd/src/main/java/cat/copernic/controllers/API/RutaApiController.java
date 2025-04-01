@@ -4,8 +4,13 @@
  */
 package cat.copernic.controllers.API;
 
+import cat.copernic.Entity.PuntGPS;
 import cat.copernic.Entity.Ruta;
+import cat.copernic.Entity.User;
 import cat.copernic.logica.RutaLogic;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -19,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -33,6 +39,8 @@ public class RutaApiController {
     
     Logger logger = LoggerFactory.getLogger(UserApiController.class);
         
+    private ObjectMapper objectMapper;  // Para convertir JSON a objetos
+
     @GetMapping("/all")
     public ResponseEntity<List<Ruta>> findAll(){
         
@@ -86,7 +94,46 @@ public class RutaApiController {
         return response;        
     }
     
-    @PostMapping("/create")
+ /*   @PostMapping(value = "/create", consumes = "multipart/form-data")
+    public ResponseEntity<Long> createRuta(
+        @RequestPart("ciclista") String ciclistaJson,
+        @RequestPart("dataInici") String dataInici,
+        @RequestPart("dataFinal") String dataFinal,
+        @RequestPart("puntsGPS") String puntsGPSJson
+    ) {
+        System.out.println("11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111");
+        ResponseEntity<Long> response;
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-store"); 
+        try {
+            // Convertir JSON a objetos Java
+            User ciclista = objectMapper.readValue(ciclistaJson, User.class);
+            List<PuntGPS> puntsGPS = objectMapper.readValue(puntsGPSJson, objectMapper.getTypeFactory().constructCollectionType(List.class, PuntGPS.class));
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        
+            // Convertir el String a LocalDateTime
+            LocalDateTime DataInici = LocalDateTime.parse(dataInici, formatter);
+            LocalDateTime DataFinal = LocalDateTime.parse(dataFinal, formatter);
+            // Crear objeto Ruta
+            Ruta ruta = new Ruta(ciclista, DataInici, DataFinal, puntsGPS);
+
+            
+            
+            
+            Long rutaId = rutaLogic.saveRuta(ruta);
+            logger.info("✅ Ruta created with ID: {}", rutaId);
+          response = new ResponseEntity<>(rutaId, HttpStatus.CREATED);
+
+        } catch (Exception e) {
+            logger.error("❌ Error creating ruta", e);
+             response = new ResponseEntity<>(0L,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
+    }*/
+    
+   @PostMapping("/create")
     public ResponseEntity<Long> createRuta(@RequestBody Ruta ruta) {
         try {
             if (ruta == null) {
@@ -110,15 +157,10 @@ public class RutaApiController {
                 return ResponseEntity.badRequest().build();
             }
 
-           Ruta OldRuta = rutaLogic.getRuta(ruta.getId());
+            Ruta OldRuta = rutaLogic.getRuta(ruta.getId());
             if (OldRuta == null) {
                 return ResponseEntity.notFound().build();
             }
-
-            
-
-            
-            
 
             Long rutaId = rutaLogic.updateRuta(ruta);
             if(rutaId != null){

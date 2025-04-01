@@ -12,6 +12,7 @@ import static java.time.LocalDateTime.now;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,23 +39,28 @@ public class AuthApiController {
     
         
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestParam String email, @RequestParam String word) {
-        
+    public ResponseEntity<User> loginUser(@RequestParam String email, @RequestParam String word) {
+         
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-store"); 
         
         String res = userLogic.authenticateUser(email, word);
 
         User user;
         if(res.equals("NOTFOUND")){
             logger.error("usuari no trobat ");
-            return ResponseEntity.status(401).body("Usuari no trobat");
+           // return ResponseEntity.status(401).body("Usuari no trobat");
+           return ResponseEntity.status(401).body(null);
         }
         else if (res.equals("INCORRECT")) {
             logger.info("credencials incorrectes ");
-            return ResponseEntity.status(401).body("Credencials incorrectes");
+            //return ResponseEntity.status(401).body("Credencials incorrectes");
+            return ResponseEntity.status(401).body(null);
         }
         else if(res.equals("INACTIVE")){
             logger.info("usuari no actiu");
-            return ResponseEntity.badRequest().body("Usuari no activat");
+           // return ResponseEntity.badRequest().body("Usuari no activat");
+           return ResponseEntity.badRequest().body(null);
         }else{
              user = userRepo.findById(res).orElse(null);
              if(user != null){
@@ -62,7 +68,8 @@ public class AuthApiController {
                   return ResponseEntity.ok(user); 
              }else{
                   logger.error("usuari no trobat en la segona verificació");
-                 return ResponseEntity.status(401).body("Usuari no trobat en segona veirificació");
+                 //return ResponseEntity.status(401).body("Usuari no trobat en segona veirificació");
+                 return ResponseEntity.status(401).body(null);
              }
            
         }

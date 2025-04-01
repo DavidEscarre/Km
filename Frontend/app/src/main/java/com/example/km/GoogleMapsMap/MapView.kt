@@ -14,6 +14,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.km.PuntGPSManagment.ui.viewmodels.PuntGPSViewModel
+import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
 import com.example.km.main.screens.getCurrentLocation
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -30,9 +32,9 @@ import com.google.maps.android.compose.rememberCameraPositionState
         val context = LocalContext.current
         val cameraPositionState = rememberCameraPositionState()
         var userLocation by remember { mutableStateOf<LatLng?>(null) }
-        val viewModel: LocationViewModel = viewModel(factory = object : ViewModelProvider.Factory {
+        val viewModel: PuntGPSViewModel = viewModel(factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return LocationViewModel(context.applicationContext as Application) as T
+                return PuntGPSViewModel(context.applicationContext as Application) as T
             }
         })
 

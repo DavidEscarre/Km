@@ -76,6 +76,10 @@ public class User implements UserDetails{
     
     @OneToMany(mappedBy = "ciclista", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonIgnore
+    private List<Recompensa> recompensas = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "ciclista", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JsonIgnore
     private List<Ruta> rutes = new ArrayList<>();
    
     //constructors
@@ -84,7 +88,8 @@ public class User implements UserDetails{
         
     }
 
-    public User(String email, String nom, String observacions, Rol rol, boolean estat, double saldoDisponible, LocalDateTime dataAlta, String word, byte[] foto, int telefon, String adreca) {
+    public User(String email, String nom, String observacions, Rol rol, boolean estat, double saldoDisponible,
+            LocalDateTime dataAlta, String word, byte[] foto, int telefon, String adreca, List<Recompensa> recompensas, List<Ruta> rutes) {
         this.email = email;
         this.nom = nom;
         this.observacions = observacions;
@@ -96,8 +101,27 @@ public class User implements UserDetails{
         this.foto = foto;
         this.telefon = telefon;
         this.adreca = adreca;
+        this.recompensas = recompensas;
+        this.rutes = rutes;
     }
 
+    public List<Recompensa> getRecompensas() {
+        return recompensas;
+    }
+
+    public void setRecompensas(List<Recompensa> recompensas) {
+        this.recompensas = recompensas;
+    }
+
+    public List<Ruta> getRutes() {
+        return rutes;
+    }
+
+    public void setRutes(List<Ruta> rutes) {
+        this.rutes = rutes;
+    }
+
+    
     public String getEmail() {
         return email;
     }

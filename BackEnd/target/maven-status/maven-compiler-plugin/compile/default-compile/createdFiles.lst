@@ -19,6 +19,7 @@ cat\copernic\controllers\web\AuthWebController.class
 cat\copernic\logica\UserLogic.class
 cat\copernic\controllers\API\PuntGPSApiController.class
 cat\copernic\controllers\API\RecompensaApiController.class
+cat\copernic\config\LocalDateTimeAdapter.class
 cat\copernic\controllers\web\PuntGPSWebController.class
 cat\copernic\controllers\API\SistemaApiController.class
 cat\copernic\logica\RecompensaLogic.class
