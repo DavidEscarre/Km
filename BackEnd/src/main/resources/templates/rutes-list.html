@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Rutes List</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <main class="main-container">
+        <section class="table-container">
+            <h2>Llista de Rutes</h2>
+
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Ciclista</th>
+                        <th scope="col">Distancia</th>
+                        <th scope="col">Estat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="rute, rowStat : ${rutes}" class="expandable-row">
+                        <td th:text="${rute.ciclista.email}" scope="row"></td>
+                        <td th:text="${rute.distancia}" scope="row"></td>
+                        <td th:text="${rute.estat}"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <!-- Botón para ir atrás -->
+            <a href="/" class="btn btn-secondary" style="margin-top: 10px;">Volver al Inicio</a>
+        </section>
+    </main>
+</body>
+</html>
