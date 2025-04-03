@@ -1,33 +1,32 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Users List</title>
+    <title>Rutes List</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <main class="main-container">
         <section class="table-container">
-            <h2>Llista d'Usuaris</h2>
+            <h2>Llista de Rutes</h2>
 
             <table class="styled-table">
                 <thead>
                     <tr>
-                        <th scope="col">Nom</th>
-                        <th scope="col">Email</th>
+                        <th scope="col">Ciclista</th>
+                        <th scope="col">Distancia</th>
+                        <th scope="col">Estat</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="user, rowStat : ${users}" class="expandable-row">
-                        <td th:text="${user.nom}" scope="row"></td>
-                        <td th:text="${user.email}"></td>
+                    <tr th:each="rute, rowStat : ${rutes}" class="expandable-row">
+                        <td th:text="${rute.ciclista.email}" scope="row"></td>
+                        <td th:text="${rute.distancia}" scope="row"></td>
+                        <td th:text="${rute.estat}"></td>
                     </tr>
                 </tbody>
             </table>
 
-            <form th:action="@{/users/create}" method="get">
-                <button id="btn-users" type="submit" class="btn btn-danger" style="display: inline;">Crear Usuari</button>
-            </form>
 
             <!-- Botón para ir atrás -->
             <a href="/" class="btn btn-secondary" style="margin-top: 10px;">Volver al Inicio</a>

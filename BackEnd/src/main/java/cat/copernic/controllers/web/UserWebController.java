@@ -4,13 +4,21 @@
  */
 package cat.copernic.controllers.web;
 
+import cat.copernic.Entity.User;
+import cat.copernic.enums.Rol;
 import cat.copernic.logica.UserLogic;
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -50,6 +58,29 @@ public class UserWebController {
             return "error-page";  // Página personalizada de error
         }
     }
+    @GetMapping("/create")
+    public String createUsers(Model model, Authentication authentication) {
+          model.addAttribute("user", new User()); // Asegurar que el objeto está en el modelo
+        return "create-user";
 
-    
+        }
+    @PostMapping("/create")
+    public String createUsers(@ModelAttribute User user, Model model, Authentication authentication) {
+        try {
+           
+         // Instanciar el codificador de contraseñas BCrypt
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            // Encriptar la contraseña
+            String encryptedPassword = passwordEncoder.encode(user.getPassword());
+            user.setWord(encryptedPassword);
+            user.setRol(Rol.CICLISTA);
+            user.setDataAlta(LocalDateTime.now());
+            user.setSaldoDisponible(0.00);
+            userLogic.createUser(user,null);
+            return "redirect:/users/all";
+        }catch(Exception e){
+            return "create-user";
+        }
+            
+        }
 }
