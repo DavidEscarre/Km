@@ -3,10 +3,11 @@ package com.example.km.core.models;
 import com.example.km.core.utils.enums.EstatRuta;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Ruta {
     private Long id;
-
 
     private User ciclista;
 
@@ -14,9 +15,9 @@ public class Ruta {
     private EstatRuta estat = EstatRuta.PENDENT;
 
 
-    private String dataInici;
+    private LocalDateTime dataInici;
 
-    private String dataFinal;
+    private LocalDateTime dataFinal;
 
 
     private double saldo = 0.00;
@@ -30,20 +31,49 @@ public class Ruta {
 
     private double velocitatMax = 0.00;
 
+    private List<PuntGPS> puntsGPS = new ArrayList<>();
+
     public Ruta() {
     }
 
-    public Ruta(Long id, User ciclista, String dataInici, String dataFinal) {
+    public Ruta(Long id, User ciclista, LocalDateTime dataInici, LocalDateTime dataFinal, List<PuntGPS> puntsGPS) {
         this.id = id;
         this.ciclista = ciclista;
         this.dataInici = dataInici;
         this.dataFinal = dataFinal;
-    }
+        this.puntsGPS = puntsGPS;
 
-    public Ruta(User ciclista, String dataInici, String dataFinal) {
+    }
+    public Ruta(Long id, User ciclista, LocalDateTime dataInici, LocalDateTime dataFinal) {
+        this.id = id;
         this.ciclista = ciclista;
         this.dataInici = dataInici;
         this.dataFinal = dataFinal;
+
+
+    }
+
+    public Ruta(User ciclista, LocalDateTime dataInici, LocalDateTime dataFinal,List<PuntGPS> puntsGPS) {
+        this.ciclista = ciclista;
+        this.dataInici = dataInici;
+        this.dataFinal = dataFinal;
+        this.puntsGPS = puntsGPS;
+
+    }
+    public Ruta(User ciclista, LocalDateTime dataInici, LocalDateTime dataFinal) {
+        this.ciclista = ciclista;
+        this.dataInici = dataInici;
+        this.dataFinal = dataFinal;
+
+
+    }
+
+    public List<PuntGPS> getPuntsGPS() {
+        return puntsGPS;
+    }
+
+    public void setPuntsGPS(List<PuntGPS> puntsGPS) {
+        this.puntsGPS = puntsGPS;
     }
 
     public Long getId() {
@@ -70,19 +100,19 @@ public class Ruta {
         this.estat = estat;
     }
 
-    public String getDataInici() {
+    public LocalDateTime getDataInici() {
         return dataInici;
     }
 
-    public void setDataInici(String dataInici) {
+    public void setDataInici(LocalDateTime dataInici) {
         this.dataInici = dataInici;
     }
 
-    public String getDataFinal() {
+    public LocalDateTime getDataFinal() {
         return dataFinal;
     }
 
-    public void setDataFinal(String dataFinal) {
+    public void setDataFinal(LocalDateTime dataFinal) {
         this.dataFinal = dataFinal;
     }
 

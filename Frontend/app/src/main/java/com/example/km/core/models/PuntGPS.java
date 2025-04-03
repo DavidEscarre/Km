@@ -16,19 +16,19 @@ public class PuntGPS {
     private long longitud;
 
 
-    private String marcaTemps;
+    private LocalDateTime marcaTemps;
 
     public PuntGPS() {
     }
 
-    public PuntGPS(Ruta ruta, long latitud, long longitud, String marcaTemps) {
+    public PuntGPS(Ruta ruta, long latitud, long longitud, LocalDateTime marcaTemps) {
         this.ruta = ruta;
         this.latitud = latitud;
         this.longitud = longitud;
         this.marcaTemps = marcaTemps;
     }
 
-    public PuntGPS(Long id, Ruta ruta, long latitud, long longitud, String marcaTemps) {
+    public PuntGPS(Long id, Ruta ruta, long latitud, long longitud, LocalDateTime marcaTemps) {
         this.id = id;
         this.ruta = ruta;
         this.latitud = latitud;
@@ -68,11 +68,11 @@ public class PuntGPS {
         this.longitud = longitud;
     }
 
-    public String getMarcaTemps() {
+    public LocalDateTime getMarcaTemps() {
         return marcaTemps;
     }
 
-    public void setMarcaTemps(String marcaTemps) {
+    public void setMarcaTemps(LocalDateTime marcaTemps) {
         this.marcaTemps = marcaTemps;
     }
 

@@ -7,6 +7,7 @@ import android.content.Context
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,7 +23,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -48,7 +48,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.km.GoogleMapsMap.GoogleMapScreen
-import com.example.km.GoogleMapsMap.LocationViewModel
+import com.example.km.PuntGPSManagment.ui.viewmodels.PuntGPSViewModel
 import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
 import com.example.km.core.models.Ruta
 import com.example.km.core.models.User
@@ -61,15 +61,15 @@ import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MainScreen(rutaViewModel: RutaViewModel,navController: NavController,  userState: MutableState<User?>) {
+fun MainScreen(rutaViewModel: RutaViewModel, navController: NavController,   userState: State<User?>) {
     val context = LocalContext.current
     var rutaActiva by remember { mutableStateOf(false) }
-    val viewModel: LocationViewModel = viewModel(factory = object : ViewModelProvider.Factory {
+    val puntsGPSViewModel: PuntGPSViewModel = viewModel(factory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return LocationViewModel(context.applicationContext as Application) as T
+            return PuntGPSViewModel(context.applicationContext as Application) as T
         }
     })
-    val locationList by viewModel.locationList.collectAsState()
+    val locationList by puntsGPSViewModel.locationList.collectAsState()
     val scrollState = rememberScrollState()
 
 
@@ -106,6 +106,7 @@ fun MainScreen(rutaViewModel: RutaViewModel,navController: NavController,  userS
                 Button(onClick = {
                     rutaActiva = !rutaActiva
 
+
                 }) {
                     Text(if (rutaActiva) "Aturar Ruta" else "Començar Ruta")
                 }
@@ -127,9 +128,10 @@ fun MainScreen(rutaViewModel: RutaViewModel,navController: NavController,  userS
         }
     }
     if(rutaActiva){
-        viewModel.startLocationUpdates()
+
+        IniciarRuta(rutaViewModel, puntsGPSViewModel, context, userState )
     }else{
-        viewModel.stopLocationUpdates()
+        AturarRuta(rutaViewModel, puntsGPSViewModel, context, userState )
     }
 
 }
@@ -164,26 +166,32 @@ fun getCurrentLocation(context: Context, onLocationReceived: (LatLng) -> Unit) {
         }
     }
 }
-/*
+
+
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun IniciarRuta(rutaViewModel: RutaViewModel,viewModel: LocationViewModel ,context: Context,userState: MutableState<User?>){
+fun IniciarRuta(rutaViewModel: RutaViewModel, puntsGPSViewModel: PuntGPSViewModel, context: Context,  userState: State<User?>){
 
     val coroutineScope = rememberCoroutineScope()
     val dataInici = LocalDateTime.now()
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     val formattedDate = dataInici.format(formatter)
     val rutaIniciada by rutaViewModel.rutaIniciada.collectAsState()
+    Log.d("USER_STATE1", "✅ USUARI ${userState}" )
     val ciclista: User = userState.value!!
+    Log.d("USER_STATE2", "✅ USUARI ${ciclista}" )
     if(rutaIniciada == null){
-        val ruta: Ruta = Ruta(ciclista, formattedDate,null)
 
+      val ruta = Ruta(ciclista, dataInici, dataInici)
+        //Log.d("ruta", "✅ ruta ${ruta.toString()}" )
         coroutineScope.launch {
-
+            Log.d("INICIANDO RUTA AAAAAAA", "✅ USUARI ${ciclista}" )
+           // rutaViewModel.iniciarRuta(ciclista,formattedDate, "", emptyList(), context,
             rutaViewModel.iniciarRuta(ruta, context,
-                onSuccess = {
+
+            onSuccess = {
                     Handler(Looper.getMainLooper()).post {
                         Toast.makeText(
                             context,
@@ -204,24 +212,25 @@ fun IniciarRuta(rutaViewModel: RutaViewModel,viewModel: LocationViewModel ,conte
                     }
                 })
 
-            viewModel.startLocationUpdates()
+            puntsGPSViewModel.startLocationUpdates()
         }
     }
 
 
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@SuppressLint("CoroutineCreationDuringComposition")
-@Composable
-fun AturarRuta(rutaViewModel: RutaViewModel, viewModel: LocationViewModel ,context: Context, userState: MutableState<User?>) {
 
-    viewModel.stopLocationUpdates()
+@SuppressLint("CoroutineCreationDuringComposition")
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun AturarRuta(rutaViewModel: RutaViewModel, puntsGPSViewModel: PuntGPSViewModel, context: Context,  userState: State<User?>) {
+
+    puntsGPSViewModel.stopLocationUpdates()
     val dataFinal = LocalDateTime.now()
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     val formattedDate = dataFinal.format(formatter)
     val coroutineScope = rememberCoroutineScope()
-
+    val puntGPSRutaList by puntsGPSViewModel.puntGPSRutaList.collectAsState()
     val rutaIniciada = rutaViewModel.rutaIniciada.collectAsState().value
 
     val ciclista: User? = userState.value
@@ -236,7 +245,7 @@ fun AturarRuta(rutaViewModel: RutaViewModel, viewModel: LocationViewModel ,conte
         return
     }
 
-    val ruta = Ruta(ciclista, rutaIniciada.dataInici, formattedDate)
+    val ruta = Ruta(rutaIniciada.id, ciclista, rutaIniciada.dataInici, rutaIniciada.dataFinal, puntGPSRutaList)
 
     coroutineScope.launch {
         rutaViewModel.aturarRuta(ruta, context,
@@ -252,5 +261,5 @@ fun AturarRuta(rutaViewModel: RutaViewModel, viewModel: LocationViewModel ,conte
             }
         )
     }
-}*/
+}
 

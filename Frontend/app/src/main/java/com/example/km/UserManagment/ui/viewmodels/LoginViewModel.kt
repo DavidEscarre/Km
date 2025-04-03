@@ -1,14 +1,24 @@
 package com.example.km.UserManagment.ui.viewmodels
 
 import android.util.Log
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.km.UserManagment.data.datasource.AuthRetrofitInstance
+import com.example.km.UserManagment.data.repositories.LoginRepositoryImpl
+import com.example.km.core.models.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel: ViewModel()  {
+
+
+    private val AuthRepo = LoginRepositoryImpl()
+
+    private val _userState = MutableStateFlow<User?>(null)
+    val userState: StateFlow<User?> get() = _userState
+
 
     private val _email = MutableStateFlow<String>("")
     val email: StateFlow<String> get() = _email
@@ -63,15 +73,16 @@ class LoginViewModel: ViewModel()  {
         viewModelScope.launch {
             try {
 
-                val response = AuthRetrofitInstance.authApi.loginUser(email.value, word.value)
+                val response = AuthRepo.loginUser(email.value, word.value)
 
                 if (response.isSuccessful) {
-
+                    _userState.value = response.body()
                     Log.d("Login", "✅ login correcte")
                     onSuccess()
+
                     _loginError.value = null
                 } else {
-
+                    _userState.value = null
                     Log.e("Login", "❌ Error en el Login ")
                     val errorBody = response.errorBody()?.string()
                     val errorMessage =
@@ -81,8 +92,16 @@ class LoginViewModel: ViewModel()  {
                     _loginError.value = errorMessage
                 }
             }catch(e: Exception){
+                _userState.value = null
                 e.printStackTrace()
             }
+        }
+    }
+    fun logOut(context: android.content.Context, navController: androidx.navigation.NavController){
+
+        viewModelScope.launch {
+            _userState.value = null
+            navController.navigate("login")
         }
     }
 }

@@ -70,11 +70,12 @@ public class Ruta {
     public Ruta() {
     }
 
-    public Ruta(Long id, User ciclista, LocalDateTime dataInici, LocalDateTime dataFinal) {
+    public Ruta(Long id, User ciclista, LocalDateTime dataInici, LocalDateTime dataFinal, List<PuntGPS> puntsGPS) {
         this.id = id;
         this.ciclista = ciclista;
         this.dataInici = dataInici;
         this.dataFinal = dataFinal;
+        this.puntsGPS = puntsGPS;
     }
 
     public Ruta(User ciclista, LocalDateTime dataInici, LocalDateTime dataFinal) {
@@ -82,7 +83,29 @@ public class Ruta {
         this.dataInici = dataInici;
         this.dataFinal = dataFinal;
     }
+    public Ruta(Long id, User ciclista, LocalDateTime dataInici, LocalDateTime dataFinal) {
+        this.id = id;
+        this.ciclista = ciclista;
+        this.dataInici = dataInici;
+        this.dataFinal = dataFinal;
+    }
 
+    public Ruta(User ciclista, LocalDateTime dataInici, LocalDateTime dataFinal, List<PuntGPS> puntsGPS) {
+        this.ciclista = ciclista;
+        this.dataInici = dataInici;
+        this.dataFinal = dataFinal;
+        this.puntsGPS = puntsGPS;
+    }
+
+    public List<PuntGPS> getPuntsGPS() {
+        return puntsGPS;
+    }
+
+    public void setPuntsGPS(List<PuntGPS> puntsGPS) {
+        this.puntsGPS = puntsGPS;
+    }
+
+    
     public Long getId() {
         return id;
     }
