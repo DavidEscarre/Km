@@ -1,3 +1,4 @@
+cat\copernic\repository\ExempleRepo.class
 cat\copernic\logica\PuntGPSLogic.class
 cat\copernic\controllers\web\RecompensaWebController.class
 cat\copernic\repository\UserRepo.class
@@ -17,6 +18,7 @@ cat\copernic\controllers\web\UserWebController.class
 cat\copernic\Entity\Sistema.class
 cat\copernic\controllers\web\AuthWebController.class
 cat\copernic\logica\UserLogic.class
+cat\copernic\controllers\API\ExempleApiController.class
 cat\copernic\controllers\API\PuntGPSApiController.class
 cat\copernic\controllers\API\RecompensaApiController.class
 cat\copernic\config\LocalDateTimeAdapter.class
@@ -26,6 +28,7 @@ cat\copernic\logica\RecompensaLogic.class
 cat\copernic\repository\SistemaRepo.class
 cat\copernic\controllers\web\SistemaWebController.class
 cat\copernic\Entity\PuntGPS.class
+cat\copernic\Entity\Exemple.class
 cat\copernic\controllers\web\RutaWebController.class
 cat\copernic\enums\EstatRuta.class
 cat\copernic\controllers\API\AuthApiController.class

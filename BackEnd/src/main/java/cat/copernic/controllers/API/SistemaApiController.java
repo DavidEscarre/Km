@@ -28,7 +28,7 @@ public class SistemaApiController {
     @Autowired
     private SistemaLogic sistemaLogic;
     
-    Logger logger = LoggerFactory.getLogger(UserApiController.class);
+    Logger logger = LoggerFactory.getLogger(SistemaApiController.class);
         
     @GetMapping("/all")
     public ResponseEntity<List<Sistema>> findAll(){

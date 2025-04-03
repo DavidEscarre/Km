@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Home</title>
-    </head>
-    <body>
-      
-        <h1>Hola</h1>
-         <form th:action="@{/users/all}" method="get">
-                <button id="btn-users" type="submit" class="btn btn-danger" style="display: inline;">Usuarios</button>
-            </form>
-               
-                
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+
+    <h1>Hola</h1>
+
+    <form th:action="@{/users/all}" method="get">
+        <button id="btn-users" type="submit" class="btn btn-danger" style="display: inline;">Usuarios</button>
+    </form>
+    <form th:action="@{/rutes/all}" method="get">
+        <button id="btn-users" type="submit" class="btn btn-danger" style="display: inline;">Rutes</button>
+    </form>
+    <!-- Botón para cerrar sesión -->
+    <form th:action="@{/logout}" method="post">
+        <button type="submit" class="btn btn-secondary" style="margin-top: 10px;">Cerrar Sesión</button>
+    </form>
+
+</body>
 </html>

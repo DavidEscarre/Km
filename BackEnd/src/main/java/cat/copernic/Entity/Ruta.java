@@ -62,13 +62,20 @@ public class Ruta {
     private double velocitatMax = 0.00;
 
     
-    @OneToMany(mappedBy = "ruta", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "ruta", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<PuntGPS> puntsGPS = new ArrayList<>();
     
     
     public Ruta() {
     }
+
+    public Ruta(User ciclista, LocalDateTime dataInici) {
+        this.ciclista = ciclista;
+        this.dataInici = dataInici;
+    }
+ 
+    
 
     public Ruta(Long id, User ciclista, LocalDateTime dataInici, LocalDateTime dataFinal, List<PuntGPS> puntsGPS) {
         this.id = id;

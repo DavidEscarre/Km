@@ -9,6 +9,7 @@ import cat.copernic.Entity.Ruta;
 import cat.copernic.Entity.User;
 import cat.copernic.logica.RutaLogic;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.security.PermitAll;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,11 +35,12 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/rest/rutes")
+@CrossOrigin(origins = "*")  // Permitir acceso desde cualquier origen
 public class RutaApiController {
     @Autowired
     private RutaLogic rutaLogic;
     
-    Logger logger = LoggerFactory.getLogger(UserApiController.class);
+    Logger logger = LoggerFactory.getLogger(RutaApiController.class);
         
     private ObjectMapper objectMapper;  // Para convertir JSON a objetos
 
@@ -63,7 +66,6 @@ public class RutaApiController {
     
     @GetMapping("/byId/{rutaId}")
     public ResponseEntity<Ruta> getRutaById(@PathVariable Long rutaId){
-        Ruta ruta;
         
         ResponseEntity<Ruta> response;
         
@@ -73,7 +75,7 @@ public class RutaApiController {
         try {
             
             logger.info("Cercant ruta amb id: {}", "rutaId: "+rutaId);
-            ruta = rutaLogic.getRuta(rutaId);
+           Ruta ruta = rutaLogic.getRuta(rutaId);
             
             if (ruta == null)
             {
@@ -134,6 +136,7 @@ public class RutaApiController {
     }*/
     
    @PostMapping("/create")
+   @PermitAll  // Permitir acceso sin autenticación
     public ResponseEntity<Long> createRuta(@RequestBody Ruta ruta) {
         try {
             if (ruta == null) {

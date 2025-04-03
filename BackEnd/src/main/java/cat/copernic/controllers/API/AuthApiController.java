@@ -35,7 +35,7 @@ public class AuthApiController {
     @Autowired
     private UserRepo userRepo;
     
-    Logger logger = LoggerFactory.getLogger(UserApiController.class);
+    Logger logger = LoggerFactory.getLogger(AuthApiController.class);
     
         
     @PostMapping("/login")

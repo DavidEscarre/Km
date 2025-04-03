@@ -30,7 +30,7 @@ public class PuntGPSApiController {
     @Autowired
     private PuntGPSLogic puntGPSLogic;
     
-    Logger logger = LoggerFactory.getLogger(UserApiController.class);
+    Logger logger = LoggerFactory.getLogger(PuntGPSApiController.class);
         
     @GetMapping("/all")
     public ResponseEntity<List<PuntGPS>> findAll(){

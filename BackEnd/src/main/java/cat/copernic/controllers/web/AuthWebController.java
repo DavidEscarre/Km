@@ -7,11 +7,14 @@ package cat.copernic.controllers.web;
 import cat.copernic.Entity.User;
 import cat.copernic.controllers.API.UserApiController;
 import cat.copernic.logica.UserLogic;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import static org.hibernate.internal.CoreLogging.logger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -75,5 +78,19 @@ public class AuthWebController {
     @GetMapping
     public String redirigirLoging(Model model) {
         return "login"; // Vista del login
+    }
+    
+    
+    // Nuevo método para cerrar sesión
+    @PostMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        // Invalidar la sesión
+        request.getSession().invalidate();
+        
+        // Borrar la autenticación
+        SecurityContextHolder.clearContext();
+
+        logger.info("Usuari desconnectat correctament");
+        return "redirect:/login?logout"; // Redirigir al login después del logout
     }
 }
