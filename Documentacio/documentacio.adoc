@@ -431,3 +431,40 @@ image::Sprint5_tasques.png[]
 Sprint 6
 
 Es deixarà per les tasques que no s'acabin en els anteriors sprints.
+
+
+
+[[Sprint2]]
+
+== *12. Sprint 2*
+
+En aquest Sprint he trobat alguns problemes durant el desenvolupament del codi i les diferents tasques del sprint, per aquesta raó, s'han tornat a reorganitzar les tasques de cada sprint, aprofitant com sempre l'experiència obtinguda durant el desenvolupament del sprint.
+
+=== *Tasques completades*
+image::tascasCompletadas.png[]
+
+=== *Nova planificació*
+
+
+Sprint 3
+
+image::Sprint3_tasques2.png[]
+
+Sprint 4
+
+image::Sprint4_tasques2_1.png[]
+
+image::Sprint4_tasques2_2.png[]
+
+Sprint 5
+
+image::Sprint5_tasques2.png[]
+
+
+Sprint 6
+
+Es deixarà per les tasques que no s'acabin en els anteriors sprints.
+
+
+=== *Problemes durant el Sprint 2*
+El principal problema que m'he trobat al Sprint 2 ha sigut un error que no deixava crear cap objecte al Frontend app, l'error era un "Malformed JSON", aquest problema encara persisteix i encara intento ressoldareu.

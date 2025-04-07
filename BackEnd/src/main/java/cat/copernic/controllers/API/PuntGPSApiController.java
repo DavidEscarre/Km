@@ -6,6 +6,7 @@ package cat.copernic.controllers.API;
 
 import cat.copernic.Entity.PuntGPS;
 import cat.copernic.logica.PuntGPSLogic;
+import jakarta.annotation.security.PermitAll;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/rest/puntgps")
+@CrossOrigin(origins = "*")  // Permitir acceso desde cualquier origen
 public class PuntGPSApiController {
     @Autowired
     private PuntGPSLogic puntGPSLogic;
@@ -86,20 +89,43 @@ public class PuntGPSApiController {
     }
     
     @PostMapping("/create")
+    @PermitAll  // Permitir acceso sin autenticación
     public ResponseEntity<Long> createPuntGPS(@RequestBody PuntGPS puntGPS) {
         try {
             if (puntGPS == null) {
                 logger.error("❌ puntGPS received is null");
                 return ResponseEntity.badRequest().build();
+            }else{
+                Long puntGPSId = puntGPSLogic.savePuntGPS(puntGPS);
+                logger.info("✅ puntGPS created with ID: {}", puntGPSId);
+                return new ResponseEntity<>(puntGPSId, HttpStatus.CREATED);
             }
             
-            Long puntGPSId = puntGPSLogic.savePuntGPS(puntGPS);
-            logger.info("✅ puntGPS created with ID: {}", puntGPSId);
-            return new ResponseEntity<>(puntGPSId, HttpStatus.CREATED);
+           
         } catch (Exception e) {
             logger.error("❌ Error creating puntGPS", e);
             return ResponseEntity.internalServerError().build();
         }
     }
+    
+ /*   @GetMapping("/allById/{rutaId}")
+    public ResponseEntity<List<PuntGPS>> findAllByRutaId(@PathVariable Long rutaId){
+
+        List<PuntGPS> llista;
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-store");
+        
+        try{
+            
+            llista = puntGPSLogic.findAllPuntsGPS();
+            logger.info("Trobada llista de tots els puntsGPS", "trobades: "+llista.size());
+            return new ResponseEntity<>(llista, headers, HttpStatus.OK);
+            
+        }catch(Exception e){
+            logger.error("Llista de tots els puntsGPS no trobada, error del servidor", "Error message: "+e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+       
+    }*/
     
 }

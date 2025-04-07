@@ -25,4 +25,7 @@ object UserRetrofitInstance {
             .addConverterFactory(GsonConverterFactory.create(gson))  // Convierte JSON a objetos Kotlin
             .build()
     }
+    val userApi: UserApiRest by lazy {
+        retrofitInstance.create(UserApiRest::class.java)
+    }
 }

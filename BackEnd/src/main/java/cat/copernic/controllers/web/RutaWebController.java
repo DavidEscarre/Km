@@ -31,7 +31,7 @@ public class RutaWebController {
      * @return La vista con la lista de todos los usuarios.
      */
     
-    @GetMapping("/all")
+    @GetMapping
     public String ListAllRutes(Model model, Authentication authentication) {
         try {
             /*

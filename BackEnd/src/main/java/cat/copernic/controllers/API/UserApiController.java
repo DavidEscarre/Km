@@ -22,11 +22,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -108,42 +110,7 @@ public class UserApiController {
         return response;
     }
     
-    @PostMapping("/create")
-    public ResponseEntity<String> createUser(@RequestBody User user) throws IOException {
-        
-        
-        
-        // Ruta de la imagen en el sistema de archivos
-        Path projectPath = Paths.get("").toAbsolutePath();
 
-        Path imagePath = projectPath.resolve("src/main/java/cat/copernic/mavenproject1/tux.jpg");
-        byte[] imageBytes = Files.readAllBytes(imagePath);
-
-        // Convertir a MultipartFile simulado
-        MultipartFile imageFile = new MockMultipartFile("imagen.jpg", imageBytes);
-        
-        try {
-            
-            if (user == null)
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            else
-            {
-                
-                if (userLogic.userIsUnique(user)){
-                    String userEmail = userLogic.createUser(user, imageFile);
-                    return new ResponseEntity<>(userEmail, HttpStatus.CREATED);
-                }else{
-                    return new ResponseEntity<>(HttpStatus.IM_USED);
-                }
-                
-            }
-    
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        
-    }
-    
     
     @DeleteMapping("/delete/{userEmail}")
     public ResponseEntity<Void> deleteUserByEmail(@PathVariable String userEmail){

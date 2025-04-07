@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.km.PuntGPSManagment.data.repositories.PuntGPSRepositoryImpl
 import com.example.km.RutaManagment.data.datasource.RutaApiRest
 import com.example.km.RutaManagment.data.datasource.RutaRetrofitInstance
 import com.example.km.RutaManagment.data.repositories.RutaRepositoryImpl
@@ -18,10 +19,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.Response
+import retrofit2.Response
+
 @RequiresApi(Build.VERSION_CODES.O)
 class RutaViewModel: ViewModel() {
 
+    private val puntGPSRepo = PuntGPSRepositoryImpl()
 
     private val rutaRepo = RutaRepositoryImpl()
 
@@ -31,15 +34,19 @@ class RutaViewModel: ViewModel() {
     private val _rutaIniciada = MutableStateFlow<Ruta?>(null)
     val rutaIniciada: StateFlow<Ruta?>  = _rutaIniciada
 
-   /* private val _puntsGPSRuta = MutableStateFlow<List<PuntGPS>>(emptyList())
-    val puntsGPSRuta: StateFlow<Ruta?> get() = _puntsGPSRuta*/
+   private val _puntsGPSRuta = MutableStateFlow<List<PuntGPS>>(emptyList())
+    val puntsGPSRuta: MutableStateFlow<List<PuntGPS>> get() = _puntsGPSRuta
 
 
-    fun findById(id: Long){
-       viewModelScope.launch {
+    fun findById(id: Long): Ruta?{
+        var res: Ruta? = null
+        viewModelScope.launch {
+
            try{
               val response = rutaRepo.getRutaById(id)
+               res= response.body()
                if(response.isSuccessful){
+                   Log.d("RutaById", "La ruta sa encontrao coñooo")
                    _rutaAct.value = response.body()
                }else{
                    Log.e("RutaById", "La ruta no sa pogut trobar")
@@ -49,8 +56,12 @@ class RutaViewModel: ViewModel() {
            }catch(e: Exception){
                _rutaAct.value = null
                e.printStackTrace()
+
+
            }
        }
+
+        return res
     }
 
     //fun iniciarRuta(ciclista: User, dataInici:String, dataFinal:String, puntsGPS: List<PuntGPS>,context: android.content.Context, onSuccess: () -> Unit, onError: (String) -> Unit) {
@@ -70,18 +81,21 @@ class RutaViewModel: ViewModel() {
 */
                 //val response = rutaRepo.createRuta(ciclistaJson,dataIniciBody, dataFinalBody, puntsJson)
                 val response = rutaRepo.createRuta(ruta)
-
+                response.body()?.let { findById(it) }
                 if (response.isSuccessful) {
-
+                  //  response.body()?.let { findById(it) }
                     Log.d("Ruta", "✅ Ruta iniciada")
                     onSuccess()
-                    findById(response.body()!!)
+
+                    _rutaAct.value = findById(response.body()!!)
                     _rutaIniciada.value = rutaAct.value
+                    Log.d("Rutasadadsdas", "✅ ${rutaAct.value} ")
                 } else {
-                    Log.e("Ruta", "❌ Error al iniciar la ruta")
+
                     val errorBody = response.errorBody()?.string()
+                    Log.e("Ruta", "❌ Error al iniciar la ruta ${response.code()} - ${errorBody.toString()}")
                     val errorMessage =
-                        "❌ ${response.code()} - $errorBody"
+                        "❌ ${response.code()} - ${errorBody.toString()}"
                     onError(errorMessage)
                     _rutaIniciada.value = null
                 }
@@ -92,15 +106,16 @@ class RutaViewModel: ViewModel() {
         }
 
     }
-    fun aturarRuta(ruta: Ruta,context: android.content.Context, onSuccess: () -> Unit, onError: (String) -> Unit) {
+    fun aturarRuta(ruta: Ruta, puntsGPSList: List<PuntGPS> ,context: android.content.Context, onSuccess: () -> Unit, onError: (String) -> Unit) {
 
         viewModelScope.launch {
             try {
-
+                //val locationList = puntsGPSRuta
+               // ruta.puntsGPS = locationList
                 val response = rutaRepo.updateRuta(ruta)
 
                 if (response.isSuccessful) {
-
+                    CrearPuntsGPSRuta(puntsGPSList)
                     Log.d("Ruta", "✅ Ruta aturada")
                     onSuccess()
                     _rutaIniciada.value = null
@@ -116,5 +131,29 @@ class RutaViewModel: ViewModel() {
                 e.printStackTrace()
             }
         }
+    }
+    fun CrearPuntsGPSRuta(puntsGPSList: List<PuntGPS>){
+        viewModelScope.launch {
+
+            puntsGPSList.forEach {
+                try{
+                    it.ruta = rutaAct.value
+                    Log.d("PuntGPS RUTA", "${rutaAct.value}, Punt = ${it.ruta.id}")
+                    val response = puntGPSRepo.createPuntGPS(it)
+                    if(response.isSuccessful){
+                        Log.d("PuntGPS RUTA", "PUNT CREAT: ${response.body()}")
+                    }else{
+                        Log.e("PuntGPS RUTA", "❌ Error al crear el puntGPS en rutaViewModel")
+                    }
+
+
+                }catch(_: Exception){
+                    Log.e("PuntGPS RUTA", "❌ Error al crear el puntGPS en rutaViewModel exception")
+                }
+
+            }
+        }
+
+
     }
 }

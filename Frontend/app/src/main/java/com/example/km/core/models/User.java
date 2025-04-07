@@ -35,10 +35,10 @@ public class User {
     private String word;
 
 
-    private byte[] foto;
+    private String foto;
 
 
-    private int telefon;
+    private String telefon;
 
 
     private String adreca;
@@ -51,7 +51,7 @@ public class User {
     public User() {
     }
 
-    public User(String email, String nom, String observacions, Rol rol, boolean estat, double saldoDisponible, LocalDateTime dataAlta, String word, byte[] foto, int telefon, String adreca, List<Ruta> rutes, List<Recompensa> recompenses) {
+    public User(String email, String nom, String observacions, Rol rol, boolean estat, double saldoDisponible, LocalDateTime dataAlta, String word, String foto, String telefon, String adreca, List<Ruta> rutes, List<Recompensa> recompenses) {
         this.email = email;
         this.nom = nom;
         this.observacions = observacions;
@@ -147,19 +147,19 @@ public class User {
         this.word = word;
     }
 
-    public byte[] getFoto() {
+    public String getFoto() {
         return foto;
     }
 
-    public void setFoto(byte[] foto) {
+    public void setFoto(String foto) {
         this.foto = foto;
     }
 
-    public int getTelefon() {
+    public String getTelefon() {
         return telefon;
     }
 
-    public void setTelefon(int telefon) {
+    public void setTelefon(String telefon) {
         this.telefon = telefon;
     }
 

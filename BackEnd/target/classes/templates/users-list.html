@@ -1,37 +1,61 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Users List</title>
+    <title>Usuarios</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/stylesList.css"> <!-- Enlaza el CSS externo -->
 </head>
 <body>
-    <main class="main-container">
-        <section class="table-container">
-            <h2>Llista d'Usuaris</h2>
+    <header class="header">
+        <h1>USUARIS</h1>
+        <nav>
+                <a href="/">
+                    <button class="nav-button " href="/">SISTEMA</button>
+                </a>
+                <a href="/rutes">
+                    <button class="nav-button" href="/rutes">RUTES</button>
+                </a>
+                <a href="/users">
+                    <button class="nav-button active" href="/users">USUARIS</button>
+                </a>
+                <a>
+                    <button class="nav-button" href="/">RECOMPENSES</button>
+                </a>  
+               
+                <a href="/logout" class="logout-container">
+                    <img  class="logout-icon" src="/images/logout.svg" alt="Cerrar sesión">
+                </a>
+      
+        </nav>
+    </header>
+    
+    <main class="container">
+        
+        <form th:action="@{/users/create}" method="get">
+            <button id="create-button" type="submit" class="create-button">Crear Usuari</button>
+        </form>
 
-            <table class="styled-table">
-                <thead>
-                    <tr>
-                        <th scope="col">Nom</th>
-                        <th scope="col">Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="user, rowStat : ${users}" class="expandable-row">
-                        <td th:text="${user.nom}" scope="row"></td>
-                        <td th:text="${user.email}"></td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <form th:action="@{/users/create}" method="get">
-                <button id="btn-users" type="submit" class="btn btn-danger" style="display: inline;">Crear Usuari</button>
-            </form>
-
-            <!-- Botón para ir atrás -->
-            <a href="/" class="btn btn-secondary" style="margin-top: 10px;">Volver al Inicio</a>
+        
+        <section class="user-list">
+            <div class="user-card" th:each="user : ${users}">
+                
+                 <div class="user-img">
+                    <img th:src="|data:image/jpeg;base64,${userImages[user.email]}|"/>
+                 </div>
+                <div class="user-info">
+                    <h3 class="user-name" th:text="${user.nom}"></h3>
+                    <p class="user-email" th:text="${user.email}"></p>
+                    <p><strong>Estat:</strong> <span class="status active">Actiu</span></p>
+                    <p><strong>Rol:</strong> <span th:text="${user.rol}"></span></p>
+                </div>
+                <div class="user-actions">
+                    <button class="edit-button">Editar</button>
+                    <button class="delete-button">Eliminar</button>
+                </div>
+            </div>
         </section>
     </main>
+        <script src="/scripts/main.js"></script>
 </body>
 </html>

@@ -17,7 +17,7 @@ interface RutaApiRest {
     suspend fun findAll(): Response<List<Ruta>>
 
     @GET("byId/{rutaId}")
-    suspend fun getRutaById(@Path("rutaId") rutaId: Long): Response<Ruta>
+    suspend fun getRutaById(@Path("rutaId") rutaId: Long): Response<Ruta?>
 
    @POST("create")
    suspend fun createRuta(@Body ruta: Ruta): Response<Long>
@@ -32,7 +32,7 @@ interface RutaApiRest {
     ): Response<Long>*/
 
     @POST("update")
-    suspend fun updateRuta(@Body ruta: Ruta): Response<Long>
+    suspend fun updateRuta(@Body ruta: Ruta): Response<Long?>
 }
 
 

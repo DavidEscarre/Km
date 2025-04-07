@@ -50,19 +50,19 @@ public class AuthApiController {
         if(res.equals("NOTFOUND")){
             logger.error("usuari no trobat ");
            // return ResponseEntity.status(401).body("Usuari no trobat");
-           return ResponseEntity.status(401).body(null);
+           return ResponseEntity.status(404).body(null); // 404 de not found
         }
         else if (res.equals("INCORRECT")) {
             logger.info("credencials incorrectes ");
             //return ResponseEntity.status(401).body("Credencials incorrectes");
-            return ResponseEntity.status(401).body(null);
+            return ResponseEntity.status(401).body(null); // 403 de unauthorithed o algo asi
         }
         else if(res.equals("INACTIVE")){
             logger.info("usuari no actiu");
            // return ResponseEntity.badRequest().body("Usuari no activat");
-           return ResponseEntity.badRequest().body(null);
+           return ResponseEntity.status(403).body(null); // 403 de forbiden
         }else{
-             user = userRepo.findById(res).orElse(null);
+             user = userLogic.getUser(res);
              if(user != null){
                     logger.info("usuari trobat i credencials correctes, autenticat");
                   return ResponseEntity.ok(user); 

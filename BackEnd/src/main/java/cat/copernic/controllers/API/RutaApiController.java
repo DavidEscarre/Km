@@ -154,10 +154,10 @@ public class RutaApiController {
     }
     
     @PostMapping("/update")
-    public ResponseEntity<Void> updateRuta(@RequestBody Ruta ruta) {
+    public ResponseEntity<Long> updateRuta(@RequestBody Ruta ruta) {
         try {
             if (ruta == null || ruta.getId() == null) {
-                return ResponseEntity.badRequest().build();
+                return ResponseEntity.badRequest().body(null);
             }
 
             Ruta OldRuta = rutaLogic.getRuta(ruta.getId());
@@ -167,7 +167,7 @@ public class RutaApiController {
 
             Long rutaId = rutaLogic.updateRuta(ruta);
             if(rutaId != null){
-                 return ResponseEntity.ok().build();
+                 return ResponseEntity.ok().body(ruta.getId());
             }else{
                  return ResponseEntity.notFound().build();
             }

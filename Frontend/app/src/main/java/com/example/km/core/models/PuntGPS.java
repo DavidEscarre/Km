@@ -27,6 +27,11 @@ public class PuntGPS {
         this.longitud = longitud;
         this.marcaTemps = marcaTemps;
     }
+    public PuntGPS(long latitud, long longitud, LocalDateTime marcaTemps) {
+        this.latitud = latitud;
+        this.longitud = longitud;
+        this.marcaTemps = marcaTemps;
+    }
 
     public PuntGPS(Long id, Ruta ruta, long latitud, long longitud, LocalDateTime marcaTemps) {
         this.id = id;

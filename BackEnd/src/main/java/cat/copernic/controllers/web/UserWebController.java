@@ -8,6 +8,10 @@ import cat.copernic.Entity.User;
 import cat.copernic.enums.Rol;
 import cat.copernic.logica.UserLogic;
 import java.time.LocalDateTime;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -39,14 +43,26 @@ public class UserWebController {
      * @return La vista con la lista de todos los usuarios.
      */
     
-    @GetMapping("/all")
+    @GetMapping
     public String ListAllUsers(Model model, Authentication authentication) {
         try {
+           List<User> users = userLogic.findAllUsers();
+           Map<String, String> userImages = new HashMap<>();
+            
+            for (User user : users) {
+                byte[] imageData = user.getFoto();
+                if (imageData != null) {
+                    String base64Image = Base64.getEncoder().encodeToString(imageData);
+                    userImages.put(user.getEmail(), base64Image);
+                }
+            }
+            
             /*
             boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
             model.addAttribute("isAuthenticated", isAuthenticated);
            */
-            model.addAttribute("users", userLogic.findAllUsers());
+            model.addAttribute("userImages",userImages);
+            model.addAttribute("users", users);
             return "users-list"; // Página que muestra la lista de clientes
         } catch (Exception e) {
             // Registra el error para depuración
@@ -65,22 +81,34 @@ public class UserWebController {
 
         }
     @PostMapping("/create")
-    public String createUsers(@ModelAttribute User user, Model model, Authentication authentication) {
+    public String createUsers(@ModelAttribute User user, @RequestParam("image") MultipartFile imageFile ,Model model, Authentication authentication) {
         try {
-           
-         // Instanciar el codificador de contraseñas BCrypt
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            // Encriptar la contraseña
-            String encryptedPassword = passwordEncoder.encode(user.getPassword());
-            user.setWord(encryptedPassword);
-            user.setRol(Rol.CICLISTA);
-            user.setDataAlta(LocalDateTime.now());
-            user.setSaldoDisponible(0.00);
-            userLogic.createUser(user,null);
-            return "redirect:/users/all";
+           if (user == null || imageFile.isEmpty()) {
+                model.addAttribute("errorMessage", "Camps incorrectes");
+                return "redirect:/users/create";
+            }
+            if (userLogic.userIsUnique(user)) {
+                    // Instanciar el codificador de contraseñas BCrypt
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                // Encriptar la contraseña
+                String encryptedPassword = passwordEncoder.encode(user.getPassword());
+                user.setWord(encryptedPassword);
+                user.setRol(Rol.CICLISTA);
+                user.setDataAlta(LocalDateTime.now());
+                user.setSaldoDisponible(0.00);
+                userLogic.createUser(user,imageFile);
+                
+                return "redirect:/users";
+            } else {
+                model.addAttribute("errorMessage", "Usuari ya existent");
+                return "redirect:/users/create";
+            }
         }catch(Exception e){
             return "create-user";
         }
             
         }
+    
+
+    
 }
