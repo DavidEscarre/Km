@@ -13,6 +13,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -23,9 +24,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.km.PuntGPSManagment.ui.viewmodels.PuntGPSViewModel
 import com.example.km.R
+import com.example.km.RecompensaManagment.ui.screeens.RecompensesScreen
 import com.example.km.RutaManagment.ui.screens.RutesScreen
 import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
 import com.example.km.UserManagment.ui.screens.LoginScreen
+import com.example.km.UserManagment.ui.screens.ProfileScreen
 import com.example.km.UserManagment.ui.viewmodels.LoginViewModel
 import com.example.km.core.models.User
 import com.example.km.main.screens.MainScreen
@@ -35,6 +38,7 @@ import com.example.km.main.screens.MainScreen
 @Composable
 fun AppNavigation(puntGPSViewModel: PuntGPSViewModel, rutaViewModel: RutaViewModel, navController: NavController, loginViewModel: LoginViewModel, userState: State<User?>) {
     val navController = rememberNavController()
+    val context = LocalContext.current
    // val rutaViewModel: RutaViewModel = viewModel()
     //val puntGPSViewModel: PuntGPSViewModel = viewModel()
     NavHost(navController = navController, startDestination = "login") {
@@ -45,7 +49,12 @@ fun AppNavigation(puntGPSViewModel: PuntGPSViewModel, rutaViewModel: RutaViewMod
         composable("home") { MainScreen(rutaViewModel, puntGPSViewModel, navController, userState) }
 
         composable("rutes") { RutesScreen(rutaViewModel, puntGPSViewModel, navController, userState) }
-/*
+        composable("recompenses") { RecompensesScreen(navController, userState) }
+        composable("profile") { ProfileScreen(context, loginViewModel, navController, userState) }
+
+
+
+        /*
         composable("categories") { CategoriesScreen(navController) }
         composable("items") { ItemsScreen(navController) }
         composable("profile") { UserProfileScreen(navController) }
