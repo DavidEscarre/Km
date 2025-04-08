@@ -126,8 +126,10 @@ class LoginViewModel: ViewModel()  {
     fun logOut(context: android.content.Context, navController: androidx.navigation.NavController){
 
         viewModelScope.launch {
+
             _userState.value = null
             navController.navigate("login")
         }
+
     }
 }
