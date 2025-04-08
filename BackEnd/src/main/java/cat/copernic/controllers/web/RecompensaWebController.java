@@ -4,13 +4,97 @@
  */
 package cat.copernic.controllers.web;
 
+import cat.copernic.Entity.Recompensa;
+import cat.copernic.logica.RecompensaLogic;
+import java.time.LocalDateTime;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
  * @author alpep
  */
 @Controller
+@RequestMapping("/recompenses")
 public class RecompensaWebController {
+    
+    @Autowired
+    private RecompensaLogic recompensaLogic;  // Servicio para gestionar los clientes
+
+    /**
+     * Muestra la lista de todos las recompensas en el sistema.
+     *
+     * @param model El modelo para pasar la lista de usuarios a la vista.
+     * @param authentication
+     * @return La vista con la lista de todos las recompensas
+     * 
+     */ 
+    
+    @GetMapping
+    public String ListAllRecompenses(Model model, Authentication authentication) {
+        try {
+           List<Recompensa> recompenses = recompensaLogic.findAllRecompenses();
+
+      
+            model.addAttribute("recompenses", recompenses);
+            return "recompenses-list"; // Página que muestra la lista de clientes
+        } catch (Exception e) {
+            // Registra el error para depuración
+            e.printStackTrace();
+            if(authentication != null){
+            model.addAttribute("authorities", authentication.getAuthorities());
+            }
+            model.addAttribute("errorMessage", "Ha ocurrido un error al cargar la lista de clientes.");
+            return "error-page";  // Página personalizada de error
+        }
+    }
+    /*
+    @GetMapping("/create")
+    public String createUsers(Model model, Authentication authentication) {
+          model.addAttribute("user", new User()); // Asegurar que el objeto está en el modelo
+        return "create-user";
+
+        }
+    @PostMapping("/create")
+    public String createUsers(@ModelAttribute User user, @RequestParam("image") MultipartFile imageFile ,Model model, Authentication authentication) {
+        try {
+           if (user == null || imageFile.isEmpty()) {
+                model.addAttribute("errorMessage", "Camps incorrectes");
+                return "redirect:/users/create";
+            }
+            if (userLogic.userIsUnique(user)) {
+                    // Instanciar el codificador de contraseñas BCrypt
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                // Encriptar la contraseña
+                String encryptedPassword = passwordEncoder.encode(user.getPassword());
+                user.setWord(encryptedPassword);
+                user.setRol(Rol.CICLISTA);
+                user.setDataAlta(LocalDateTime.now());
+                user.setSaldoDisponible(0.00);
+                userLogic.createUser(user,imageFile);
+                
+                return "redirect:/users";
+            } else {
+                model.addAttribute("errorMessage", "Usuari ya existent");
+                return "redirect:/users/create";
+            }
+        }catch(Exception e){
+            return "create-user";
+        }
+            
+        }*/
     
 }
