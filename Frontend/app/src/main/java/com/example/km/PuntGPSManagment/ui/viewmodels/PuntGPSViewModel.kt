@@ -1,6 +1,7 @@
 package com.example.km.PuntGPSManagment.ui.viewmodels
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.pm.PackageManager
 import android.os.Build
@@ -9,6 +10,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,6 +28,7 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -33,8 +36,19 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 class PuntGPSViewModel(application: Application) : AndroidViewModel(application) {
 
-    val rutaViewModel: RutaViewModel = RutaViewModel()
-    var rutaIniciada = rutaViewModel.rutaIniciada
+
+
+   /* private val _rutaAct: MutableStateFlow<Ruta?> = MutableStateFlow(null)
+    val rutaAct: StateFlow<Ruta?> = _rutaAct
+
+    init {
+        viewModelScope.launch {
+            rutaViewModel.rutaAct.collect { valor ->
+                _rutaAct.value = valor  // <-- aquí lo sincronizas
+            }
+        }
+    }
+*/
 
     private val puntGPSRepo = PuntGPSRepositoryImpl()
 
@@ -53,31 +67,35 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
 
 
     private val locationCallback = object : LocationCallback() {
+        @SuppressLint("SuspiciousIndentation")
         @RequiresApi(Build.VERSION_CODES.O)
         override fun onLocationResult(locationResult: LocationResult) {
             locationResult.lastLocation?.let { location ->
-                if(rutaIniciada.value != null){
+
+
                     _locationList.value = _locationList.value + (LatLng(location.latitude, location.longitude))
-
+                    Log.d("crear pgps", "creaadpolocssssssssssssssssssssssssssssssssoooooo")
                     val dataMarcaTemps = LocalDateTime.now()
-                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-                    val formattedDate = dataMarcaTemps.format(formatter)
 
-                    create(
-                        PuntGPS(rutaIniciada.value, location.latitude.toLong(), location.longitude.toLong(), dataMarcaTemps),
+                    val puntGPSCreat = PuntGPS(location.latitude.toLong(), location.longitude.toLong(),dataMarcaTemps)
+                    _puntGPSRutaList.value = _puntGPSRutaList.value + (puntGPSCreat)
+                   /* create(
+                        PuntGPS(rutaAct.value, location.latitude.toLong(), location.longitude.toLong(),dataMarcaTemps ),
 
                             onSuccess = { response ->
                             val puntGPSCreat = findById(response,onSuccess = {}, onError = {})
                                 if(puntGPSCreat!=null){
+                                    Log.d("crear pgps", "creaadpolocoooooo")
                                     _puntGPSRutaList.value = _puntGPSRutaList.value + (puntGPSCreat)
                                 }
+                                Log.d("crear pgps", "creaadpo")
                             },
                             onError = { errorMessage ->
+                                Log.e("Error puntgps al crear", errorMessage)
+                            })*/
 
-                            })
 
 
-                }
 
             }
         }
@@ -100,8 +118,12 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
     fun stopLocationUpdates() {
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
+    fun vuidarllistaPuntsGPS() {
+        _locationList.value = emptyList()
+        _puntGPSRutaList.value = emptyList()
+    }
 
-    fun create(puntGPS: PuntGPS, onSuccess: (Long) -> Unit, onError: (String) -> Unit ){
+    fun create(puntGPS: PuntGPS, onSuccess: (Long?) -> Unit, onError: (String) -> Unit ){
         viewModelScope.launch {
             try {
 
@@ -110,7 +132,8 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
                 if (response.isSuccessful) {
 
                     Log.d("PuntGPS", "✅ Punt GPS creat")
-                    onSuccess(response.body()!!)
+                    val puntId =response.body()
+                    onSuccess(puntId)
 
                 } else {
                     Log.e("PuntGPS", "❌ Error al crear el punt GPS")
@@ -125,6 +148,9 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
             }
 
         }
+
+    }
+    fun fetchAllByRuteId(){
 
     }
 

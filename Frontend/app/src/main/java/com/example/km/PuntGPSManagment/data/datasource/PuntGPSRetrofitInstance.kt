@@ -2,6 +2,7 @@ package com.example.km.PuntGPSManagment.data.datasource
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.example.km.RutaManagment.data.datasource.RutaRetrofitInstance
 import com.example.km.core.utils.LocalDateTimeAdapter
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -24,5 +25,10 @@ object PuntGPSRetrofitInstance {
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))  // Convierte JSON a objetos Kotlin
             .build()
+    }
+
+
+    fun <T> create(service: Class<T>): T {
+        return PuntGPSRetrofitInstance.retrofitInstance.create(service)
     }
 }

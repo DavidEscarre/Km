@@ -18,6 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.km.PuntGPSManagment.ui.viewmodels.PuntGPSViewModel
+import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
 import com.example.km.UserManagment.ui.viewmodels.LoginViewModel
 import com.example.km.core.models.User
 import com.example.km.main.screens.MainScreen
@@ -38,10 +40,11 @@ class MainActivity : ComponentActivity(), OnMapsSdkInitializedCallback {
 
                 val navController: NavHostController = rememberNavController()
                 val loginViewModel: LoginViewModel = viewModel()
-
+                val puntGPSViewModel: PuntGPSViewModel = viewModel()
+                val rutaViewModel: RutaViewModel = viewModel()
                 // Aquí guardamos el usuario autenticado
                 val userState = loginViewModel.userState.collectAsState()
-                AppNavigation(navController, loginViewModel, userState)
+                AppNavigation(puntGPSViewModel, rutaViewModel, navController, loginViewModel, userState)
             }
         }
         /*setContent {

@@ -18,6 +18,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,8 +69,9 @@ public class User implements UserDetails{
     @Column(nullable = true, columnDefinition = "LONGBLOB")
     private byte[] foto;
     
+    @Pattern(regexp = "\\d{9}")
     @Column(nullable = true, length = 9)
-    private int telefon;
+    private String telefon;
     
     @Column(nullable = true)
     private String adreca;
@@ -89,7 +91,7 @@ public class User implements UserDetails{
     }
 
     public User(String email, String nom, String observacions, Rol rol, boolean estat, double saldoDisponible,
-            LocalDateTime dataAlta, String word, byte[] foto, int telefon, String adreca, List<Recompensa> recompensas, List<Ruta> rutes) {
+            LocalDateTime dataAlta, String word, byte[] foto, String telefon, String adreca, List<Recompensa> recompensas, List<Ruta> rutes) {
         this.email = email;
         this.nom = nom;
         this.observacions = observacions;
@@ -195,11 +197,11 @@ public class User implements UserDetails{
         this.foto = foto;
     }
 
-    public int getTelefon() {
+    public String getTelefon() {
         return telefon;
     }
 
-    public void setTelefon(int telefon) {
+    public void setTelefon(String telefon) {
         this.telefon = telefon;
     }
 

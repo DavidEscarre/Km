@@ -2,12 +2,14 @@ package com.example.km.UserManagment.ui.screens
 
 import android.content.Context
 import android.graphics.drawable.Icon
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Size
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -93,7 +95,7 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-@OptIn(ExperimentalMaterial3Api::class)
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel,  userState: State<User?>) {
 
@@ -381,6 +383,7 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel,  u
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun onLogin(loginViewModel: LoginViewModel, context: Context, navController: NavController, coroutineScope: CoroutineScope) {
     coroutineScope.launch {
         loginViewModel.loginUser(context, navController,
@@ -396,6 +399,7 @@ fun onLogin(loginViewModel: LoginViewModel, context: Context, navController: Nav
             },
 
             onError = { errorMessage ->
+
             })
     }
 }

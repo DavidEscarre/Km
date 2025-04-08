@@ -11,10 +11,10 @@ import retrofit2.http.Path
 interface RutaRepository {
     suspend fun findAll(): Response<List<Ruta>>
 
-    suspend fun getRutaById(rutaId: Long): Response<Ruta>
+    suspend fun getRutaById(rutaId: Long): Response<Ruta?>
 
     //suspend fun createRuta(ciclista: RequestBody, dataInici: RequestBody, dataFinal: RequestBody, puntsGPS: RequestBody): Response<Long>
     suspend fun createRuta(ruta: Ruta): Response<Long>
 
-    suspend fun updateRuta(ruta: Ruta): Response<Long>
+    suspend fun updateRuta(ruta: Ruta): Response<Long?>
 }

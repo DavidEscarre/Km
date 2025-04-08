@@ -16,6 +16,7 @@ import com.example.km.core.models.Ruta
 import com.example.km.core.models.User
 import okhttp3.RequestBody
 import retrofit2.Response
+import retrofit2.create
 import retrofit2.http.Part
 @RequiresApi(Build.VERSION_CODES.O)
 class RutaRepositoryImpl: RutaRepository {
@@ -23,12 +24,14 @@ class RutaRepositoryImpl: RutaRepository {
 
     val rutaApiRest: RutaApiRest =  RutaRetrofitInstance.retrofitInstance.create(RutaApiRest::class.java)
 
+    //val rutaApiRest = RutaRetrofitInstance.retrofitInstance.create()
+
     override suspend fun findAll(): Response<List<Ruta>> {
         val response = rutaApiRest.findAll()
         return response
     }
 
-    override suspend fun getRutaById(rutaId: Long): Response<Ruta> {
+    override suspend fun getRutaById(rutaId: Long): Response<Ruta?> {
         return  rutaApiRest.getRutaById(rutaId)
        // return response
     }
@@ -43,7 +46,7 @@ class RutaRepositoryImpl: RutaRepository {
 
    }
 
-    override suspend fun updateRuta(ruta: Ruta): Response<Long> {
+    override suspend fun updateRuta(ruta: Ruta): Response<Long?> {
         val response = rutaApiRest.updateRuta(ruta)
         return response
     }

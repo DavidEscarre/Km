@@ -1,6 +1,9 @@
 package com.example.km.UserManagment.ui.viewmodels
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,12 +12,14 @@ import com.example.km.UserManagment.data.repositories.LoginRepositoryImpl
 import com.example.km.core.models.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-
+@RequiresApi(Build.VERSION_CODES.O)
 class LoginViewModel: ViewModel()  {
 
 
     private val AuthRepo = LoginRepositoryImpl()
+
 
     private val _userState = MutableStateFlow<User?>(null)
     val userState: StateFlow<User?> get() = _userState
@@ -66,30 +71,51 @@ class LoginViewModel: ViewModel()  {
         return isValid
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun loginUser(context: android.content.Context, navController: androidx.navigation.NavController
-    ,  onSuccess: () -> Unit, onError: (String) -> Unit) {
+                  , onSuccess: () -> Unit, onError: (String) -> Unit) {
         if (!validateFields()) return
 
         viewModelScope.launch {
             try {
 
+
                 val response = AuthRepo.loginUser(email.value, word.value)
 
                 if (response.isSuccessful) {
-                    _userState.value = response.body()
-                    Log.d("Login", "✅ login correcte")
-                    onSuccess()
+                    if(response.body() != null){
+                       // response.body().foto = response.body().foto
+                        _userState.value = response.body()
 
-                    _loginError.value = null
+                        Log.d("Login", "✅ login correcte")
+                        onSuccess()
+
+                        _loginError.value = null
+                    }else{
+                        Log.d("Login", "✅ Response Body Vuit pero Successful")
+                    }
+
                 } else {
                     _userState.value = null
-                    Log.e("Login", "❌ Error en el Login ")
+                    Log.e("Login", "❌ Error en el Login, Codi: ${response.code()}")
+
+                    if(response.code() == 404){
+                        _loginError.value = "Usuari no trobat."
+                        _emailError.value = "Aquest correu no pertany a cap usuari."
+                    }else if(response.code() == 401){
+                        _loginError.value = "Credencials incorrectes."
+                    }else if(response.code() == 403){
+                        _loginError.value = "Usuari no actiu."
+                        _emailError.value = "Aquest correu pertany a un usuari inactiu."
+
+                    }
+
                     val errorBody = response.errorBody()?.string()
                     val errorMessage =
                         "$errorBody"
                    // _loginError.value = errorBody
                     onError(errorMessage)
-                    _loginError.value = errorMessage
+
                 }
             }catch(e: Exception){
                 _userState.value = null

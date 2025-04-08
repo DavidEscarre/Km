@@ -1,0 +1,216 @@
+ /* ==== RESETEO BÁSICO ==== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: sans-serif;
+    }
+
+    body {
+      background-color: #fff;
+      color: #333;
+    }
+
+    /* ==== CABECERA Y NAVEGACIÓN ==== */
+    header {
+      background-color: #2b2b2b;
+      color: #fff;
+      padding: 1rem;
+    }
+    header h1 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    nav {
+      display: flex;
+      gap: 1rem;
+    }
+    .nav-button {
+      background-color: #444;
+      border: none;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      border-radius: 4px;
+    }
+    .nav-button:hover {
+      background-color: #666;
+    }
+    .nav-button.active {
+      background-color: #f9c00c; /* Color resaltado para la sección activa */
+      color: #000;
+    }
+    
+      .logout-container {
+        position: absolute;  /* Posiciona el icono */
+        top: 50px; /* Ajusta la distancia desde arriba */
+        right: 10px; /* Lo alinea a la derecha */
+    }
+     .logout-icon {
+        width: 32px;
+        height: 32px;
+        filter: drop-shadow(0 0 2px white); /* Simula grosor extra */
+        filter: invert(1); /*Convierte el color del SVG a blanco */
+        cursor: pointer; /* Cambia el cursor para indicar que es clickeable */
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .logout-icon:hover {
+        transform: scale(1.1); /* Efecto de zoom al pasar el mouse */
+    }
+    /* ==== CONTENEDOR PRINCIPAL ==== */
+    .container {
+      max-width: 1200px;
+      margin: 1rem auto;
+      padding: 0 1rem;
+    }
+
+    /* ==== BOTÓN CREAR ==== */
+    .create-button {
+      display: block;
+      margin: 1rem auto;
+      background-color: #222;
+      color: #fff;
+      padding: 0.7rem 2rem;
+      border: none;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .create-button:hover {
+      background-color: #333;
+    }
+     /* ==== LISTA DE RUTAS(TARJETAS) ==== */
+    .ruta-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .ruta-card {
+      display: flex;
+      align-items: center;
+      background-color: #f3f3f3;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      gap: 1rem;
+    }
+    .ruta-info {
+      flex: 1; /* Para ocupar el espacio disponible */
+    }
+    .ruta-ciclista {
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
+    }
+    .ruta-distancia {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+    .status {
+      background-color: #a8f0b0; /* Verde claro */
+      color: #006b0b;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-weight: bold;
+      margin-left: 0.3rem;
+    }
+
+    /* ==== BOTONES EDITAR / ELIMINAR ==== */
+    .ruta-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    /* ==== LISTA DE USUARIOS (TARJETAS) ==== */
+    .user-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .user-card {
+      display: flex;
+      align-items: center;
+      background-color: #f3f3f3;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      gap: 1rem;
+    }
+
+    /* ==== IMAGEN DE USUARIO ==== */
+      .user-img img{
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background-color: #f0f0f0;
+        background-image: url('/static/images/placeholder.png');
+        background-size: cover;
+        background-position: center;
+        border: 2px dashed #ccc;
+      }
+    .user-img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background-color: #f0f0f0;
+        background-image: url('/static/images/placeholder.png'); 
+        background-size: cover;
+        background-position: center;
+        border: 2px dashed #ccc;
+    }
+
+    /* ==== INFORMACIÓN DEL USUARIO ==== */
+    .user-info {
+      flex: 1; /* Para ocupar el espacio disponible */
+    }
+    .user-name {
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
+    }
+    .user-email {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+    .status {
+      background-color: #a8f0b0; /* Verde claro */
+      color: #006b0b;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-weight: bold;
+      margin-left: 0.3rem;
+    }
+
+    /* ==== BOTONES EDITAR / ELIMINAR ==== */
+    .user-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .edit-button,
+    .delete-button {
+      padding: 0.4rem 1rem;
+      border: none;
+      cursor: pointer;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+    .edit-button {
+      background-color: #81c2ff; /* Azul claro */
+      color: #fff;
+    }
+    .edit-button:hover {
+      background-color: #57abf2;
+    }
+    .delete-button {
+      background-color: #ffb3b3; /* Rojo clarito */
+      color: #fff;
+    }
+    .delete-button:hover {
+      background-color: #ff8f8f;
+    }

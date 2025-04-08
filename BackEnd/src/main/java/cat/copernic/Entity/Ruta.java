@@ -69,6 +69,9 @@ public class Ruta {
     
     public Ruta() {
     }
+    public Ruta(Long id) {
+        this.id = id;
+    }
 
     public Ruta(User ciclista, LocalDateTime dataInici) {
         this.ciclista = ciclista;

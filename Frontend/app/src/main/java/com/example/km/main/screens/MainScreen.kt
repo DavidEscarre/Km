@@ -24,12 +24,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -49,9 +51,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.km.GoogleMapsMap.GoogleMapScreen
 import com.example.km.PuntGPSManagment.ui.viewmodels.PuntGPSViewModel
+//import com.example.km.PuntGPSManagment.ui.viewmodels.ViewModelsFactories.PuntGPSViewModelFactory
 import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
+import com.example.km.core.models.PuntGPS
 import com.example.km.core.models.Ruta
 import com.example.km.core.models.User
+import com.example.km.navigation.BottomNavigationBar
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
@@ -61,80 +66,110 @@ import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MainScreen(rutaViewModel: RutaViewModel, navController: NavController,   userState: State<User?>) {
+fun MainScreen(rutaViewModel: RutaViewModel,puntGPSViewModel: PuntGPSViewModel, navController: NavController,   userState: State<User?>) {
     val context = LocalContext.current
     var rutaActiva by remember { mutableStateOf(false) }
-    val puntsGPSViewModel: PuntGPSViewModel = viewModel(factory = object : ViewModelProvider.Factory {
+    var activadorRuta by remember { mutableStateOf(true) }
+   /* val puntGPSViewModel: PuntGPSViewModel = viewModel(
+        factory = PuntGPSViewModelFactory(rutaViewModel, context.applicationContext as Application)
+    )*/
+   /* val puntsGPSViewModel: PuntGPSViewModel = viewModel(factory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return PuntGPSViewModel(context.applicationContext as Application) as T
         }
-    })
-    val locationList by puntsGPSViewModel.locationList.collectAsState()
+    })*/
+    val locationList by puntGPSViewModel.locationList.collectAsState()
     val scrollState = rememberScrollState()
 
+    Scaffold(
+        bottomBar = { BottomNavigationBar(navController) }
+    ) { paddingValues ->
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .verticalScroll(scrollState)  // Habilita el scroll
-    ) {
-        Box(
+        Column(
             modifier = Modifier
-                .border(2.dp, Color.Black, RectangleShape)
-                .fillMaxWidth()  // Asegura que no se desborde
-                .height(600.dp)  // Altura razonable para el mapa
+                .fillMaxSize()
+                .background(Color.White)
+                .verticalScroll(scrollState)// Habilita el scroll
+                .padding(paddingValues)
         ) {
-            var hasPermission by remember { mutableStateOf(false) }
-
-            if (!hasPermission) {
-                RequestLocationPermission { hasPermission = true }
-            }
-
-            if (hasPermission) {
-                GoogleMapScreen()
-            }
-        }
-
-        Spacer(modifier = Modifier.height(21.dp))
-
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Button(onClick = {
-                    rutaActiva = !rutaActiva
-
-
-                }) {
-                    Text(if (rutaActiva) "Aturar Ruta" else "Començar Ruta")
-                }
-            }
-
-            Column(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)  // Espaciado para mejorar la apariencia
+                    .border(2.dp, Color.Black, RectangleShape)
+                    .fillMaxWidth()  // Asegura que no se desborde
+                    .height(600.dp)  // Altura razonable para el mapa
             ) {
-                locationList.forEach { elemento ->
-                    Text(
-                        text = elemento.toString(),
-                        fontSize = 18.sp,
-                        modifier = Modifier.padding(8.dp)
-                    )
+                var hasPermission by remember { mutableStateOf(false) }
+
+                if (!hasPermission) {
+                    RequestLocationPermission { hasPermission = true }
+                }
+
+                if (hasPermission) {
+                    GoogleMapScreen()
                 }
             }
-        }
-    }
-    if(rutaActiva){
 
-        IniciarRuta(rutaViewModel, puntsGPSViewModel, context, userState )
-    }else{
-        AturarRuta(rutaViewModel, puntsGPSViewModel, context, userState )
+            Spacer(modifier = Modifier.height(21.dp))
+
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Button(onClick = {
+                        rutaActiva = !rutaActiva
+
+                        activadorRuta = true
+
+                    }) {
+                        Text(if (rutaActiva) "Aturar Ruta" else "Començar Ruta")
+                    }
+                    Spacer(Modifier.height(28.dp))
+
+                    Button(
+                        onClick = {
+
+                        },
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFAA00)),
+                        shape = RoundedCornerShape(10.dp)
+
+                    ) {
+                        Text("Crear Exemple", color = Color.White, fontSize = 18.sp)
+                    }
+
+                }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)  // Espaciado para mejorar la apariencia
+                ) {
+                    locationList.forEach { elemento ->
+                        Text(
+                            text = elemento.toString(),
+                            fontSize = 18.sp,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+                }
+            }
+
+        }
+
+        if (rutaActiva && activadorRuta) {
+
+            IniciarRuta(rutaViewModel, puntGPSViewModel, context, userState)
+            activadorRuta = false
+        } else if (!rutaActiva && activadorRuta) {
+            AturarRuta(rutaViewModel, puntGPSViewModel, context, userState)
+            activadorRuta = false
+        }
     }
 
 }
+
+
 
 @Composable
 fun RequestLocationPermission(
@@ -169,14 +204,15 @@ fun getCurrentLocation(context: Context, onLocationReceived: (LatLng) -> Unit) {
 
 
 
-@SuppressLint("CoroutineCreationDuringComposition")
+
+@SuppressLint("CoroutineCreationDuringComposition", "SuspiciousIndentation")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun IniciarRuta(rutaViewModel: RutaViewModel, puntsGPSViewModel: PuntGPSViewModel, context: Context,  userState: State<User?>){
 
     val coroutineScope = rememberCoroutineScope()
     val dataInici = LocalDateTime.now()
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss         yyyy-MM-dd HH:mm:ss")
     val formattedDate = dataInici.format(formatter)
     val rutaIniciada by rutaViewModel.rutaIniciada.collectAsState()
     Log.d("USER_STATE1", "✅ USUARI ${userState}" )
@@ -184,7 +220,7 @@ fun IniciarRuta(rutaViewModel: RutaViewModel, puntsGPSViewModel: PuntGPSViewMode
     Log.d("USER_STATE2", "✅ USUARI ${ciclista}" )
     if(rutaIniciada == null){
 
-      val ruta = Ruta(ciclista, dataInici, dataInici)
+     val ruta = Ruta(ciclista, dataInici)
         //Log.d("ruta", "✅ ruta ${ruta.toString()}" )
         coroutineScope.launch {
             Log.d("INICIANDO RUTA AAAAAAA", "✅ USUARI ${ciclista}" )
@@ -207,7 +243,7 @@ fun IniciarRuta(rutaViewModel: RutaViewModel, puntsGPSViewModel: PuntGPSViewMode
                         Toast.makeText(
                             context,
                             errorMessage,
-                            Toast.LENGTH_SHORT
+                            Toast.LENGTH_LONG
                         ).show()
                     }
                 })
@@ -220,19 +256,22 @@ fun IniciarRuta(rutaViewModel: RutaViewModel, puntsGPSViewModel: PuntGPSViewMode
 }
 
 
+
+
 @SuppressLint("CoroutineCreationDuringComposition")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AturarRuta(rutaViewModel: RutaViewModel, puntsGPSViewModel: PuntGPSViewModel, context: Context,  userState: State<User?>) {
 
     puntsGPSViewModel.stopLocationUpdates()
+    val puntsGPSlist = puntsGPSViewModel.puntGPSRutaList.collectAsState().value
     val dataFinal = LocalDateTime.now()
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     val formattedDate = dataFinal.format(formatter)
     val coroutineScope = rememberCoroutineScope()
     val puntGPSRutaList by puntsGPSViewModel.puntGPSRutaList.collectAsState()
     val rutaIniciada = rutaViewModel.rutaIniciada.collectAsState().value
-
+    val rutaActual = rutaViewModel.rutaAct.collectAsState().value
     val ciclista: User? = userState.value
 
     if (ciclista == null) {
@@ -240,26 +279,30 @@ fun AturarRuta(rutaViewModel: RutaViewModel, puntsGPSViewModel: PuntGPSViewModel
         return
     }
 
-    if (rutaIniciada == null) {
-        Toast.makeText(context, "Error: Ruta no iniciada", Toast.LENGTH_SHORT).show()
-        return
+    if (rutaActual != null) {
+       // var puntsGPSRutaList: List<PuntGPS> = emptyList()
+
+
+        val ruta = Ruta(rutaActual.id, ciclista, rutaActual.dataInici, dataFinal)
+
+        coroutineScope.launch {
+            rutaViewModel.aturarRuta(ruta, puntsGPSlist, context,
+                onSuccess = {
+
+                    Handler(Looper.getMainLooper()).post {
+                        Toast.makeText(context, "Ruta finalizada", Toast.LENGTH_SHORT).show()
+                    }
+                    puntsGPSViewModel.vuidarllistaPuntsGPS()
+                },
+                onError = { errorMessage ->
+                    Handler(Looper.getMainLooper()).post {
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            )
+        }
+
     }
 
-    val ruta = Ruta(rutaIniciada.id, ciclista, rutaIniciada.dataInici, rutaIniciada.dataFinal, puntGPSRutaList)
-
-    coroutineScope.launch {
-        rutaViewModel.aturarRuta(ruta, context,
-            onSuccess = {
-                Handler(Looper.getMainLooper()).post {
-                    Toast.makeText(context, "Ruta finalizada", Toast.LENGTH_SHORT).show()
-                }
-            },
-            onError = { errorMessage ->
-                Handler(Looper.getMainLooper()).post {
-                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-                }
-            }
-        )
-    }
 }
 
