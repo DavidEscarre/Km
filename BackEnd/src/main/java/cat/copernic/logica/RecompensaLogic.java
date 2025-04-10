@@ -47,4 +47,17 @@ public class RecompensaLogic {
         
         return (r != null);
     }    
+    
+    public Long createRecompensa(Recompensa recompensa) {
+        
+        try {
+           // user.setWord(passwordEncoder.encode(user.getWord()));
+            Recompensa savedRecompensa = recompensaRepo.save(recompensa);
+            return savedRecompensa.getId();
+        } catch (Exception e) {
+         
+            return null;
+        }
+
+    }
 }

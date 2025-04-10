@@ -11,3 +11,17 @@
                 reader.readAsDataURL(file); // Convierte el archivo a una URL base64
             }
         });
+
+    function validatePasswords() {
+      const password = document.getElementById('word').value;
+      const confirmPassword = document.getElementById('confirmWord').value;
+      const errorDiv = document.getElementById('passwordError');
+
+      if (password !== confirmPassword) {
+        errorDiv.style.display = 'block';
+        return false;
+      } else {
+        errorDiv.style.display = 'none';
+        return true;
+      }
+    }
