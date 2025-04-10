@@ -81,13 +81,14 @@ public class UserWebController {
 
         }
     @PostMapping("/create")
-    public String createUsers(@ModelAttribute User user, @RequestParam("image") MultipartFile imageFile ,Model model, Authentication authentication) {
+    public String createUsers(@ModelAttribute User user, @RequestParam("confirmWord") String confirmWord ,@RequestParam("image") MultipartFile imageFile ,Model model, Authentication authentication) {
         try {
-           if (user == null || imageFile.isEmpty()) {
+           if (user == null || !confirmWord.equals(user.getPassword())) {
                 model.addAttribute("errorMessage", "Camps incorrectes");
                 return "redirect:/users/create";
             }
             if (userLogic.userIsUnique(user)) {
+                
                     // Instanciar el codificador de contraseñas BCrypt
                 BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
                 // Encriptar la contraseña

@@ -61,40 +61,31 @@ public class RecompensaWebController {
             return "error-page";  // Página personalizada de error
         }
     }
-    /*
+    
     @GetMapping("/create")
-    public String createUsers(Model model, Authentication authentication) {
-          model.addAttribute("user", new User()); // Asegurar que el objeto está en el modelo
-        return "create-user";
+    public String createRecompesa(Model model, Authentication authentication) {
+          model.addAttribute("recompensa", new Recompensa()); // Asegurar que el objeto está en el modelo
+        return "create-recompensa";
 
         }
+    
     @PostMapping("/create")
-    public String createUsers(@ModelAttribute User user, @RequestParam("image") MultipartFile imageFile ,Model model, Authentication authentication) {
+    public String createRecompesa(@ModelAttribute Recompensa recompensa, Model model, Authentication authentication) {
         try {
-           if (user == null || imageFile.isEmpty()) {
+           if (recompensa == null) {
                 model.addAttribute("errorMessage", "Camps incorrectes");
-                return "redirect:/users/create";
+                return "redirect:/recompenses/create";
             }
-            if (userLogic.userIsUnique(user)) {
-                    // Instanciar el codificador de contraseñas BCrypt
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                // Encriptar la contraseña
-                String encryptedPassword = passwordEncoder.encode(user.getPassword());
-                user.setWord(encryptedPassword);
-                user.setRol(Rol.CICLISTA);
-                user.setDataAlta(LocalDateTime.now());
-                user.setSaldoDisponible(0.00);
-                userLogic.createUser(user,imageFile);
+           
+            recompensa.setDataCreacio(LocalDateTime.now());
+            recompensaLogic.createRecompensa(recompensa);
                 
-                return "redirect:/users";
-            } else {
-                model.addAttribute("errorMessage", "Usuari ya existent");
-                return "redirect:/users/create";
-            }
+            return "redirect:/recompenses";
+            
         }catch(Exception e){
-            return "create-user";
+            return "create-recompensa";
         }
             
-        }*/
+        }
     
 }
