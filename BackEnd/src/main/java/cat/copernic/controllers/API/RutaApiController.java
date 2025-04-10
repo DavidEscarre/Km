@@ -95,46 +95,7 @@ public class RutaApiController {
         
         return response;        
     }
-    
- /*   @PostMapping(value = "/create", consumes = "multipart/form-data")
-    public ResponseEntity<Long> createRuta(
-        @RequestPart("ciclista") String ciclistaJson,
-        @RequestPart("dataInici") String dataInici,
-        @RequestPart("dataFinal") String dataFinal,
-        @RequestPart("puntsGPS") String puntsGPSJson
-    ) {
-        System.out.println("11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111");
-        ResponseEntity<Long> response;
-        
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Cache-Control", "no-store"); 
-        try {
-            // Convertir JSON a objetos Java
-            User ciclista = objectMapper.readValue(ciclistaJson, User.class);
-            List<PuntGPS> puntsGPS = objectMapper.readValue(puntsGPSJson, objectMapper.getTypeFactory().constructCollectionType(List.class, PuntGPS.class));
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        
-            // Convertir el String a LocalDateTime
-            LocalDateTime DataInici = LocalDateTime.parse(dataInici, formatter);
-            LocalDateTime DataFinal = LocalDateTime.parse(dataFinal, formatter);
-            // Crear objeto Ruta
-            Ruta ruta = new Ruta(ciclista, DataInici, DataFinal, puntsGPS);
-
-            
-            
-            
-            Long rutaId = rutaLogic.saveRuta(ruta);
-            logger.info("✅ Ruta created with ID: {}", rutaId);
-          response = new ResponseEntity<>(rutaId, HttpStatus.CREATED);
-
-        } catch (Exception e) {
-            logger.error("❌ Error creating ruta", e);
-             response = new ResponseEntity<>(0L,HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return response;
-    }*/
-    
+      
    @PostMapping("/create")
    @PermitAll  // Permitir acceso sin autenticación
     public ResponseEntity<Long> createRuta(@RequestBody Ruta ruta) {
@@ -178,6 +139,7 @@ public class RutaApiController {
             return ResponseEntity.internalServerError().build();
         }
     }
+    
 }
     
 

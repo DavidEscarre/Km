@@ -7,6 +7,7 @@ package cat.copernic.controllers.API;
 import cat.copernic.Entity.PuntGPS;
 import cat.copernic.logica.PuntGPSLogic;
 import jakarta.annotation.security.PermitAll;
+import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +79,38 @@ public class PuntGPSApiController {
             {
                 logger.info("PuntGPS trobat: {}", "puntGPSId: "+puntGPSId); 
                 response = new ResponseEntity<>(puntGPS, headers, HttpStatus.OK);
+            }
+            
+        } catch (Exception e) {
+            logger.error("Error intern del servidor al intentar trovar el puntGPS {}", "Error mesage: "+e.getMessage()); 
+            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+        return response;        
+    }
+    @GetMapping("/byIdRuta/{rutaId}")
+    public ResponseEntity<List<PuntGPS>> getPuntGPSByIdRuta(@PathVariable Long rutaId){
+        List<PuntGPS> puntGPSlist = new ArrayList<>();
+        
+        ResponseEntity<List<PuntGPS>> response;
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-store"); //no usar caché
+        
+        try {
+            
+            logger.info("Cercant puntGPS amb idRUTA: {}", "puntGPSId: "+ rutaId);
+             puntGPSlist = puntGPSLogic.getPuntsGPSyRuteId(rutaId);
+            
+            if (puntGPSlist.isEmpty())
+            {
+                logger.info("PuntGPS no trobat: {}", "puntGPSId: "+rutaId); 
+                response = new ResponseEntity<List<PuntGPS>>(puntGPSlist,headers, HttpStatus.NOT_FOUND);
+            }
+            else
+            {
+                logger.info("PuntGPS trobat: {}", "puntGPSId: "+rutaId); 
+                response = new ResponseEntity<List<PuntGPS>>(puntGPSlist, headers, HttpStatus.OK);
             }
             
         } catch (Exception e) {

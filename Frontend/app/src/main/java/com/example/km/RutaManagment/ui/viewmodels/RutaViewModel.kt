@@ -66,7 +66,7 @@ class RutaViewModel: ViewModel() {
 
     //fun iniciarRuta(ciclista: User, dataInici:String, dataFinal:String, puntsGPS: List<PuntGPS>,context: android.content.Context, onSuccess: () -> Unit, onError: (String) -> Unit) {
     fun iniciarRuta(ruta: Ruta,context: android.content.Context, onSuccess: () -> Unit, onError: (String) -> Unit) {
-
+        vuidarPuntsGPSList()
         viewModelScope.launch {
             try {
 
@@ -110,12 +110,18 @@ class RutaViewModel: ViewModel() {
 
         viewModelScope.launch {
             try {
-                //val locationList = puntsGPSRuta
-               // ruta.puntsGPS = locationList
+                CrearPuntsGPSRuta(puntsGPSList)
+                val locationList = puntGPSRepo.getPuntGPSByIdRuta(ruta.id)
+                Log.d(" Raaaaaaaaaaaaaaaaaaaa111", locationList.body()!!.size.toString())
+                ruta.puntsGPS = locationList.body()
+
+
+
+                Log.d(" RUTAEERRRccQQ1111",  ruta.puntsGPS.size.toString())
                 val response = rutaRepo.updateRuta(ruta)
 
                 if (response.isSuccessful) {
-                    CrearPuntsGPSRuta(puntsGPSList)
+
                     Log.d("Ruta", "✅ Ruta aturada")
                     onSuccess()
                     _rutaIniciada.value = null
@@ -132,28 +138,27 @@ class RutaViewModel: ViewModel() {
             }
         }
     }
-    fun CrearPuntsGPSRuta(puntsGPSList: List<PuntGPS>){
-        viewModelScope.launch {
+    suspend fun CrearPuntsGPSRuta(puntsGPSList: List<PuntGPS>) {
+        Log.d("PuntGPS RUTAsssss", puntsGPSList.size.toString())
 
-            puntsGPSList.forEach {
-                try{
-                    it.ruta = rutaAct.value
-                    Log.d("PuntGPS RUTA", "${rutaAct.value}, Punt = ${it.ruta.id}")
-                    val response = puntGPSRepo.createPuntGPS(it)
-                    if(response.isSuccessful){
-                        Log.d("PuntGPS RUTA", "PUNT CREAT: ${response.body()}")
-                    }else{
-                        Log.e("PuntGPS RUTA", "❌ Error al crear el puntGPS en rutaViewModel")
-                    }
-
-
-                }catch(_: Exception){
-                    Log.e("PuntGPS RUTA", "❌ Error al crear el puntGPS en rutaViewModel exception")
+        for (it in puntsGPSList) {
+            try {
+                it.ruta = rutaAct.value
+                Log.d("PuntGPS RUTA", "${rutaAct.value}, Punt = ${it.ruta.id}")
+                val response = puntGPSRepo.createPuntGPS(it)
+                if (response.isSuccessful) {
+                    Log.d("PuntGPS RUTA", "PUNT CREAT: ${response.body()}")
+                    _puntsGPSRuta.value = _puntsGPSRuta.value + puntGPSRepo.getPuntGPSById(response.body()!!).body()!!
+                } else {
+                    Log.e("PuntGPS RUTA", "❌ Error al crear el puntGPS")
                 }
-
+            } catch (e: Exception) {
+                Log.e("PuntGPS RUTA", "❌ Exception al crear el puntGPS: ${e.message}")
             }
         }
+    }
 
-
+    fun vuidarPuntsGPSList(){
+        _puntsGPSRuta.value = emptyList()
     }
 }

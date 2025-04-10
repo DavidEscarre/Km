@@ -1,6 +1,7 @@
 package com.example.km.PuntGPSManagment.data.repositories
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.km.PuntGPSManagment.data.datasource.PuntGPSApiRest
 import com.example.km.PuntGPSManagment.data.datasource.PuntGPSRetrofitInstance
@@ -29,6 +30,12 @@ class PuntGPSRepositoryImpl: PuntGPSRepository {
 
     override suspend fun createPuntGPS(puntGPS: PuntGPS): Response<Long> {
         val response = puntGPSApiRest.createPuntGPS(puntGPS)
+        return response
+    }
+
+    override suspend fun getPuntGPSByIdRuta(rutaId: Long):Response<List<PuntGPS>> {
+        val response = puntGPSApiRest.getPuntGPSByIdRuta(rutaId)
+        Log.d(" Raaaaaaaa2222222aaaaaaaaaaaa111", "$rutaId, ${response.body()}", )
         return response
     }
 

@@ -40,6 +40,13 @@ public class PuntGPSLogic {
         
         return ret;
     }
+    
+    public List<PuntGPS> getPuntsGPSyRuteId(Long rutaId)throws Exception{
+        
+        List<PuntGPS> ret = puntGPSRepo.findByRuta_Id(rutaId);
+        
+        return ret;
+    }
     public boolean existsById(Long id)
     {
         PuntGPS p = puntGPSRepo.findById(id).orElse(null);

@@ -93,7 +93,7 @@ public class UserWebController {
                 // Encriptar la contraseña
                 String encryptedPassword = passwordEncoder.encode(user.getPassword());
                 user.setWord(encryptedPassword);
-                user.setRol(Rol.CICLISTA);
+                
                 user.setDataAlta(LocalDateTime.now());
                 user.setSaldoDisponible(0.00);
                 userLogic.createUser(user,imageFile);

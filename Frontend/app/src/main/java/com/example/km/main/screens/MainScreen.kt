@@ -23,11 +23,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,10 +43,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
@@ -51,6 +58,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.km.GoogleMapsMap.GoogleMapScreen
 import com.example.km.PuntGPSManagment.ui.viewmodels.PuntGPSViewModel
+import com.example.km.R
 //import com.example.km.PuntGPSManagment.ui.viewmodels.ViewModelsFactories.PuntGPSViewModelFactory
 import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
 import com.example.km.core.models.PuntGPS
@@ -58,7 +66,14 @@ import com.example.km.core.models.Ruta
 import com.example.km.core.models.User
 import com.example.km.navigation.BottomNavigationBar
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.Polyline
+import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -70,14 +85,11 @@ fun MainScreen(rutaViewModel: RutaViewModel,puntGPSViewModel: PuntGPSViewModel, 
     val context = LocalContext.current
     var rutaActiva by remember { mutableStateOf(false) }
     var activadorRuta by remember { mutableStateOf(true) }
-   /* val puntGPSViewModel: PuntGPSViewModel = viewModel(
-        factory = PuntGPSViewModelFactory(rutaViewModel, context.applicationContext as Application)
-    )*/
-   /* val puntsGPSViewModel: PuntGPSViewModel = viewModel(factory = object : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return PuntGPSViewModel(context.applicationContext as Application) as T
-        }
-    })*/
+
+    val moveCameraTrigger = remember { mutableStateOf(false) }
+    val cameraPositionState = rememberCameraPositionState()
+    val userLocation by puntGPSViewModel.currentLocation.collectAsState()
+
     val locationList by puntGPSViewModel.locationList.collectAsState()
     val scrollState = rememberScrollState()
 
@@ -89,7 +101,7 @@ fun MainScreen(rutaViewModel: RutaViewModel,puntGPSViewModel: PuntGPSViewModel, 
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .verticalScroll(scrollState)// Habilita el scroll
+                //.verticalScroll(scrollState) Habilita el scroll
                 .padding(paddingValues)
         ) {
             Box(
@@ -105,7 +117,68 @@ fun MainScreen(rutaViewModel: RutaViewModel,puntGPSViewModel: PuntGPSViewModel, 
                 }
 
                 if (hasPermission) {
-                    GoogleMapScreen()
+                        LaunchedEffect(Unit) {
+                            getCurrentLocation(context) { location ->
+                                // userLocation = location
+                                puntGPSViewModel.setCurrentLocation(location)
+                                Log.d("GPS", userLocation.toString())
+                                cameraPositionState.position=CameraPosition.fromLatLngZoom(location, 15f)
+
+                            }
+                            puntGPSViewModel.startLocationUpdatesSimple()
+                        }
+
+                        getCurrentLocation(context) { location ->
+                            // userLocation = location
+                            puntGPSViewModel.setCurrentLocation(location)
+                            Log.d("GPS", userLocation.toString())
+
+                        }
+
+
+
+
+                    // Muestra el mapa
+                    GoogleMap(
+                        cameraPositionState = cameraPositionState
+                    ) {
+                        userLocation?.let { location ->
+                            Marker(state = MarkerState(position = location), title = "Mi Ubicación")
+                        }
+
+                        if (locationList.isNotEmpty()) {
+                            Polyline(points = locationList, color = Color.Blue, width = 8f)
+                        }
+                    }
+
+                    // Botón para centrar
+                    IconButton(
+                        onClick = { moveCameraTrigger.value = true },
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(bottom = 10.dp, start = 10.dp)
+                            .size(50.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.center_camera),
+                            contentDescription = "centrar camara",
+                            tint = Color(0f,0f,0f,0.8f),
+                            modifier = Modifier.size(76.dp)
+                        )
+                    }
+
+                    // Solo mueve la cámara si se ha presionado el botón
+                    LaunchedEffect(moveCameraTrigger.value) {
+                        if (moveCameraTrigger.value && userLocation != null) {
+                            cameraPositionState.animate(
+                                CameraUpdateFactory.newLatLngZoom(userLocation!!, 17f),
+                                durationMs = 600
+                            )
+                            moveCameraTrigger.value = false
+                        }
+                    }
+
+                    //GoogleMapScreen(puntGPSViewModel)
                 }
             }
 
@@ -116,31 +189,24 @@ fun MainScreen(rutaViewModel: RutaViewModel,puntGPSViewModel: PuntGPSViewModel, 
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Button(onClick = {
+                    Button(
+                        onClick = {
                         rutaActiva = !rutaActiva
 
                         activadorRuta = true
 
-                    }) {
+                        },
+                        Modifier.shadow(5.dp, RoundedCornerShape(51), true),
+                        colors = ButtonColors(containerColor = Color(0xFF3E3E3E), contentColor = Color.White,Color.Black,Color.Black)) {
                         Text(if (rutaActiva) "Aturar Ruta" else "Començar Ruta")
                     }
                     Spacer(Modifier.height(28.dp))
 
-                    Button(
-                        onClick = {
 
-                        },
-                        modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFAA00)),
-                        shape = RoundedCornerShape(10.dp)
-
-                    ) {
-                        Text("Crear Exemple", color = Color.White, fontSize = 18.sp)
-                    }
 
                 }
 
-                Column(
+               /* Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp)  // Espaciado para mejorar la apariencia
@@ -152,7 +218,7 @@ fun MainScreen(rutaViewModel: RutaViewModel,puntGPSViewModel: PuntGPSViewModel, 
                             modifier = Modifier.padding(8.dp)
                         )
                     }
-                }
+                }*/
             }
 
         }
@@ -198,7 +264,12 @@ fun getCurrentLocation(context: Context, onLocationReceived: (LatLng) -> Unit) {
     fusedLocationClient.lastLocation.addOnSuccessListener { location ->
         location?.let {
             onLocationReceived(LatLng(it.latitude, it.longitude))
+
         }
+
+
+
+
     }
 }
 
@@ -209,7 +280,7 @@ fun getCurrentLocation(context: Context, onLocationReceived: (LatLng) -> Unit) {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun IniciarRuta(rutaViewModel: RutaViewModel, puntsGPSViewModel: PuntGPSViewModel, context: Context,  userState: State<User?>){
-
+    puntsGPSViewModel.stopLocationUpdatesSimple()
     val coroutineScope = rememberCoroutineScope()
     val dataInici = LocalDateTime.now()
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss         yyyy-MM-dd HH:mm:ss")
@@ -264,12 +335,13 @@ fun IniciarRuta(rutaViewModel: RutaViewModel, puntsGPSViewModel: PuntGPSViewMode
 fun AturarRuta(rutaViewModel: RutaViewModel, puntsGPSViewModel: PuntGPSViewModel, context: Context,  userState: State<User?>) {
 
     puntsGPSViewModel.stopLocationUpdates()
-    val puntsGPSlist = puntsGPSViewModel.puntGPSRutaList.collectAsState().value
+
+    val puntsGPSlist by puntsGPSViewModel.puntGPSRutaList.collectAsState()
     val dataFinal = LocalDateTime.now()
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     val formattedDate = dataFinal.format(formatter)
     val coroutineScope = rememberCoroutineScope()
-    val puntGPSRutaList by puntsGPSViewModel.puntGPSRutaList.collectAsState()
+    val puntGPSRutaList = rutaViewModel.puntsGPSRuta.collectAsState()
     val rutaIniciada = rutaViewModel.rutaIniciada.collectAsState().value
     val rutaActual = rutaViewModel.rutaAct.collectAsState().value
     val ciclista: User? = userState.value
@@ -280,13 +352,15 @@ fun AturarRuta(rutaViewModel: RutaViewModel, puntsGPSViewModel: PuntGPSViewModel
     }
 
     if (rutaActual != null) {
-       // var puntsGPSRutaList: List<PuntGPS> = emptyList()
+
+        Log.d("LLISTAPuntGPS RUTAsssss", puntGPSRutaList.value.size.toString() )
 
 
         val ruta = Ruta(rutaActual.id, ciclista, rutaActual.dataInici, dataFinal)
-
+        Log.d("PuntGPSaaa RUTAsssss", ruta.puntsGPS.size.toString() )
         coroutineScope.launch {
             rutaViewModel.aturarRuta(ruta, puntsGPSlist, context,
+
                 onSuccess = {
 
                     Handler(Looper.getMainLooper()).post {
@@ -303,6 +377,7 @@ fun AturarRuta(rutaViewModel: RutaViewModel, puntsGPSViewModel: PuntGPSViewModel
         }
 
     }
-
+    puntsGPSViewModel.vuidarllistaPuntsGPS()
+    puntsGPSViewModel.startLocationUpdatesSimple()
 }
 

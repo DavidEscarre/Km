@@ -11,4 +11,6 @@ interface PuntGPSRepository {
     suspend fun getPuntGPSById(puntGPSId: Long): Response<PuntGPS>
 
     suspend fun createPuntGPS(puntGPS: PuntGPS): Response<Long>
+
+    suspend fun getPuntGPSByIdRuta(rutaId: Long): Response<List<PuntGPS>>
 }
