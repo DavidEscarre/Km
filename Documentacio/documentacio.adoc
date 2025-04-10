@@ -400,7 +400,7 @@ image::Trello6.png[]
 
 https://trello.com/invite/b/67d2bb31bdeeafab5739043d/ATTI01a1de41486edc7420d39504157a257eDFF8C943/proyecte4km[*Enllaç al Trello*]
 
-[[Sprint1]]
+[[sprint1]]
 == *11. Sprint 1*
 
 En aquest primer Sprint s'han reorganitzat les tasques de cada sprint, aprofitant l'experiència obtinguda durant el desenvolupament del sprint.
@@ -434,7 +434,7 @@ Es deixarà per les tasques que no s'acabin en els anteriors sprints.
 
 
 
-[[Sprint2]]
+[[sprint2]]
 == *12. Sprint 2*
 
 En aquest Sprint he trobat alguns problemes durant el desenvolupament del codi i les diferents tasques del sprint, per aquesta raó, s'han tornat a reorganitzar les tasques de cada sprint, aprofitant com sempre l'experiència obtinguda durant el desenvolupament del sprint.
@@ -468,7 +468,7 @@ Es deixarà per les tasques que no s'acabin en els anteriors sprints.
 === *Problemes durant el Sprint 2*
 El principal problema que m'he trobat al Sprint 2 ha sigut un error que no deixava crear cap objecte al Frontend app, l'error era un "Malformed JSON", aquest problema encara persisteix i encara intento ressoldareu.
 
-[[Sprint3]]
+[[sprint3]]
 == *12. Sprint 3*
 
 En aquest Sprint vaig poder solucionar els problemes de l'anterior Sprint i avançar més feina que de costum.
