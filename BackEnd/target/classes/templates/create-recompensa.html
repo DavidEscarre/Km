@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+     <title>Formulari d'Usuari</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/stylesForm.css">
+</head>
+<body>
+    <header class="header">
+        <h1>PANEL ADMINISTRATIU KM+</h1>
+        <nav>
+                <a href="/">
+                    <button class="nav-button" href="/">SISTEMA</button>
+                </a>
+                <a href="/rutes">
+                    <button class="nav-button" href="/rutes">RUTES</button>
+                </a>
+                <a href="/users">
+                    <button class="nav-button" href="/users">USUARIS</button>
+                </a>
+                <a href="/recompenses">
+                    <button class="nav-button active" href="/recompenses">RECOMPENSES</button>
+                </a>    
+                <a href="/logout" class="logout-container">
+                    <img  class="logout-icon" src="/images/logout.svg" alt="Cerrar sesión">
+                </a>
+        </nav>
+    </header>
+    
+ <!-- CONTENEDOR PRINCIPAL -->
+    <main class="container">
+        <h2 class="form-title">Crear recompensa</h2>
+        <!-- WRAPPER DEL FORMULARIO (2 columnas) -->
+        <form class="form-wrapper" th:action="@{/recompenses/create}" th:object="${recompensa}" method="post">
+            
+               
+                <div class="mb-3">
+                    <label for="nom" class="form-label">Nom</label>
+                    <input type="text" id="nom" th:field="*{nom}" class="form-control" maxlength="25" required placeholder="Introdueix el nom">
+                </div>
+                <div class="mb-3">
+                    <label for="descripcio" class="form-label">Descripcio</label>
+                    <input type="text" id="descripcio" th:field="*{descripcio}" class="form-control" maxlength="100" required placeholder="Introdueix la descripcio">
+                </div>
+                <div class="mb-3">
+                    <label for="observacions" class="form-label">Observacions</label>
+                    <input type="text" id="observacions" th:field="*{observacions}" class="form-control" maxlength="100" required placeholder="Introdueix les observacions">
+                </div>
+                <div class="mb-3">
+                    <label for="preu" class="form-label">Preu</label>
+                    <input type="number" 
+                           id="preu" 
+                           th:field="*{preu}" 
+                           class="form-control" 
+                           step="0.01" 
+                           min="0"
+                           max="99999999"
+                           required
+                           placeholder="Introduce tu contraseña">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="puntbescanvi" class="form-label">Punt de Bescanvi</label>
+                    <input type="text" id="puntbescanvi" th:field="*{puntBescanvi}" class="form-control" maxlength="100" required placeholder="Introdueix el punt de bescanvi">
+                </div>
+
+                <!-- MENSAJE DE ERROR -->
+                <div th:if="${errorMessage}" class="errorMsg" th:text="${errorMessage}"></div>
+                
+                <!-- BOTÓN DE ENVIAR (ancho 100%) -->
+              
+                    <button type="submit" class="btn-primary w-100">Crear</button>
+
+        </form>
+        <a class="btn-cancel"  href="/users">
+                        <button  class="btn-cancel" href="/recompenses">Cancelar</button>
+        </a>
+    </main>
+    <script src="/scripts/main.js"></script>
+</body>
+</html>
