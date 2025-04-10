@@ -468,3 +468,30 @@ Es deixarà per les tasques que no s'acabin en els anteriors sprints.
 
 === *Problemes durant el Sprint 2*
 El principal problema que m'he trobat al Sprint 2 ha sigut un error que no deixava crear cap objecte al Frontend app, l'error era un "Malformed JSON", aquest problema encara persisteix i encara intento ressoldareu.
+
+[[Sprint3]]
+
+== *12. Sprint 3*
+
+En aquest Sprint vaig poder solucionar els problemes de l'anterior Sprint i avançar més feina que de costum.
+
+=== *Tasques completades*
+image::tascasCompletadasSprint3.png[]
+
+=== *Nova planificació*
+Algunes tasques han sigut replanificades i mogudes a altres Sprints per optimització del desenvolupament del projecte.
+
+Sprint 4
+
+image::Sprint4_tasques3.png[]
+
+
+Sprint 5
+
+image::Sprint5_tasques3.png[]
+
+
+Sprint 6
+
+image::Sprint6_tasques.png[]
+
