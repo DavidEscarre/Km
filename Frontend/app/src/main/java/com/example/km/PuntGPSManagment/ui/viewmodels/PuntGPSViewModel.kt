@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -11,6 +12,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,8 +20,10 @@ import com.example.km.PuntGPSManagment.data.repositories.PuntGPSRepositoryImpl
 import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
 import com.example.km.core.models.PuntGPS
 import com.example.km.core.models.Ruta
+import com.example.km.main.screens.getCurrentLocation
 import com.google.android.gms.common.api.Response
 import com.google.android.gms.common.api.Result
+import com.google.android.gms.location.CurrentLocationRequest
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -50,6 +54,10 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
     }
 */
 
+    private val _currentLocation = MutableStateFlow<LatLng?>(null)
+    val currentLocation: StateFlow<LatLng?> = _currentLocation
+
+
     private val puntGPSRepo = PuntGPSRepositoryImpl()
 
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(application)
@@ -60,10 +68,11 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
     private val _puntGPSRutaList = MutableStateFlow<List<PuntGPS>>(emptyList())
     val puntGPSRutaList: StateFlow<List<PuntGPS>> = _puntGPSRutaList
 
-    private var locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000L)
+    private var locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000L)
         .setWaitForAccurateLocation(true)
         .setMinUpdateIntervalMillis(2000)
         .build()
+
 
 
     private val locationCallback = object : LocationCallback() {
@@ -72,31 +81,26 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
         override fun onLocationResult(locationResult: LocationResult) {
             locationResult.lastLocation?.let { location ->
 
+                    setCurrentLocation(LatLng(location.latitude,location.longitude))
 
                     _locationList.value = _locationList.value + (LatLng(location.latitude, location.longitude))
                     Log.d("crear pgps", "creaadpolocssssssssssssssssssssssssssssssssoooooo")
                     val dataMarcaTemps = LocalDateTime.now()
 
-                    val puntGPSCreat = PuntGPS(location.latitude.toLong(), location.longitude.toLong(),dataMarcaTemps)
+                    val puntGPSCreat = PuntGPS(location.latitude, location.longitude,dataMarcaTemps)
                     _puntGPSRutaList.value = _puntGPSRutaList.value + (puntGPSCreat)
-                   /* create(
-                        PuntGPS(rutaAct.value, location.latitude.toLong(), location.longitude.toLong(),dataMarcaTemps ),
 
-                            onSuccess = { response ->
-                            val puntGPSCreat = findById(response,onSuccess = {}, onError = {})
-                                if(puntGPSCreat!=null){
-                                    Log.d("crear pgps", "creaadpolocoooooo")
-                                    _puntGPSRutaList.value = _puntGPSRutaList.value + (puntGPSCreat)
-                                }
-                                Log.d("crear pgps", "creaadpo")
-                            },
-                            onError = { errorMessage ->
-                                Log.e("Error puntgps al crear", errorMessage)
-                            })*/
+            }
+        }
+    }
 
+    private val locationCallbackSimple = object : LocationCallback() {
+        @SuppressLint("SuspiciousIndentation")
+        @RequiresApi(Build.VERSION_CODES.O)
+        override fun onLocationResult(locationResult: LocationResult) {
+            locationResult.lastLocation?.let { location ->
 
-
-
+                setCurrentLocation(LatLng(location.latitude,location.longitude))
             }
         }
     }
@@ -107,9 +111,24 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
+            vuidarllistaPuntsGPS()
             fusedLocationClient.requestLocationUpdates(
                 locationRequest,
                 locationCallback,
+                Looper.getMainLooper()
+            )
+        }
+    }
+    fun startLocationUpdatesSimple() {
+        if (ActivityCompat.checkSelfPermission(
+                getApplication(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            vuidarllistaPuntsGPS()
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest,
+                locationCallbackSimple,
                 Looper.getMainLooper()
             )
         }
@@ -118,9 +137,17 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
     fun stopLocationUpdates() {
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
+    fun stopLocationUpdatesSimple() {
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+    }
+
     fun vuidarllistaPuntsGPS() {
         _locationList.value = emptyList()
         _puntGPSRutaList.value = emptyList()
+    }
+
+    fun setCurrentLocation(location: LatLng) {
+        _currentLocation.value = location
     }
 
     fun create(puntGPS: PuntGPS, onSuccess: (Long?) -> Unit, onError: (String) -> Unit ){

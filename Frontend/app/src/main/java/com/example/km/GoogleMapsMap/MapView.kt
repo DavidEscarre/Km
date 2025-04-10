@@ -2,7 +2,9 @@ package com.example.km.GoogleMapsMap
 
 import android.app.Application
 import android.content.Context
+import android.location.Location
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,13 +38,13 @@ import com.google.maps.android.compose.rememberCameraPositionState
 
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
-    fun GoogleMapScreen() {
+    fun GoogleMapScreen(puntGPSViewModel: PuntGPSViewModel) {
 
         val context = LocalContext.current
         val cameraPositionState = rememberCameraPositionState()
-        var userLocation by remember { mutableStateOf<LatLng?>(null) }
+        //var userLocation by remember { mutableStateOf<LatLng?>(null) }
+        var userLocation = puntGPSViewModel.currentLocation.collectAsState()
 
-        val rutaViewModel: RutaViewModel = viewModel()
        /* val puntGPSViewModel: PuntGPSViewModel = viewModel(
             factory = PuntGPSViewModelFactory(rutaViewModel, context.applicationContext as Application)
         )*/
@@ -51,16 +53,18 @@ import com.google.maps.android.compose.rememberCameraPositionState
                 return PuntGPSViewModel(rutaViewModel,context.applicationContext as Application) as T
             }
         })*/
-        val puntGPSViewModel: PuntGPSViewModel = viewModel(factory = object : ViewModelProvider.Factory {
+       /* val puntGPSViewModel: PuntGPSViewModel = viewModel(factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return PuntGPSViewModel(context.applicationContext as Application) as T
             }
-        })
+        })*/
 
         val locationList by puntGPSViewModel.locationList.collectAsState()
         LaunchedEffect(Unit) {
             getCurrentLocation(context) { location ->
-                userLocation = location
+               // userLocation = location
+                puntGPSViewModel.setCurrentLocation(location)
+                Log.d("GPS", userLocation.toString())
                 cameraPositionState.position = CameraPosition.fromLatLngZoom(location, 15f)
             }
         }
@@ -69,7 +73,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
            // modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState
         ) {
-            userLocation?.let { location ->
+            userLocation.value?.let { location ->
                 Marker(state = MarkerState(position = location), title = "Mi Ubicación")
             }
             if (locationList.isNotEmpty()) {
@@ -161,5 +165,5 @@ fun RouteViewMap(rutaId: Long, rutaViewModel: RutaViewModel, context: Context){
     @Preview
     @Composable
     fun PreviewMap() {
-        GoogleMapScreen()
+       // GoogleMapScreen()
     }

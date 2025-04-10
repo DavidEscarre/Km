@@ -1,6 +1,7 @@
 package com.example.km.PuntGPSManagment.data.datasource
 
 import com.example.km.core.models.PuntGPS
+import com.example.km.core.models.Ruta
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -17,6 +18,9 @@ interface PuntGPSApiRest {
 
     @POST("create")
     suspend fun createPuntGPS(@Body puntGPS: PuntGPS): Response<Long>
+
+    @GET("byIdRuta/{rutaId}")
+    suspend fun getPuntGPSByIdRuta(@Path("rutaId") rutaId: Long): Response<List<PuntGPS>>
 }
 
 

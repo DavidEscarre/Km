@@ -8,6 +8,7 @@ public class Recompensa {
 
     private Long id;
 
+    private String nom;
 
     private String descripcio;
 
@@ -34,7 +35,8 @@ public class Recompensa {
     public Recompensa() {
     }
 
-    public Recompensa(String descripcio, String observacions, double preu, String dataCreacio, String dataAssignacio, String dataRecollida, User ciclista, String puntBescanvi) {
+    public Recompensa(String nom, String descripcio, String observacions, double preu, String dataCreacio, String dataAssignacio, String dataRecollida, User ciclista, String puntBescanvi) {
+        this.nom = nom;
         this.descripcio = descripcio;
         this.observacions = observacions;
         this.preu = preu;
@@ -45,8 +47,9 @@ public class Recompensa {
         this.puntBescanvi = puntBescanvi;
     }
 
-    public Recompensa(Long id, String descripcio, String observacions, double preu, String dataCreacio, String dataAssignacio, String dataRecollida, User ciclista, String puntBescanvi) {
+    public Recompensa(Long id, String nom, String descripcio, String observacions, double preu, String dataCreacio, String dataAssignacio, String dataRecollida, User ciclista, String puntBescanvi) {
         this.id = id;
+        this.nom = nom;
         this.descripcio = descripcio;
         this.observacions = observacions;
         this.preu = preu;
@@ -138,9 +141,11 @@ public class Recompensa {
     }
 
 
+    public String getNom() {
+        return nom;
+    }
 
-
-
-
-
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
 }

@@ -5,6 +5,8 @@
 package cat.copernic;
 
 import cat.copernic.Entity.User;
+import cat.copernic.logica.PuntGPSLogic;
+import cat.copernic.repository.PuntGPSRepo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -22,7 +24,7 @@ public class KmApplication {
         ApplicationContext context = SpringApplication.run(KmApplication.class, args);
          
          
-         
+        
          
     }
 
