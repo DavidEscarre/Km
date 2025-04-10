@@ -435,7 +435,6 @@ Es deixarà per les tasques que no s'acabin en els anteriors sprints.
 
 
 [[Sprint2]]
-
 == *12. Sprint 2*
 
 En aquest Sprint he trobat alguns problemes durant el desenvolupament del codi i les diferents tasques del sprint, per aquesta raó, s'han tornat a reorganitzar les tasques de cada sprint, aprofitant com sempre l'experiència obtinguda durant el desenvolupament del sprint.
@@ -470,7 +469,6 @@ Es deixarà per les tasques que no s'acabin en els anteriors sprints.
 El principal problema que m'he trobat al Sprint 2 ha sigut un error que no deixava crear cap objecte al Frontend app, l'error era un "Malformed JSON", aquest problema encara persisteix i encara intento ressoldareu.
 
 [[Sprint3]]
-
 == *12. Sprint 3*
 
 En aquest Sprint vaig poder solucionar els problemes de l'anterior Sprint i avançar més feina que de costum.
