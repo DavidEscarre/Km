@@ -44,9 +44,14 @@ class RutaRepositoryImpl: RutaRepository {
         return response
     }
 
+
     override suspend fun getRutaById(rutaId: Long): Response<Ruta?> {
         return  rutaApiRest.getRutaById(rutaId)
-       // return response
+
+    }
+
+    override suspend fun getAllByCiclistaEmail(ciclistaEmail: String): Response<List<Ruta>> {
+        return  rutaApiRest.getAllByCiclistaEmail(ciclistaEmail)
     }
 
 

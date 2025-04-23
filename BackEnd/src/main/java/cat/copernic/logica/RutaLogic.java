@@ -38,6 +38,13 @@ public class RutaLogic {
         
     }
     
+    public List<Ruta> getAllByCiclistaEmail(String email)throws Exception{
+        
+        List<Ruta> ret = rutaRepo.findAllByCiclista_Email(email);
+        
+        return ret;
+    }
+    
     public Ruta getRuta(Long id)throws Exception{
         
         Ruta ret = rutaRepo.findById(id).orElse(null);

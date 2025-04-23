@@ -24,6 +24,9 @@ import retrofit2.Response
 @RequiresApi(Build.VERSION_CODES.O)
 class RutaViewModel(): ViewModel() {
 
+    private val _rutas = MutableStateFlow<List<Ruta>>(emptyList<Ruta>())
+    val rutas: StateFlow<List<Ruta>>  = _rutas
+
     private val puntGPSRepo = PuntGPSRepositoryImpl()
 
     private val rutaRepo = RutaRepositoryImpl()
@@ -37,7 +40,27 @@ class RutaViewModel(): ViewModel() {
    private val _puntsGPSRuta = MutableStateFlow<List<PuntGPS>>(emptyList())
     val puntsGPSRuta: MutableStateFlow<List<PuntGPS>> get() = _puntsGPSRuta
 
+    fun fetchAllRutas(ciclistaEmail: String){
+        viewModelScope.launch {
+            try{
+                val response = rutaRepo.getAllByCiclistaEmail(ciclistaEmail)
 
+                if(response.isSuccessful){
+                    Log.d("RutaById", "La ruta sa encontrao coñooo")
+                    _rutas.value = response.body()!!
+                }else{
+                    Log.e("RutaById", "La ruta no sa pogut trobar")
+                    _rutas.value = emptyList()
+                }
+
+            }catch(e: Exception){
+                _rutaAct.value = null
+                e.printStackTrace()
+
+
+            }
+        }
+    }
 
     fun findById(id: Long): Ruta?{
         var res: Ruta? = null

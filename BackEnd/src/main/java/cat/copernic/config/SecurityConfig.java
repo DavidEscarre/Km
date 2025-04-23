@@ -19,6 +19,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
     http
         .csrf(AbstractHttpConfigurer::disable)  // Deshabilitar CSRF
         .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/rest/rutes/**").permitAll()    
             .requestMatchers("/rest/puntgps/**").permitAll()  // Permitir todas las rutas REST
             .requestMatchers("/rest/**").permitAll()  // Permitir todas las rutas REST
             .requestMatchers("/api/auth/login").permitAll()

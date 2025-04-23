@@ -5,6 +5,8 @@
 package cat.copernic.repository;
 
 import cat.copernic.Entity.Ruta;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +16,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface RutaRepo extends JpaRepository<Ruta, Long> {  
-    
+    List<Ruta> findAllByCiclista_Email(String email);
 }

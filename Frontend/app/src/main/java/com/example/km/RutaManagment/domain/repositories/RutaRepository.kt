@@ -18,4 +18,10 @@ interface RutaRepository {
     suspend fun createRuta(ruta: Ruta): Response<Long>
 
     suspend fun updateRuta(ruta: Ruta): Response<Long?>
+
+
+    suspend fun getAllByCiclistaEmail(ciclistaEmail: String): Response<List<Ruta>>
+
+
 }
+
