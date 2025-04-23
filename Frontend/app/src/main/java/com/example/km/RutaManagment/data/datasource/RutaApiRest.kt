@@ -22,14 +22,8 @@ interface RutaApiRest {
    @POST("create")
    suspend fun createRuta(@Body ruta: Ruta): Response<Long>
 
-  /* @Multipart
-   @POST("create")
-    suspend fun createRuta(
-        @Part("ciclista") ciclista: RequestBody,
-        @Part("dataInici") dataInici: RequestBody,
-        @Part("dataFinal") dataFinal: RequestBody,
-        @Part("puntsGPS") puntsGPS: RequestBody,
-    ): Response<Long>*/
+    @GET("byCiclistaEmail/{ciclistaEmail}")
+    suspend fun getAllByCiclistaEmail(@Path("ciclistaEmail") ciclistaEmail: String): Response<List<Ruta>>
 
     @POST("update")
     suspend fun updateRuta(@Body ruta: Ruta): Response<Long?>

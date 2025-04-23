@@ -95,6 +95,33 @@ public class RutaApiController {
         
         return response;        
     }
+    
+    @GetMapping("/byCiclistaEmail/{ciclistaEmail}")
+    @PermitAll  // Permitir acceso sin autenticación
+    public ResponseEntity<List<Ruta>> getAllByCiclistaEmail(@PathVariable String ciclistaEmail){
+        
+        ResponseEntity<List<Ruta>> response;
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-store"); //no usar caché
+        
+        try {
+            
+            logger.info("Cercant rutes amb idCiclista: {}", "ciclistaId: "+ciclistaEmail);
+           List<Ruta> rutas = rutaLogic.getAllByCiclistaEmail(ciclistaEmail);
+            
+            logger.info("Rutas trobades: {}", "ciclistaEmail: "+ciclistaEmail); 
+            response = new ResponseEntity<>(rutas, headers, HttpStatus.OK);
+           
+
+        } catch (Exception e) {
+            logger.error("Error intern del servidor al intentar trovar la ruta {}", "Error mesage: "+e.getMessage()); 
+            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+        return response;        
+    }
+    
       
    @PostMapping("/create")
    @PermitAll  // Permitir acceso sin autenticación
