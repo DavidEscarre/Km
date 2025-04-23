@@ -32,7 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class RecompensaWebController {
     
     @Autowired
-    private RecompensaLogic recompensaLogic;  // Servicio para gestionar los clientes
+    private RecompensaLogic recompensaLogic; 
 
     /**
      * Muestra la lista de todos las recompensas en el sistema.

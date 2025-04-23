@@ -1,5 +1,6 @@
 package com.example.km.SistemaManagment.data.datasource
 
+import com.example.km.RutaManagment.data.datasource.RutaRetrofitInstance
 import com.example.km.core.utils.URL_IP_APP
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -14,5 +15,9 @@ object SistemaRetrofitInstance {
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())  // Convierte JSON a objetos Kotlin
             .build()
+    }
+
+    fun <T> create(service: Class<T>): T {
+        return retrofitInstance.create(service)
     }
 }

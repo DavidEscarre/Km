@@ -12,6 +12,7 @@ public class Sistema {
 
     private Long tempsMaxRec = 259200000L;
 
+    private Long precisioPunts = 2000L;
 
     public Sistema(Long id) {
         this.id = id;
@@ -60,4 +61,11 @@ public class Sistema {
         this.tempsMaxRec = tempsMaxRec;
     }
 
+    public Long getPrecisioPunts() {
+        return precisioPunts;
+    }
+
+    public void setPrecisioPunts(Long precisioPunts) {
+        this.precisioPunts = precisioPunts;
+    }
 }

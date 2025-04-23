@@ -30,13 +30,46 @@
         </nav>
     </header>
     <main class="container">
-        <form th:action="@{/users}" method="get">
-            <button id="btn-users" type="submit" class="btn btn-danger" style="display: inline;">Usuarios</button>
+        
+          <h2 class="section-title">Parametres de sistema</h2>
+        <form class="form-grid" th:action="@{/update}" th:object="${sistema}" method="post">
+            <div class="form-group">
+                <label>Velocitat màxima vàlida</label>
+                <input type="number" th:field="*{velMaxValida}" placeholder="">
+            </div>
+            <div class="form-group">
+                <label>Conversió entre saldo i quilòmetres</label>
+                <input type="number" th:field="*{puntsKm}" placeholder="">
+            </div>
+            <div class="form-group">
+                <label>Temps màxim d'aturada (Min)</label>
+                <input type="number" th:field="*{tempsMaxAturMin}" placeholder="" >
+            </div>
+            <div class="form-group">
+                <label>Temps màxim per recollir la recompensa (Hores)</label>
+                <input type="number" th:field="*{tempsMaxRecHoras}" placeholder="">
+            </div>
+             <div class="form-group">
+                <label>Precicio dels punts, temps entre medicions (Seg)</label>
+                <input type="number" th:field="*{precicioPuntsSeg}" placeholder="">
+            </div>
+            <div class="form-buttons">
+                <div class="save-button">
+                    <button type="submit" name="action" value="guardar" class="submit-button">Guarda</button>
+                </div>
+                <div class="reset-button">
+                    <button type="submit" name="action" value="reset" class="submit-button">Resetejar</button>
+                </div>
+            </div>
+            
         </form>
-        <form th:action="@{/rutes}" method="get">
-            <button id="btn-rutes" type="submit" class="btn btn-danger" style="display: inline;">Rutes</button>
-        </form>
-        <!-- Botón para cerrar sesión -->
+          <!--
+          <form class="form-grid" th:action="@{/reset}" th:object="${sistema}" method="post">
+              <div class="reset-button">
+                <button type="submit" class="submit-button">Resetejar</button>
+            </div>
+          </form>
+          -->
         
     </main>
 </body>
