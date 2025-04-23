@@ -27,24 +27,43 @@
                 </a>
         </nav>
     </header>
-    <main class="main-container">
+    <main class="container">
         
-          <section class="user-list">
+          <section class="recompenses-list">
             <div class="ruta-card" th:each="ruta : ${rutes}">
                 
                 
-                <div class="ruta-info">
-                  <!--  <h3 class="ruta-ciclista" th:text="${ruta.ciclista}"></h3> -->
+              
+                  <div class="ruta-card-section1">
+                     
+                      <!--  <h3 class="ruta-ciclista" th:text="${ruta.ciclista}"></h3> -->
                     <p>
-                      <strong>Ciclista:</strong> <span class="ruta-ciclista" th:text="${ruta.ciclista.nom +' '+ ruta.ciclista.email}"></span> 
+                      <strong>Ciclista:</strong> <span class="ruta-ciclista" th:text="${ruta.ciclista.nom +', '+ ruta.ciclista.email}"></span> 
                     </p>
                     <p>
-                      <strong>Distancia:</strong> <span class="ruta-distancia" th:text="${ruta.distancia}"></span> 
+                      <strong>Distancia:</strong> <span class="ruta-distancia" th:text="${ruta.distancia} +' '+ km"></span> 
+                    </p>
+                    <p>
+                      <strong>Durada:</strong> <span class="ruta-temps" th:text="${ruta.durada}"></span> 
                     </p>
                   
                     <p><strong>Estat:</strong> <span th:text="${ruta.estat}"></span></p>
+                    
+                 </div>
+                  <div class="ruta-card-section2">
+                     
+                     <div class="ruta-saldo-container">
+                        <span class="ruta-saldo" th:text="${ruta.saldo}">500</span>
+                        <img class="price-icon" src="/images/coins_icon.svg" alt="">               
+                    </div>
                   
-                </div>
+                    <p><strong>Velocitat Mitjana</strong> <span th:text="${ruta.velocitatMitjana}"></span></p>
+                     <p><strong>Velocitat Maxima</strong> <span th:text="${ruta.velocitatMax}"></span></p>
+                 </div>
+                 
+                    
+                    
+                
                 <div class="ruta-actions">
                     <button class="edit-button">Editar</button>
                     <button class="delete-button">Eliminar</button>

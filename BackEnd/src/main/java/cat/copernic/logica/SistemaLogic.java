@@ -42,5 +42,28 @@ public class SistemaLogic {
         return (s != null);
     }    
     
-    
+    public boolean updateSistema(Sistema newSistema)throws Exception
+    {
+        if(existsById(newSistema.getId())){
+            
+            Sistema oldSistema = getSistema(newSistema.getId());
+            
+            oldSistema.setPrecisioPunts(newSistema.getPrecisioPunts());
+            oldSistema.setPuntsKm(newSistema.getPuntsKm());
+            oldSistema.setTempsMaxAtur(newSistema.getTempsMaxAtur());
+            oldSistema.setTempsMaxRec(newSistema.getTempsMaxRec());
+            oldSistema.setVelMaxValida(newSistema.getVelMaxValida());
+            
+            sistemaRepo.save(oldSistema);
+            return true;
+        }else return false;
+  
+       
+    }
+        
+
+            
+
+
+       
 }

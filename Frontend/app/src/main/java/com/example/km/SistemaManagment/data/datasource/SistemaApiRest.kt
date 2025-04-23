@@ -11,7 +11,7 @@ interface SistemaApiRest {
     suspend fun findAll(): Response<List<Sistema>>
 
     @GET("byId/{sistemaId}")
-    suspend fun getSistemaById(@Path("sistemaId") sistemaId: Long): Response<Sistema>
+    suspend fun getSistemaById(@Path("sistemaId") sistemaId: Long): Response<Sistema?>
 }
 
 

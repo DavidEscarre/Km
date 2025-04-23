@@ -4,7 +4,36 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5cf478d9-788e-4dba-897f-7f63629f3244" name="Changes" comment="dada" />
+    <list default="true" id="5cf478d9-788e-4dba-897f-7f63629f3244" name="Changes" comment="dada">
+      <change afterPath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/PuntGPSManagment/domain/usecases/tempsAturUseCase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/SistemaManagment/data/repositories/SistemaRepositoryImpl.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/SistemaManagment/domain/repositories/SistemaRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/SistemaManagment/ui/viewmodels/SistemaViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BackEnd/src/main/java/cat/copernic/Entity/Ruta.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/src/main/java/cat/copernic/Entity/Ruta.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BackEnd/src/main/java/cat/copernic/Entity/Sistema.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/src/main/java/cat/copernic/Entity/Sistema.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BackEnd/src/main/resources/static/styles/stylesList.css" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/src/main/resources/static/styles/stylesList.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BackEnd/src/main/resources/templates/create-recompensa.html" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/src/main/resources/templates/create-recompensa.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BackEnd/src/main/resources/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/src/main/resources/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BackEnd/src/main/resources/templates/recompenses-list.html" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/src/main/resources/templates/recompenses-list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BackEnd/src/main/resources/templates/rutes-list.html" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/src/main/resources/templates/rutes-list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BackEnd/target/classes/cat/copernic/Entity/Ruta.class" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/target/classes/cat/copernic/Entity/Ruta.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BackEnd/target/classes/cat/copernic/Entity/Sistema.class" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/target/classes/cat/copernic/Entity/Sistema.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BackEnd/target/classes/static/styles/stylesList.css" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/target/classes/static/styles/stylesList.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BackEnd/target/classes/templates/create-recompensa.html" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/target/classes/templates/create-recompensa.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BackEnd/target/classes/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/target/classes/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BackEnd/target/classes/templates/recompenses-list.html" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/target/classes/templates/recompenses-list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BackEnd/target/classes/templates/rutes-list.html" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/target/classes/templates/rutes-list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/.kotlin/sessions/kotlin-compiler-14954843864530635415.salive" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/PuntGPSManagment/ui/viewmodels/PuntGPSViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/PuntGPSManagment/ui/viewmodels/PuntGPSViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/PuntGPSManagment/ui/viewmodels/ViewModelsFactories/PuntGPSViewModelFactory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/PuntGPSManagment/ui/viewmodels/ViewModelsFactories/PuntGPSViewModelFactory.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/RutaManagment/data/repositories/RutaRepositoryImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/RutaManagment/data/repositories/RutaRepositoryImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/SistemaManagment/data/datasource/SistemaApiRest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/SistemaManagment/data/datasource/SistemaApiRest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/SistemaManagment/data/datasource/SistemaRetrofitInstance.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/SistemaManagment/data/datasource/SistemaRetrofitInstance.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/core/models/Sistema.java" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/core/models/Sistema.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/main/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/main/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/main/screens/MainScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/main/screens/MainScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/navigation/NavGraph.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/app/src/main/java/com/example/km/navigation/NavGraph.kt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,26 +45,26 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitLabMergeRequestFiltersHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPENED",
-    "assignee": {
-      "type": "org.jetbrains.plugins.gitlab.mergerequest.ui.filters.GitLabMergeRequestsFiltersValue.MergeRequestsMemberFilterValue.MergeRequestsAssigneeFilterValue",
-      "username": "david.degonz",
-      "fullname": "David Escarre"
+  <component name="GitLabMergeRequestFiltersHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPENED&quot;,
+    &quot;assignee&quot;: {
+      &quot;type&quot;: &quot;org.jetbrains.plugins.gitlab.mergerequest.ui.filters.GitLabMergeRequestsFiltersValue.MergeRequestsMemberFilterValue.MergeRequestsAssigneeFilterValue&quot;,
+      &quot;username&quot;: &quot;david.degonz&quot;,
+      &quot;fullname&quot;: &quot;David Escarre&quot;
     }
   }
-}]]></component>
-  <component name="GitLabMergeRequestsSettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "first": "https://david.degonz@gitlab.com/david.degonz/proyecte4_km.git",
-    "second": "0e719f77-1555-45a2-af9d-d616ca5fc89e"
+}</component>
+  <component name="GitLabMergeRequestsSettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;first&quot;: &quot;https://david.degonz@gitlab.com/david.degonz/proyecte4_km.git&quot;,
+    &quot;second&quot;: &quot;0e719f77-1555-45a2-af9d-d616ca5fc89e&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 3
-}]]></component>
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2uFqfvXHbwOSKJJnEG36SnZmR7I" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -48,9 +77,9 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "FirsBranch",
+    "git-widget-placeholder": "Feature/Web/CrearRecompensesWeb",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/alpep/Documents/NetBeansProjects/Proyecte4_Km"
+    "last_opened_file_path": "C:/Users/alpep/Documents/NetBeansProjects/proyecte4_km/Frontend"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />

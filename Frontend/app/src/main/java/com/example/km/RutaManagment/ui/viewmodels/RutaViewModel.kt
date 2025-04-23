@@ -22,7 +22,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Response
 
 @RequiresApi(Build.VERSION_CODES.O)
-class RutaViewModel: ViewModel() {
+class RutaViewModel(): ViewModel() {
 
     private val puntGPSRepo = PuntGPSRepositoryImpl()
 
@@ -36,6 +36,7 @@ class RutaViewModel: ViewModel() {
 
    private val _puntsGPSRuta = MutableStateFlow<List<PuntGPS>>(emptyList())
     val puntsGPSRuta: MutableStateFlow<List<PuntGPS>> get() = _puntsGPSRuta
+
 
 
     fun findById(id: Long): Ruta?{

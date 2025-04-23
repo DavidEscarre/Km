@@ -27,6 +27,7 @@ import com.example.km.R
 import com.example.km.RecompensaManagment.ui.screeens.RecompensesScreen
 import com.example.km.RutaManagment.ui.screens.RutesScreen
 import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
+import com.example.km.SistemaManagment.ui.viewmodels.SistemaViewModel
 import com.example.km.UserManagment.ui.screens.LoginScreen
 import com.example.km.UserManagment.ui.screens.ProfileScreen
 import com.example.km.UserManagment.ui.viewmodels.LoginViewModel
@@ -36,7 +37,7 @@ import com.example.km.main.screens.MainScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AppNavigation(puntGPSViewModel: PuntGPSViewModel, rutaViewModel: RutaViewModel, navController: NavController, loginViewModel: LoginViewModel, userState: State<User?>) {
+fun AppNavigation(sistemaViewModel: SistemaViewModel, puntGPSViewModel: PuntGPSViewModel, rutaViewModel: RutaViewModel, navController: NavController, loginViewModel: LoginViewModel, userState: State<User?>) {
     val navController = rememberNavController()
     val context = LocalContext.current
    // val rutaViewModel: RutaViewModel = viewModel()
@@ -46,7 +47,7 @@ fun AppNavigation(puntGPSViewModel: PuntGPSViewModel, rutaViewModel: RutaViewMod
 
 
         // Pantalla Home amb Bottom Navigation
-        composable("home") { MainScreen(rutaViewModel, puntGPSViewModel, navController, userState) }
+        composable("home") { MainScreen(sistemaViewModel, rutaViewModel, puntGPSViewModel, navController, userState) }
 
         composable("rutes") { RutesScreen(rutaViewModel, puntGPSViewModel, navController, userState) }
         composable("recompenses") { RecompensesScreen(navController, userState) }

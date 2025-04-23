@@ -65,3 +65,69 @@
       margin: 1rem auto;
       padding: 0 1rem;
     }
+    .section-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #003366;
+  margin: 2rem 0 1rem;
+  text-decoration: underline;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.form-group input {
+  padding: 0.6rem;
+  border: 2px solid #ddd;
+  border-radius: 20px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+  border-color: #003366;
+}
+.form-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  grid-column: 1 / -1; /* Se asegura de abarcar toda la fila si está dentro del grid */
+}
+
+.save-button, .reset-button {
+  flex: 0.15;
+  display: flex;
+  justify-content: center;
+}
+
+.submit-button {
+  background-color: #333;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: 0.6rem 2rem;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.submit-button:hover {
+  background-color: #555;
+}

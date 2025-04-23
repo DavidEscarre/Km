@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class RutaWebController {
       
     @Autowired
-    private RutaLogic rutaLogic;  // Servicio para gestionar los clientes
+    private RutaLogic rutaLogic; 
 
     /**
      * Muestra la lista de todos las rutas en el sistema.

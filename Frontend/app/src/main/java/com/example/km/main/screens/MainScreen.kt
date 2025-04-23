@@ -61,8 +61,11 @@ import com.example.km.PuntGPSManagment.ui.viewmodels.PuntGPSViewModel
 import com.example.km.R
 //import com.example.km.PuntGPSManagment.ui.viewmodels.ViewModelsFactories.PuntGPSViewModelFactory
 import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
+import com.example.km.SistemaManagment.data.repositories.SistemaRepositoryImpl
+import com.example.km.SistemaManagment.ui.viewmodels.SistemaViewModel
 import com.example.km.core.models.PuntGPS
 import com.example.km.core.models.Ruta
+import com.example.km.core.models.Sistema
 import com.example.km.core.models.User
 import com.example.km.navigation.BottomNavigationBar
 import com.google.android.gms.location.LocationServices
@@ -81,7 +84,7 @@ import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MainScreen(rutaViewModel: RutaViewModel,puntGPSViewModel: PuntGPSViewModel, navController: NavController,   userState: State<User?>) {
+fun MainScreen(sistemaViewModel: SistemaViewModel, rutaViewModel: RutaViewModel,puntGPSViewModel: PuntGPSViewModel, navController: NavController,   userState: State<User?>) {
     val context = LocalContext.current
     var rutaActiva by remember { mutableStateOf(false) }
     var activadorRuta by remember { mutableStateOf(true) }
@@ -90,9 +93,17 @@ fun MainScreen(rutaViewModel: RutaViewModel,puntGPSViewModel: PuntGPSViewModel, 
     val cameraPositionState = rememberCameraPositionState()
     val userLocation by puntGPSViewModel.currentLocation.collectAsState()
 
+    val aturat by puntGPSViewModel.aturat.collectAsState()
+    val tempsAtur by puntGPSViewModel.tempsAtur.collectAsState()
+    val tepsMaxAtur by sistemaViewModel.tempsMaxAtur.collectAsState()
+
     val locationList by puntGPSViewModel.locationList.collectAsState()
     val scrollState = rememberScrollState()
-
+    LaunchedEffect(Unit) {
+        val sistema = getSistemaFromBackend(sistemaViewModel)
+        puntGPSViewModel.setPrecisio(sistema.precisioPunts)
+        sistemaViewModel.findFirst()
+    }
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
@@ -222,6 +233,10 @@ fun MainScreen(rutaViewModel: RutaViewModel,puntGPSViewModel: PuntGPSViewModel, 
             }
 
         }
+        if (aturat && tempsAtur >= tepsMaxAtur) {
+            AturarRuta(rutaViewModel, puntGPSViewModel, context, userState)
+        }
+
 
         if (rutaActiva && activadorRuta) {
 
@@ -379,5 +394,19 @@ fun AturarRuta(rutaViewModel: RutaViewModel, puntsGPSViewModel: PuntGPSViewModel
     }
     puntsGPSViewModel.vuidarllistaPuntsGPS()
     puntsGPSViewModel.startLocationUpdatesSimple()
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun getSistemaFromBackend(sistemaViewModel: SistemaViewModel): Sistema {
+    sistemaViewModel.findById(1)
+    val sistema = sistemaViewModel.sistema.value
+    if(sistema==null){
+        Log.e("Error Sistema MainAct", "Error al carreglar el sistema mainAct")
+        return Sistema()
+    }else{
+        Log.d("Sistema MainAct", "carregat el sistema mainAct")
+        return sistema
+    }
+
 }
 

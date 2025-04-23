@@ -6,24 +6,17 @@ import android.app.Application
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
-import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.km.PuntGPSManagment.data.repositories.PuntGPSRepositoryImpl
-import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
+import com.example.km.PuntGPSManagment.domain.usecases.tempsAturUseCase
+import com.example.km.SistemaManagment.data.repositories.SistemaRepositoryImpl
 import com.example.km.core.models.PuntGPS
-import com.example.km.core.models.Ruta
-import com.example.km.main.screens.getCurrentLocation
-import com.google.android.gms.common.api.Response
-import com.google.android.gms.common.api.Result
-import com.google.android.gms.location.CurrentLocationRequest
+import com.example.km.core.models.Sistema
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -32,31 +25,33 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 class PuntGPSViewModel(application: Application) : AndroidViewModel(application) {
 
 
+    private val _precisioPunts = MutableStateFlow(5000L)
+    val precisioPunts: StateFlow<Long> = _precisioPunts
 
-   /* private val _rutaAct: MutableStateFlow<Ruta?> = MutableStateFlow(null)
-    val rutaAct: StateFlow<Ruta?> = _rutaAct
 
-    init {
-        viewModelScope.launch {
-            rutaViewModel.rutaAct.collect { valor ->
-                _rutaAct.value = valor  // <-- aquí lo sincronizas
-            }
-        }
+    fun setPrecisio(valor: Long) {
+        _precisioPunts.value = valor
+        Log.d("PGPSViewModel Precicio", "precicio: ${precisioPunts.value}")
     }
-*/
+
+
+    private val tempsAturUseCase = tempsAturUseCase()
 
     private val _currentLocation = MutableStateFlow<LatLng?>(null)
     val currentLocation: StateFlow<LatLng?> = _currentLocation
 
+    private val _aturat = MutableStateFlow<Boolean>(true)
+    val aturat: StateFlow<Boolean> = _aturat
+
+
+    val tempsAtur: StateFlow<Long> = tempsAturUseCase.tempsAturMs
 
     private val puntGPSRepo = PuntGPSRepositoryImpl()
 
@@ -68,7 +63,9 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
     private val _puntGPSRutaList = MutableStateFlow<List<PuntGPS>>(emptyList())
     val puntGPSRutaList: StateFlow<List<PuntGPS>> = _puntGPSRutaList
 
-    private var locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000L)
+
+
+    private var locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, precisioPunts.value)
         .setWaitForAccurateLocation(true)
         .setMinUpdateIntervalMillis(2000)
         .build()
@@ -80,15 +77,19 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
         @RequiresApi(Build.VERSION_CODES.O)
         override fun onLocationResult(locationResult: LocationResult) {
             locationResult.lastLocation?.let { location ->
+                    val locationLatLng  = LatLng(location.latitude, location.longitude)
+                    setCurrentLocation(locationLatLng)
+                    detectorAtur(locationLatLng)
+                    _locationList.value = _locationList.value + (locationLatLng)
 
-                    setCurrentLocation(LatLng(location.latitude,location.longitude))
 
-                    _locationList.value = _locationList.value + (LatLng(location.latitude, location.longitude))
-                    Log.d("crear pgps", "creaadpolocssssssssssssssssssssssssssssssssoooooo")
                     val dataMarcaTemps = LocalDateTime.now()
-
+                    Log.d("PGPSVM_LocationRes", "punt creat data: ${LocalDateTime.now().second}")
                     val puntGPSCreat = PuntGPS(location.latitude, location.longitude,dataMarcaTemps)
                     _puntGPSRutaList.value = _puntGPSRutaList.value + (puntGPSCreat)
+                    Log.d("PGPSVM_LocationRes", "PungGPS Afeixit a _puntGPSRutaList, size: ${puntGPSRutaList.value}")
+
+
 
             }
         }
@@ -211,6 +212,24 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
 
         }
         return res
+    }
+
+    fun detectorAtur(location: LatLng){
+        if(locationList.value.size > 0){
+            val startP = locationList.value.last()
+            val results = FloatArray(1)
+
+            Location.distanceBetween(startP.latitude, startP.longitude, location.latitude, location.longitude, results)
+            if(results[0].toDouble() < 1){ // Si la distancia del l'ultim punt es menor a 1 METRE
+                _aturat.value = true
+                tempsAturUseCase.start(viewModelScope)
+            }else{
+                _aturat.value = false
+                tempsAturUseCase.stop()
+                tempsAturUseCase.reset()
+            }
+        }
+
     }
 
 

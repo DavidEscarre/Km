@@ -36,14 +36,16 @@ public class Sistema {
     @Column(nullable = false)
     private Long tempsMaxRec = 259200000L;
 
-    
+    @Column(nullable = false)
+    private Long precisioPunts = 2000L;
+  
     public Sistema(Long id) {
         this.id = id;
     }
 
     public Sistema() {
     }
-
+    
     public Long getId() {
         return id;
     }
@@ -82,6 +84,39 @@ public class Sistema {
 
     public void setTempsMaxRec(Long tempsMaxRec) {
         this.tempsMaxRec = tempsMaxRec;
+    }
+
+    public Long getPrecisioPunts() {
+        return precisioPunts;
+    }
+
+    public void setPrecisioPunts(Long precisioPunts) {
+        this.precisioPunts = precisioPunts;
+    }
+    
+      // Devuelve valor en minutos para mostrar
+    public Long getTempsMaxAturMin() {
+        return tempsMaxAtur != null ? tempsMaxAtur / 60000 : null;
+    }
+
+    public void setTempsMaxAturMin(Long minuts) {
+        this.tempsMaxAtur = minuts != null ? minuts * 60000 : null;
+    }
+    
+    public Long getTempsMaxRecHoras() {
+        return tempsMaxRec != null ? tempsMaxRec / 3600000 : null;
+    }
+
+    public void setTempsMaxRecHoras(Long horas) {
+        this.tempsMaxRec = horas != null ? horas * 3600000 : null;
+    }
+    
+     public Long getPrecicioPuntsSeg() {
+        return precisioPunts != null ? precisioPunts / 1000 : null;
+    }
+
+    public void setPrecicioPuntsSeg(Long segons) {
+        this.precisioPunts = segons != null ? segons * 1000 : null;
     }
     
     
