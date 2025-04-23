@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -50,6 +51,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
@@ -87,7 +93,7 @@ import java.time.format.DateTimeFormatter
 fun MainScreen(sistemaViewModel: SistemaViewModel, rutaViewModel: RutaViewModel,puntGPSViewModel: PuntGPSViewModel, navController: NavController,   userState: State<User?>) {
     val context = LocalContext.current
     var rutaActiva by remember { mutableStateOf(false) }
-    var activadorRuta by remember { mutableStateOf(true) }
+    var activadorRuta by remember { mutableStateOf(false) }
 
     val moveCameraTrigger = remember { mutableStateOf(false) }
     val cameraPositionState = rememberCameraPositionState()
@@ -214,7 +220,33 @@ fun MainScreen(sistemaViewModel: SistemaViewModel, rutaViewModel: RutaViewModel,
                     Spacer(Modifier.height(28.dp))
 
 
+                }
+                if(aturat && rutaActiva){
+                    Spacer(Modifier.height(28.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 40.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        val tempsRestant = (tepsMaxAtur - tempsAtur)
+                        val totalSegons = tempsRestant / 1000
+                        val minuts = totalSegons / 60
+                        val segons = totalSegons % 60
 
+                        val tempsFormat = when {
+                            minuts > 0 -> "$minuts min $segons seg"
+                            else -> "$segons seg"
+                        }
+
+                        Text(
+                            buildAnnotatedString {
+                                append("Parada detectada, temps restant per la finalització de la ruta: ")
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append(tempsFormat)
+                                }
+                            }
+                           , textAlign = TextAlign.Center)
+
+                    }
                 }
 
                /* Column(
@@ -233,18 +265,26 @@ fun MainScreen(sistemaViewModel: SistemaViewModel, rutaViewModel: RutaViewModel,
             }
 
         }
-        if (aturat && tempsAtur >= tepsMaxAtur) {
-            AturarRuta(rutaViewModel, puntGPSViewModel, context, userState)
+
+
+
+
+        if (rutaActiva && aturat && tempsAtur >= tepsMaxAtur) {
+            AturarRuta(true, rutaViewModel, puntGPSViewModel, context, userState)
+            Log.d("MainScreen", "tempsMaxAtur: $tepsMaxAtur")
+            activadorRuta = false
+            rutaActiva = false
         }
-
-
         if (rutaActiva && activadorRuta) {
 
             IniciarRuta(rutaViewModel, puntGPSViewModel, context, userState)
             activadorRuta = false
+
+
         } else if (!rutaActiva && activadorRuta) {
-            AturarRuta(rutaViewModel, puntGPSViewModel, context, userState)
+            AturarRuta(false, rutaViewModel, puntGPSViewModel, context, userState)
             activadorRuta = false
+
         }
     }
 
@@ -347,7 +387,7 @@ fun IniciarRuta(rutaViewModel: RutaViewModel, puntsGPSViewModel: PuntGPSViewMode
 @SuppressLint("CoroutineCreationDuringComposition")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AturarRuta(rutaViewModel: RutaViewModel, puntsGPSViewModel: PuntGPSViewModel, context: Context,  userState: State<User?>) {
+fun AturarRuta(aturPerTemps: Boolean, rutaViewModel: RutaViewModel, puntsGPSViewModel: PuntGPSViewModel, context: Context,  userState: State<User?>) {
 
     puntsGPSViewModel.stopLocationUpdates()
 
@@ -379,7 +419,7 @@ fun AturarRuta(rutaViewModel: RutaViewModel, puntsGPSViewModel: PuntGPSViewModel
                 onSuccess = {
 
                     Handler(Looper.getMainLooper()).post {
-                        Toast.makeText(context, "Ruta finalizada", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, if(aturPerTemps) "Temps d'atur maxim superat" else "Ruta finalizada" , Toast.LENGTH_SHORT).show()
                     }
                     puntsGPSViewModel.vuidarllistaPuntsGPS()
                 },
@@ -392,6 +432,7 @@ fun AturarRuta(rutaViewModel: RutaViewModel, puntsGPSViewModel: PuntGPSViewModel
         }
 
     }
+    puntsGPSViewModel.ResetTempsAtur()
     puntsGPSViewModel.vuidarllistaPuntsGPS()
     puntsGPSViewModel.startLocationUpdatesSimple()
 }
