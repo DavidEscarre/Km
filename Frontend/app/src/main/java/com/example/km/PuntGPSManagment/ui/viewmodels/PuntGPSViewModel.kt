@@ -47,7 +47,7 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
     private val _currentLocation = MutableStateFlow<LatLng?>(null)
     val currentLocation: StateFlow<LatLng?> = _currentLocation
 
-    private val _aturat = MutableStateFlow<Boolean>(true)
+    private val _aturat = MutableStateFlow<Boolean>(false)
     val aturat: StateFlow<Boolean> = _aturat
 
 
@@ -230,6 +230,10 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
             }
         }
 
+    }
+    fun ResetTempsAtur(){
+        tempsAturUseCase.stop()
+        tempsAturUseCase.reset()
     }
 
 
