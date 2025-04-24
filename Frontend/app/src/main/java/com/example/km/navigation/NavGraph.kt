@@ -19,12 +19,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.km.PuntGPSManagment.ui.viewmodels.PuntGPSViewModel
 import com.example.km.R
 import com.example.km.RecompensaManagment.ui.screeens.RecompensesScreen
+import com.example.km.RutaManagment.ui.screens.RutaDetailsScreen
 import com.example.km.RutaManagment.ui.screens.RutesScreen
 import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
 import com.example.km.SistemaManagment.ui.viewmodels.SistemaViewModel
@@ -53,7 +56,21 @@ fun AppNavigation(sistemaViewModel: SistemaViewModel, puntGPSViewModel: PuntGPSV
         composable("recompenses") { RecompensesScreen(navController, userState) }
         composable("profile") { ProfileScreen(context, loginViewModel, navController, userState) }
 
-
+        composable(
+            "ruta_details/{rutaId}",
+            arguments = listOf(navArgument("rutaId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val rutaId = backStackEntry.arguments?.getLong("rutaId")
+            rutaId?.let {
+                RutaDetailsScreen(
+                    rutaId = it,
+                    rutaViewModel = rutaViewModel,
+                    puntGPSViewModel = puntGPSViewModel,
+                    navController = navController,
+                    userState = userState
+                )
+            }
+        }
 
         /*
         composable("categories") { CategoriesScreen(navController) }

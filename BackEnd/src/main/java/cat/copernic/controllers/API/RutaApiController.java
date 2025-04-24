@@ -75,7 +75,7 @@ public class RutaApiController {
         try {
             
             logger.info("Cercant ruta amb id: {}", "rutaId: "+rutaId);
-           Ruta ruta = rutaLogic.getRuta(rutaId);
+            Ruta ruta = rutaLogic.getRuta(rutaId);
             
             if (ruta == null)
             {

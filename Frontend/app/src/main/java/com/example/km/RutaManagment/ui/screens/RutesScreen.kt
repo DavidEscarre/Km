@@ -75,7 +75,7 @@ fun RutesScreen(
         ) {
 
             items(rutas) { ruta ->
-                RutaItem(ruta)
+                RutaItem(ruta, navController)
             }
         }
 
@@ -84,7 +84,7 @@ fun RutesScreen(
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun RutaItem(ruta: Ruta) {
+fun RutaItem(ruta: Ruta, navController: NavController) {
     // Calculate duration between start and end (or now)
     val end = ruta.dataFinal ?: LocalDateTime.now()
     val duration = Duration.between(ruta.dataInici, end)
@@ -99,6 +99,9 @@ fun RutaItem(ruta: Ruta) {
             containerColor = Color(0xFF2A2A2A),
             contentColor = Color.White
         ),
+        onClick = {
+            navController.navigate("ruta_details/${ruta.id}")
+        },
         elevation = CardDefaults.cardElevation(4.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -160,9 +163,11 @@ fun RutaItem(ruta: Ruta) {
                             color = Color.White
                         )
                     }
-
+                    val isPendent = ruta?.estat == EstatRuta.PENDENT
                     val isValidada = ruta.estat == EstatRuta.VALIDA
-                    val container = if (isValidada) Color(0xFF2ECC71) else Color(0xFFE74C3C)
+                    val container = if (isValidada && !isPendent) Color(0xFF2ECC71) else {
+                        if(!isValidada && !isPendent) Color(0xFFE74C3C) else Color.Gray
+                    }
                     val content = Color.White
                     Button(
                         onClick = { /* Acción si procede */ },
@@ -175,8 +180,7 @@ fun RutaItem(ruta: Ruta) {
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text(
-                            text = if (isValidada) "Validada" else "No validada",
-                            color = Color.White
+                            text =  if(isValidada && !isPendent) "Validada" else if(!isValidada && !isPendent) "No validada" else "Pendent",                            color = Color.White
                         )
                     }
                 }
