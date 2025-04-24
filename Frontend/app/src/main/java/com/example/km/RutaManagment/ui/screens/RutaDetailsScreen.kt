@@ -27,6 +27,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -93,7 +94,7 @@ fun RutaDetailsScreen(
 
 
 
-    val ruta by rutaViewModel.ruta.collectAsState()
+
     val moveCameraTrigger = remember { mutableStateOf(false) }
     val cameraPositionState = rememberCameraPositionState()
     val locationList = remember { mutableStateListOf<LatLng>() }
@@ -115,17 +116,19 @@ fun RutaDetailsScreen(
             height = 64.dp
     )
 
-
+    val ruta by rutaViewModel.ruta.collectAsState()
   //  val iconInicio = bitmapDescriptorFromVector()
    // val iconFin = bitmapDescriptorFromVector(R.drawable.banderaend)
     var centro   by remember { mutableStateOf<LatLng?>(null) }
-    if (rutaId != null){
-        Log.d("RutaDetailsScreen", "fetching rutaId($rutaId)....")
-        rutaViewModel.findById(rutaId)
-    }else{
-        Log.e("RutaDetailsScreen", "NO RUTA ID ....")
+
+    // Cuando cambie rutaId, se ejecuta UNA VEZ
+    LaunchedEffect(rutaId) {
+        rutaId?.let { rutaViewModel.findById(it) }
+
     }
-    LaunchedEffect(Unit) {
+
+
+    LaunchedEffect(rutaId) {
 
 
         ruta?.puntsGPS?.let { punts ->
@@ -164,6 +167,18 @@ fun RutaDetailsScreen(
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
 
+        // Si ruta aún no ha llegado, muestro un loader y corto la composición
+        if (ruta == null) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+            return@Scaffold
+        }
         Column(
             modifier = Modifier.fillMaxSize().padding(paddingValues)
         ) {
@@ -229,7 +244,7 @@ fun RutaDetailsScreen(
             ){
                 // Calculate duration between start and end (or now)
                 val end = ruta?.dataFinal ?: LocalDateTime.now()
-                val duration = Duration.between(ruta?.dataInici, end)
+                val duration = Duration.between(ruta?.dataInici ?: LocalDateTime.now(), end)
                 val hours = duration.toHours()
                 val minutes = duration.minusHours(hours).toMinutes()
                 val seconds = duration.minusHours(hours).minusMinutes(minutes).seconds
@@ -321,12 +336,13 @@ fun RutaDetailsScreen(
                             textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold, fontSize = 30.sp
                         )
+                        val saldo = ruta?.saldo ?: 0.0
                         Card(
                             Modifier.padding(top = 8.dp).shadow(6.dp,RoundedCornerShape(8.dp)),
                             shape = RoundedCornerShape(8.dp),
 
                             colors = CardDefaults.cardColors(
-                                containerColor = if (ruta?.saldo!! >= 0) Color(0xFF2ECC71) else Color(0xFFE74C3C),
+                                containerColor = if (saldo >= 0) Color(0xFF2ECC71) else Color(0xFFE74C3C),
                                 contentColor = Color.White
                             )
                         ) {
@@ -336,7 +352,7 @@ fun RutaDetailsScreen(
                             ) {
 
                                 Text(
-                                    text = "${if (ruta?.saldo!! >= 0) "+" else "-"}${ruta?.saldo}",
+                                    text = "${if (saldo >= 0) "+" else "-"}${saldo}",
                                     color = Color.White,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -348,8 +364,11 @@ fun RutaDetailsScreen(
                                 )
                             }
                         }
+                        val isPendent = ruta?.estat == EstatRuta.PENDENT
                         val isValidada = ruta?.estat == EstatRuta.VALIDA
-                        val container = if (isValidada) Color(0xFF2ECC71) else Color(0xFFE74C3C)
+                        val container = if (isValidada && !isPendent) Color(0xFF2ECC71) else {
+                            if(!isValidada && !isPendent) Color(0xFFE74C3C) else Color.Gray
+                        }
                         val content = Color.White
                         Text("Estat",Modifier.padding(top = 30.dp, start = 20.dp), color = Color.DarkGray,
                             textAlign = TextAlign.Center,
@@ -367,7 +386,7 @@ fun RutaDetailsScreen(
                             shape = RoundedCornerShape(8.dp)
                         ) {
                             Text(
-                                text = if (isValidada) "Validada" else "No validada",
+                                text = if (isValidada && !isPendent) "Validada" else if(!isValidada && !isPendent) "No validada" else "Pendent",
                                 color = Color.White
                             )
                         }

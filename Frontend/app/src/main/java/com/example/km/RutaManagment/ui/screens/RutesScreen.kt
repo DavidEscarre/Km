@@ -163,9 +163,11 @@ fun RutaItem(ruta: Ruta, navController: NavController) {
                             color = Color.White
                         )
                     }
-
+                    val isPendent = ruta?.estat == EstatRuta.PENDENT
                     val isValidada = ruta.estat == EstatRuta.VALIDA
-                    val container = if (isValidada) Color(0xFF2ECC71) else Color(0xFFE74C3C)
+                    val container = if (isValidada && !isPendent) Color(0xFF2ECC71) else {
+                        if(!isValidada && !isPendent) Color(0xFFE74C3C) else Color.Gray
+                    }
                     val content = Color.White
                     Button(
                         onClick = { /* Acción si procede */ },
@@ -178,8 +180,7 @@ fun RutaItem(ruta: Ruta, navController: NavController) {
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text(
-                            text = if (isValidada) "Validada" else "No validada",
-                            color = Color.White
+                            text =  if(isValidada && !isPendent) "Validada" else if(!isValidada && !isPendent) "No validada" else "Pendent",                            color = Color.White
                         )
                     }
                 }

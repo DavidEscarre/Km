@@ -9,6 +9,7 @@ import com.example.km.PuntGPSManagment.data.repositories.PuntGPSRepositoryImpl
 import com.example.km.RutaManagment.data.repositories.RutaRepositoryImpl
 import com.example.km.core.models.PuntGPS
 import com.example.km.core.models.Ruta
+import com.example.km.core.utils.enums.EstatRuta
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -49,7 +50,7 @@ class RutaViewModel(): ViewModel() {
                 }
 
             }catch(e: Exception){
-                _ruta.value = null
+                _rutas.value = emptyList()
                 e.printStackTrace()
 
 
@@ -83,7 +84,7 @@ class RutaViewModel(): ViewModel() {
                 }
 
             }catch(e: Exception){
-                _rutaAct.value = null
+                _ruta.value = null
                 e.printStackTrace()
 
 
@@ -169,7 +170,7 @@ class RutaViewModel(): ViewModel() {
                 ruta.puntsGPS = locationList.body()
 
 
-
+                ruta.estat = EstatRuta.NO_VALIDA
                 Log.d(" RUTAEERRRccQQ1111",  ruta.puntsGPS.size.toString())
                 val response = rutaRepo.updateRuta(ruta)
 

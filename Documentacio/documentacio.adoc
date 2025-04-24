@@ -493,3 +493,24 @@ Sprint 6
 
 image::Sprint6_tasques.png[]
 
+
+[[sprint4]]
+== *13. Sprint 4*
+
+En aquest Sprint m'he centrat en els requisits funcionals que més problemes em podien donar, com els paràmetres del sistema, i el sistema de visualització de detalls ampliats d'una ruta (el mapa d'aquest).
+
+=== *Tasques completades*
+image::tascasCompletadasSprint4.png[]
+
+=== *Nova planificació*
+Algunes tasques han sigut replanificades i mogudes a altres Sprints per optimització del desenvolupament del projecte.
+
+Sprint 5
+
+image::Sprint5_tasques4.png[]
+
+
+Sprint 6
+
+image::Sprint6_tasques2.png[]
+
