@@ -75,7 +75,7 @@ fun RutesScreen(
         ) {
 
             items(rutas) { ruta ->
-                RutaItem(ruta)
+                RutaItem(ruta, navController)
             }
         }
 
@@ -84,7 +84,7 @@ fun RutesScreen(
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun RutaItem(ruta: Ruta) {
+fun RutaItem(ruta: Ruta, navController: NavController) {
     // Calculate duration between start and end (or now)
     val end = ruta.dataFinal ?: LocalDateTime.now()
     val duration = Duration.between(ruta.dataInici, end)
@@ -99,6 +99,9 @@ fun RutaItem(ruta: Ruta) {
             containerColor = Color(0xFF2A2A2A),
             contentColor = Color.White
         ),
+        onClick = {
+            navController.navigate("ruta_details/${ruta.id}")
+        },
         elevation = CardDefaults.cardElevation(4.dp),
         modifier = Modifier.fillMaxWidth()
     ) {

@@ -1,8 +1,6 @@
 package com.example.km.GoogleMapsMap
 
-import android.app.Application
 import android.content.Context
-import android.location.Location
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -16,9 +14,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.km.PuntGPSManagment.ui.viewmodels.PuntGPSViewModel
 import com.example.km.R
 //import com.example.km.PuntGPSManagment.ui.viewmodels.ViewModelsFactories.PuntGPSViewModelFactory
@@ -86,7 +81,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 @Composable
 fun RouteViewMap(rutaId: Long, rutaViewModel: RutaViewModel, context: Context){
 
-    val ruta = rutaViewModel.findById(rutaId)
+    val ruta = rutaViewModel.findByIdAndGetRutaActual(rutaId)
     val cameraPositionState = rememberCameraPositionState()
     var StartLocation by remember { mutableStateOf<LatLng?>(null) }
     var EndLocation by remember { mutableStateOf<LatLng?>(null) }

@@ -6,26 +6,21 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.km.PuntGPSManagment.data.repositories.PuntGPSRepositoryImpl
-import com.example.km.RutaManagment.data.datasource.RutaApiRest
-import com.example.km.RutaManagment.data.datasource.RutaRetrofitInstance
 import com.example.km.RutaManagment.data.repositories.RutaRepositoryImpl
-import com.example.km.UserManagment.data.datasource.AuthRetrofitInstance
 import com.example.km.core.models.PuntGPS
 import com.example.km.core.models.Ruta
-import com.example.km.core.models.User
-import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.Response
 
 @RequiresApi(Build.VERSION_CODES.O)
 class RutaViewModel(): ViewModel() {
 
     private val _rutas = MutableStateFlow<List<Ruta>>(emptyList<Ruta>())
     val rutas: StateFlow<List<Ruta>>  = _rutas
+
+    private val _ruta = MutableStateFlow<Ruta?>(null)
+    val ruta: StateFlow<Ruta?>  = _ruta
 
     private val puntGPSRepo = PuntGPSRepositoryImpl()
 
@@ -54,6 +49,40 @@ class RutaViewModel(): ViewModel() {
                 }
 
             }catch(e: Exception){
+                _ruta.value = null
+                e.printStackTrace()
+
+
+            }
+        }
+    }
+    fun findById(id: Long){
+        viewModelScope.launch {
+
+            try{
+                val response = rutaRepo.getRutaById(id)
+                if(response.isSuccessful){
+                    Log.d("RutaById", "La ruta sa encontrao coñooo")
+                    Log.d("RutaById", "La ruta punts size: ${response.body()?.puntsGPS?.size}. ")
+
+                    _ruta.value = response.body()
+
+                    val resPunts = puntGPSRepo.getPuntGPSByIdRuta(id)
+                    if(resPunts.isSuccessful) {
+
+                        Log.d("RutaById", "puntsGPS size ruta($id): ${resPunts.body()?.size}. ")
+                        _ruta.value?.puntsGPS = resPunts.body()
+                        Log.d("RutaById", "La ruta($id) punts size: ${response.body()?.puntsGPS?.size}. ")
+
+                    }else{
+                        Log.e("RutaById", "Els puntsGPS de la ruta id: $id no s'han pogut trobar")
+                    }
+                }else{
+                    Log.e("RutaById", "La ruta no sa pogut trobar")
+                    _ruta.value = null
+                }
+
+            }catch(e: Exception){
                 _rutaAct.value = null
                 e.printStackTrace()
 
@@ -62,7 +91,7 @@ class RutaViewModel(): ViewModel() {
         }
     }
 
-    fun findById(id: Long): Ruta?{
+    fun findByIdAndGetRutaActual(id: Long): Ruta?{
         var res: Ruta? = null
         viewModelScope.launch {
 
@@ -70,10 +99,10 @@ class RutaViewModel(): ViewModel() {
               val response = rutaRepo.getRutaById(id)
                res= response.body()
                if(response.isSuccessful){
-                   Log.d("RutaById", "La ruta sa encontrao coñooo")
+                   Log.d("RutaByIdAndGetRutaActual", "La ruta sa encontrao coñooo")
                    _rutaAct.value = response.body()
                }else{
-                   Log.e("RutaById", "La ruta no sa pogut trobar")
+                   Log.e("RutaByIdAndGetRutaActual", "La ruta no sa pogut trobar")
                    _rutaAct.value = null
                }
 
@@ -105,13 +134,13 @@ class RutaViewModel(): ViewModel() {
 */
                 //val response = rutaRepo.createRuta(ciclistaJson,dataIniciBody, dataFinalBody, puntsJson)
                 val response = rutaRepo.createRuta(ruta)
-                response.body()?.let { findById(it) }
+                response.body()?.let { findByIdAndGetRutaActual(it) }
                 if (response.isSuccessful) {
                   //  response.body()?.let { findById(it) }
                     Log.d("Ruta", "✅ Ruta iniciada")
                     onSuccess()
 
-                    _rutaAct.value = findById(response.body()!!)
+                    _rutaAct.value = findByIdAndGetRutaActual(response.body()!!)
                     _rutaIniciada.value = rutaAct.value
                     Log.d("Rutasadadsdas", "✅ ${rutaAct.value} ")
                 } else {
