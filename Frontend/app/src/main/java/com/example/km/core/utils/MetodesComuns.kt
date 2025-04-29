@@ -1,27 +1,23 @@
 package com.example.km.core.utils
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Build
 import android.util.Base64
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.km.SistemaManagment.data.repositories.SistemaRepositoryImpl
-import com.example.km.SistemaManagment.ui.viewmodels.SistemaViewModel
+import com.example.km.core.models.Ruta
 import com.example.km.core.models.Sistema
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import kotlinx.coroutines.CoroutineStart
+import java.time.Duration
+import java.time.LocalDateTime
 
 fun base64ToByteArray(imageStr: String): ByteArray?{
     try {

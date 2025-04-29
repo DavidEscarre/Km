@@ -38,6 +38,8 @@ public class Ruta {
 
     private List<PuntGPS> puntsGPS = new ArrayList<>();
 
+    private long tempsAturat = 0L;
+
     public Ruta() {
     }
     public Ruta(Long id) {
@@ -52,12 +54,29 @@ public class Ruta {
         this.puntsGPS = puntsGPS;
 
     }
+    public Ruta(Long id, User ciclista, LocalDateTime dataInici, LocalDateTime dataFinal, List<PuntGPS> puntsGPS, Long tempsAturat) {
+        this.id = id;
+        this.ciclista = ciclista;
+        this.dataInici = dataInici;
+        this.dataFinal = dataFinal;
+        this.puntsGPS = puntsGPS;
+        this.tempsAturat = tempsAturat;
+    }
+
+    public Ruta(Long id, User ciclista, LocalDateTime dataInici, LocalDateTime dataFinal, Long tempsAturat) {
+        this.id = id;
+        this.ciclista = ciclista;
+        this.dataInici = dataInici;
+        this.dataFinal = dataFinal;
+        this.tempsAturat = tempsAturat;
+
+    }
+
     public Ruta(Long id, User ciclista, LocalDateTime dataInici, LocalDateTime dataFinal) {
         this.id = id;
         this.ciclista = ciclista;
         this.dataInici = dataInici;
         this.dataFinal = dataFinal;
-
 
     }
 
@@ -81,6 +100,14 @@ public class Ruta {
 
 
 
+    }
+
+    public long getTempsAturat() {
+        return tempsAturat;
+    }
+
+    public void setTempsAturat(long tempsAturat) {
+        this.tempsAturat = tempsAturat;
     }
 
     public List<PuntGPS> getPuntsGPS() {
@@ -162,6 +189,9 @@ public class Ruta {
     public void setVelocitatMax(double velocitatMax) {
         this.velocitatMax = velocitatMax;
     }
+
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public String getDurada() {

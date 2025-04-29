@@ -2,7 +2,6 @@ package com.example.km.main.screens
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Application
 import android.content.Context
 import android.os.Build
 import android.os.Handler
@@ -24,13 +23,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -57,23 +53,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.km.GoogleMapsMap.GoogleMapScreen
 import com.example.km.PuntGPSManagment.ui.viewmodels.PuntGPSViewModel
 import com.example.km.R
 //import com.example.km.PuntGPSManagment.ui.viewmodels.ViewModelsFactories.PuntGPSViewModelFactory
 import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
-import com.example.km.SistemaManagment.data.repositories.SistemaRepositoryImpl
 import com.example.km.SistemaManagment.ui.viewmodels.SistemaViewModel
-import com.example.km.core.models.PuntGPS
 import com.example.km.core.models.Ruta
 import com.example.km.core.models.Sistema
 import com.example.km.core.models.User
 import com.example.km.navigation.BottomNavigationBar
+import com.example.km.navigation.TopBar
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -91,6 +81,9 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen(sistemaViewModel: SistemaViewModel, rutaViewModel: RutaViewModel,puntGPSViewModel: PuntGPSViewModel, navController: NavController,   userState: State<User?>) {
+
+    val user = userState.value
+
     val context = LocalContext.current
     var rutaActiva by remember { mutableStateOf(false) }
     var activadorRuta by remember { mutableStateOf(false) }
@@ -101,6 +94,7 @@ fun MainScreen(sistemaViewModel: SistemaViewModel, rutaViewModel: RutaViewModel,
 
     val aturat by puntGPSViewModel.aturat.collectAsState()
     val tempsAtur by puntGPSViewModel.tempsAtur.collectAsState()
+    val tempsAturAcumulatRuta by puntGPSViewModel.tempsAturAcumulatRuta.collectAsState()
     val tepsMaxAtur by sistemaViewModel.tempsMaxAtur.collectAsState()
 
     val locationList by puntGPSViewModel.locationList.collectAsState()
@@ -111,6 +105,7 @@ fun MainScreen(sistemaViewModel: SistemaViewModel, rutaViewModel: RutaViewModel,
         sistemaViewModel.findFirst()
     }
     Scaffold(
+        topBar = { TopBar("Home", user, navController)},
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
 
@@ -266,7 +261,7 @@ fun MainScreen(sistemaViewModel: SistemaViewModel, rutaViewModel: RutaViewModel,
 
         }
 
-
+        Log.d("TEMPSACUM", tempsAturAcumulatRuta.toString() )
 
 
         if (rutaActiva && aturat && tempsAtur >= tepsMaxAtur) {
@@ -391,7 +386,7 @@ fun AturarRuta(aturPerTemps: Boolean, rutaViewModel: RutaViewModel, puntsGPSView
 
     puntsGPSViewModel.stopLocationUpdates()
 
-    val puntsGPSlist by puntsGPSViewModel.puntGPSRutaList.collectAsState()
+    val puntsGPSlist by puntsGPSViewModel.puntGPSRutaListActual.collectAsState()
     val dataFinal = LocalDateTime.now()
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     val formattedDate = dataFinal.format(formatter)
@@ -400,7 +395,7 @@ fun AturarRuta(aturPerTemps: Boolean, rutaViewModel: RutaViewModel, puntsGPSView
     val rutaIniciada = rutaViewModel.rutaIniciada.collectAsState().value
     val rutaActual = rutaViewModel.rutaAct.collectAsState().value
     val ciclista: User? = userState.value
-
+    val tempsAturAcumulatRuta by puntsGPSViewModel.tempsAturAcumulatRuta.collectAsState()
     if (ciclista == null) {
         Toast.makeText(context, "Error: Usuario no encontrado", Toast.LENGTH_SHORT).show()
         return
@@ -411,7 +406,8 @@ fun AturarRuta(aturPerTemps: Boolean, rutaViewModel: RutaViewModel, puntsGPSView
         Log.d("LLISTAPuntGPS RUTAsssss", puntGPSRutaList.value.size.toString() )
 
 
-        val ruta = Ruta(rutaActual.id, ciclista, rutaActual.dataInici, dataFinal)
+        val ruta = Ruta(rutaActual.id, ciclista, rutaActual.dataInici, dataFinal, tempsAturAcumulatRuta)
+        Log.d("TEMPSACUM_ATURAR_RUTA", tempsAturAcumulatRuta.toString() )
         Log.d("PuntGPSaaa RUTAsssss", ruta.puntsGPS.size.toString() )
         coroutineScope.launch {
             rutaViewModel.aturarRuta(ruta, puntsGPSlist, context,

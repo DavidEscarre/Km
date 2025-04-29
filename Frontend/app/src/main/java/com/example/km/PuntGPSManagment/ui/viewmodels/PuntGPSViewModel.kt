@@ -14,9 +14,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.km.PuntGPSManagment.data.repositories.PuntGPSRepositoryImpl
 import com.example.km.PuntGPSManagment.domain.usecases.tempsAturUseCase
-import com.example.km.SistemaManagment.data.repositories.SistemaRepositoryImpl
 import com.example.km.core.models.PuntGPS
-import com.example.km.core.models.Sistema
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -53,6 +51,10 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
 
     val tempsAtur: StateFlow<Long> = tempsAturUseCase.tempsAturMs
 
+
+    private val _tempsAturAcumulatRuta = MutableStateFlow<Long>(0L)
+    val tempsAturAcumulatRuta: StateFlow<Long> = _tempsAturAcumulatRuta
+
     private val puntGPSRepo = PuntGPSRepositoryImpl()
 
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(application)
@@ -60,10 +62,11 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
     private val _locationList = MutableStateFlow<List<LatLng>>(emptyList())
     val locationList: StateFlow<List<LatLng>> = _locationList
 
+    private val _puntGPSRutaListActual = MutableStateFlow<List<PuntGPS>>(emptyList())
+    val puntGPSRutaListActual: StateFlow<List<PuntGPS>> = _puntGPSRutaListActual
+
     private val _puntGPSRutaList = MutableStateFlow<List<PuntGPS>>(emptyList())
-    val puntGPSRutaList: StateFlow<List<PuntGPS>> = _puntGPSRutaList
-
-
+    val puntGPSRutaList: StateFlow<List<PuntGPS>> get() = _puntGPSRutaList
 
     private var locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, precisioPunts.value)
         .setWaitForAccurateLocation(true)
@@ -86,8 +89,8 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
                     val dataMarcaTemps = LocalDateTime.now()
                     Log.d("PGPSVM_LocationRes", "punt creat data: ${LocalDateTime.now().second}")
                     val puntGPSCreat = PuntGPS(location.latitude, location.longitude,dataMarcaTemps)
-                    _puntGPSRutaList.value = _puntGPSRutaList.value + (puntGPSCreat)
-                    Log.d("PGPSVM_LocationRes", "PungGPS Afeixit a _puntGPSRutaList, size: ${puntGPSRutaList.value}")
+                    _puntGPSRutaListActual.value = _puntGPSRutaListActual.value + (puntGPSCreat)
+                    Log.d("PGPSVM_LocationRes", "PungGPS Afeixit a _puntGPSRutaList, size: ${puntGPSRutaListActual.value}")
 
 
 
@@ -144,7 +147,7 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
 
     fun vuidarllistaPuntsGPS() {
         _locationList.value = emptyList()
-        _puntGPSRutaList.value = emptyList()
+        _puntGPSRutaListActual.value = emptyList()
     }
 
     fun setCurrentLocation(location: LatLng) {
@@ -178,8 +181,30 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
         }
 
     }
-    fun fetchAllByRuteId(){
+    fun fetchAllByRuteId(id: Long) {
+        viewModelScope.launch {
+            try {
 
+                val response = puntGPSRepo.getPuntGPSByIdRuta(id)
+
+                if (response.isSuccessful) {
+                    _puntGPSRutaList.value = response.body()!!
+                    Log.d("PuntGPS", "✅ Punt GPS trobat")
+                } else {
+                    _puntGPSRutaList.value = emptyList()
+                    val errorBody = response.errorBody()?.string()
+                    val errorMessage =
+                        "❌ ${response.code()} - $errorBody"
+                     Log.e("PuntGPS", "❌ Error al trobar el punt GPS per la id, $errorMessage")
+
+
+                }
+            }catch(e: Exception){
+                _puntGPSRutaList.value = emptyList()
+                e.printStackTrace()
+            }
+
+        }
     }
 
     fun findById(puntGPSId: Long, onSuccess: () -> Unit, onError: (String) -> Unit ): PuntGPS?{
@@ -221,9 +246,12 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
 
             Location.distanceBetween(startP.latitude, startP.longitude, location.latitude, location.longitude, results)
             if(results[0].toDouble() < 1){ // Si la distancia del l'ultim punt es menor a 1 METRE
+
                 _aturat.value = true
                 tempsAturUseCase.start(viewModelScope)
+
             }else{
+                _tempsAturAcumulatRuta.value += tempsAtur.value
                 _aturat.value = false
                 tempsAturUseCase.stop()
                 tempsAturUseCase.reset()
@@ -231,11 +259,16 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
         }
 
     }
+    fun ResetTempsAturAcumulat(){
+        _tempsAturAcumulatRuta.value = 0
+    }
     fun ResetTempsAtur(){
         tempsAturUseCase.stop()
         tempsAturUseCase.reset()
     }
 
-
+    fun vuidarPuntsLLitaRuta(){
+        _puntGPSRutaList.value = emptyList()
+    }
 
 }
