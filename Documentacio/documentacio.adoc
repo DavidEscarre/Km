@@ -517,7 +517,7 @@ image::Sprint6_tasques2.png[]
 
 
 [[sprint5]]
-== *13. Sprint 5*
+== *14. Sprint 5*
 En aquest penúltim Sprint he fet diverses parts de l'aplicació, a més de resoldre molts bugs de l'app. 
 
 === *Tasques completades*
