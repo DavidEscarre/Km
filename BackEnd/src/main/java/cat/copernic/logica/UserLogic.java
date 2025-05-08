@@ -157,15 +157,32 @@ public class UserLogic {
         }
 
     }
-    public String updateUserAndImage(User user, MultipartFile imageFile) {
+    public String updateUserAndImage(User newUser, MultipartFile imageFile) {
         
         try {
-            if (imageFile != null && !imageFile.isEmpty()) {
-                user.setFoto(convertImageToBlob(imageFile));
+            User oldUser = userRepo.findById(newUser.getEmail()).orElse(null);
+            if(oldUser == null){
+                return "NOT_FOUND";
             }
-            
+            if (imageFile != null && !imageFile.isEmpty()) {
+                newUser.setFoto(convertImageToBlob(imageFile));
+                oldUser.setFoto(newUser.getFoto());
+            }
+            oldUser.setAdreca(newUser.getAdreca());
+            oldUser.setEmail(newUser.getEmail());
+            oldUser.setEstat(newUser.isEstat());
+            oldUser.setNom(newUser.getNom());
+            oldUser.setObservacions(newUser.getObservacions());
+            oldUser.setRecompensas(newUser.getRecompensas());
+            oldUser.setResetToken(newUser.getResetToken());
+            oldUser.setRol(newUser.getRol());
+            oldUser.setRutes(newUser.getRutes());
+            oldUser.setSaldoDisponible(newUser.getSaldoDisponible());
+            oldUser.setTelefon(newUser.getTelefon());
+            oldUser.setTokenExpiration(newUser.getTokenExpiration());
+            oldUser.setWord(newUser.getWord());
            // user.setWord(passwordEncoder.encode(user.getWord()));
-            User savedUser = userRepo.save(user);
+            User savedUser = userRepo.save(oldUser);
             return savedUser.getEmail();
         } catch (Exception e) {
            

@@ -53,7 +53,9 @@
                     <form th:action="@{/users/getByEmail/{email}(email=${user.email})}" method="get">
                         <button class="detail-button" type="submit">Ver Detalles</button>
                     </form>
-                    <button class="edit-button">Editar</button>
+                    <a th:href="@{/users/update/{email}(email=${user.email})}">
+                        <button class="edit-button">Editar</button>
+                    </a>
                     <button class="delete-button">Eliminar</button>
                 </div>
             </div>
