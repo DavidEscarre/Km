@@ -14,4 +14,6 @@ interface UserRepository {
 
     suspend fun createUser(user: User): Response<String>
     suspend fun deleteUserByEmail(userEmail: String): Response<Void>
+
+    suspend fun updatePassword(userEmail: String, password: String): Response<User?>
 }

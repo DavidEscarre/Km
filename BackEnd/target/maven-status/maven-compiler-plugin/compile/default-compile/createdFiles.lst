@@ -22,6 +22,7 @@ cat\copernic\repository\ExempleRepo.class
 cat\copernic\Entity\Ruta.class
 cat\copernic\controllers\API\RutaApiController.class
 cat\copernic\KmApplication.class
+cat\copernic\logica\EmailService.class
 cat\copernic\logica\RutaLogic.class
 cat\copernic\controllers\web\MainController.class
 cat\copernic\controllers\API\UserApiController.class

@@ -31,7 +31,10 @@ class UserRepositoryImpl: UserRepository {
         val response = userApiRest.deleteUserByEmail(userEmail)
         return response
     }
-
+    override suspend fun updatePassword(userEmail: String, password: String): Response<User?> {
+        val response = userApiRest.updatePassword(userEmail, password)
+        return response
+    }
 
 
 

@@ -7,6 +7,7 @@ package cat.copernic.controllers.API;
 import cat.copernic.Entity.User;
 import cat.copernic.logica.UserLogic;
 import cat.copernic.repository.UserRepo;
+import jakarta.annotation.security.PermitAll;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -50,6 +52,8 @@ public class UserApiController {
     
     @Autowired
     private UserRepo userRepo;
+    
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     
     @GetMapping("/all")
     public ResponseEntity<List<User>> findAll(){
@@ -134,6 +138,40 @@ public class UserApiController {
         
         return response;
     }
+    @PutMapping("/updatePassword/{userEmail}")
+    @PermitAll
+    public ResponseEntity<User> updatePassword(@PathVariable String userEmail, @RequestBody String password) {
+       
+        ResponseEntity<User> response;
+
+        
+        logger.info("User ID from URL: " + userEmail);
+        
+       
+        try {
+            
+            
+            
+            User existingUser = userLogic.getUser(userEmail);
+
+            if (existingUser != null) {
+                User updatedUser = existingUser;
+                updatedUser.setWord(passwordEncoder.encode(password.substring(1, password.length()-1)));
+              userLogic.updateUser(updatedUser);
+
+              
+                return new ResponseEntity<>(existingUser, HttpStatus.OK);
+            }else{
+                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+           
+
+        } catch (Exception e) {
+            logger.error("ERROR UPDATE: " + e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+    }
     /*
     @PutMapping("/update/{userId}")
     public ResponseEntity<User> update(@PathVariable Long userId, @RequestBody User updatedUser) {
@@ -168,4 +206,7 @@ public class UserApiController {
             return ResponseEntity.internalServerError().build();
         }
     }*/
+    
+    
+    
 }

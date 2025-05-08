@@ -26,6 +26,9 @@ object AuthRetrofitInstance {
             .build()
     }
 
+
+
+
     val authApi: AuthApiRest by lazy {
         retrofit.create(AuthApiRest::class.java)
     }

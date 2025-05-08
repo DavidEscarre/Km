@@ -5,4 +5,8 @@ import retrofit2.Response
 
 interface LoginRepository {
     suspend fun loginUser(email: String, word: String): Response<User?>
+
+    suspend fun forgotPassword(email: String): Response<String?>
+
+    suspend fun verifyToken(email: String, token: String): Response<Unit?>
 }
