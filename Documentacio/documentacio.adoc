@@ -514,3 +514,22 @@ Sprint 6
 
 image::Sprint6_tasques2.png[]
 
+
+
+[[sprint5]]
+== *13. Sprint 5*
+En aquest penúltim Sprint he fet diverses parts de l'aplicació, a més de resoldre molts bugs de l'app. 
+
+=== *Tasques completades*
+image::tascasCompletadasSprint5.png[]
+
+=== *Nova planificació*
+Només queden les tasques del Sprint 6.
+
+
+Sprint 6
+
+image::Sprint6_tasques3_1.png[]
+image::Sprint6_tasques3_2.png[]
+
+

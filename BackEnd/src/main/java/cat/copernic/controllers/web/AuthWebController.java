@@ -238,19 +238,19 @@ public class AuthWebController {
     
     @GetMapping("/forgotPassword")
     public String forgotPassword(Model model) {
-        return "forgotPassword"; // Vista del login
+        return "forgotPassword"; 
     }
     
     @GetMapping("/verifyToken/{email}")
     public String verifyToken(@PathVariable("email") String email, Model model) {
-        // Añadimos directamente el email al modelo
+     
         model.addAttribute("email", email);
         return "verifyToken";
     }
     
     @GetMapping("/recoverPassword/{email}")
     public String recoverPassword(@PathVariable("email") String email, Model model) {
-        // Añadimos directamente el email al modelo
+        
         model.addAttribute("email", email);
         return "recoverPassword";
     }

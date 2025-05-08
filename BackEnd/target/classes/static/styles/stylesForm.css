@@ -93,6 +93,20 @@
         gap: 1rem;
       }
 
+    .back-container{
+    }
+    .arrow-back-icon{
+         width: 32px;
+            height: 32px;
+            filter: drop-shadow(0 0 2px white); /* Simula grosor extra */
+            filter: invert(1); /*Convierte el color del SVG a blanco */
+            cursor: pointer; /* Cambia el cursor para indicar que es clickeable */
+            transition: transform 0.2s ease-in-out;
+    }
+    .arrow-back-icon:hover{
+         transform: scale(1.1); 
+    }
+
       /* CÍRCULO PARA LA PREVIEW DE IMAGEN */
       .image-preview{
         width: 200px;
@@ -108,7 +122,7 @@
         width: 200px;
         height: 200px;
         border-radius: 50%;
-        display: none; 
+        
         background-color: #f0f0f0;
         background-image: url('/static/images/placeholder.png'); 
         background-size: cover;

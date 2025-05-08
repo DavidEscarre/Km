@@ -11,6 +11,7 @@ import cat.copernic.enums.Rol;
 import cat.copernic.logica.RecompensaLogic;
 import cat.copernic.logica.RutaLogic;
 import cat.copernic.logica.UserLogic;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.HashMap;
@@ -25,9 +26,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriUtils;
 
 /**
  *
@@ -89,7 +92,7 @@ public class UserWebController {
           model.addAttribute("user", new User()); // Asegurar que el objeto está en el modelo
         return "create-user";
 
-        }
+    }
     @PostMapping("/create")
     public String createUsers(@ModelAttribute User user, @RequestParam("confirmWord") String confirmWord ,@RequestParam("image") MultipartFile imageFile ,Model model, Authentication authentication) {
         try {
@@ -116,6 +119,58 @@ public class UserWebController {
             }
         }catch(Exception e){
             return "create-user";
+        }
+            
+    }
+    
+    @GetMapping("/update/{email}")
+    public String updateUser(@PathVariable("email") String email, Model model, Authentication authentication) {
+       
+        User user = userLogic.getUser(email);
+        if(user == null){
+            return "users-list";
+        }else{
+            if (user.getFoto() != null) {
+                String base64 = Base64.getEncoder().encodeToString(user.getFoto());
+                model.addAttribute("userImage", base64);
+            }
+            model.addAttribute("user",user);
+            return "edit-user";
+        }
+       
+
+    }
+    @PostMapping("/update/{email}")
+    public String updateUser(@PathVariable("email") String email, @ModelAttribute User user,@RequestParam("image") MultipartFile imageFile ,Model model, Authentication authentication) {
+        try {
+            User oldUser = userLogic.getUser(email);
+           if (user == null|| oldUser==null) {
+                model.addAttribute("errorMessage", "Camps incorrectes");
+                return "redirect:/users/update/" + UriUtils.encode(email, StandardCharsets.UTF_8);
+            
+           }else{
+               user.setDataAlta(oldUser.getDataAlta());
+               user.setResetToken(oldUser.getResetToken());
+               user.setSaldoDisponible(oldUser.getSaldoDisponible());
+               user.setTokenExpiration(oldUser.getTokenExpiration());
+               user.setWord(oldUser.getWord());
+               user.setRecompensas(oldUser.getRecompensas());
+               user.setRutes(oldUser.getRutes());
+               
+                  // 2. Si no han subido nueva imagen, mantenemos la antigua
+                    if (imageFile == null || imageFile.isEmpty()) {
+                        user.setFoto(oldUser.getFoto());
+                    } else {
+                        // si hay nueva foto, la leemos
+                        user.setFoto(imageFile.getBytes());
+                    }
+               
+                userLogic.updateUserAndImage(user,imageFile);
+                return "redirect:/users";
+           }
+
+        }catch(Exception e){
+            return "redirect:/users/update/" + UriUtils.encode(email, StandardCharsets.UTF_8);
         }
             
     }
