@@ -26,7 +26,7 @@ public class Recompensa {
     private String dataAssignacio;
     private String dataRecollida;
 
-
+    private String dataReserva;
     private User ciclista;
 
 
@@ -35,7 +35,7 @@ public class Recompensa {
     public Recompensa() {
     }
 
-    public Recompensa(String nom, String descripcio, String observacions, double preu, String dataCreacio, String dataAssignacio, String dataRecollida, User ciclista, String puntBescanvi) {
+    public Recompensa(String nom, String descripcio, String observacions, double preu, String dataCreacio, String dataAssignacio, String dataRecollida, User ciclista, String puntBescanvi, String dataReserva) {
         this.nom = nom;
         this.descripcio = descripcio;
         this.observacions = observacions;
@@ -43,11 +43,12 @@ public class Recompensa {
         this.dataCreacio = dataCreacio;
         this.dataAssignacio = dataAssignacio;
         this.dataRecollida = dataRecollida;
+        this.dataReserva = dataReserva;
         this.ciclista = ciclista;
         this.puntBescanvi = puntBescanvi;
     }
 
-    public Recompensa(Long id, String nom, String descripcio, String observacions, double preu, String dataCreacio, String dataAssignacio, String dataRecollida, User ciclista, String puntBescanvi) {
+    public Recompensa(Long id, String nom, String descripcio, String observacions, double preu, String dataCreacio, String dataAssignacio, String dataRecollida, User ciclista, String puntBescanvi,String dataReserva) {
         this.id = id;
         this.nom = nom;
         this.descripcio = descripcio;
@@ -56,9 +57,12 @@ public class Recompensa {
         this.dataCreacio = dataCreacio;
         this.dataAssignacio = dataAssignacio;
         this.dataRecollida = dataRecollida;
+        this.dataReserva = dataReserva;
         this.ciclista = ciclista;
         this.puntBescanvi = puntBescanvi;
     }
+
+
 
     public Long getId() {
         return id;
@@ -66,6 +70,14 @@ public class Recompensa {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getDataReserva() {
+        return dataReserva;
+    }
+
+    public void setDataReserva(String dataReserva) {
+        this.dataReserva = dataReserva;
     }
 
     public String getDescripcio() {
