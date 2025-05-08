@@ -69,6 +69,8 @@ public class Ruta {
     @JsonIgnore
     private List<PuntGPS> puntsGPS = new ArrayList<>();
     
+    @Column(nullable = false)
+    private Long tempsAturat = 0L;
     
     public Ruta() {
     }
@@ -90,6 +92,15 @@ public class Ruta {
         this.dataFinal = dataFinal;
         this.puntsGPS = puntsGPS;
     }
+    
+    public Ruta(Long id, User ciclista, LocalDateTime dataInici, LocalDateTime dataFinal, List<PuntGPS> puntsGPS, Long tempsAturat) {
+        this.id = id;
+        this.ciclista = ciclista;
+        this.dataInici = dataInici;
+        this.dataFinal = dataFinal;
+        this.puntsGPS = puntsGPS;
+        this.tempsAturat = tempsAturat;
+    }
 
     public Ruta(User ciclista, LocalDateTime dataInici, LocalDateTime dataFinal) {
         this.ciclista = ciclista;
@@ -109,6 +120,16 @@ public class Ruta {
         this.dataFinal = dataFinal;
         this.puntsGPS = puntsGPS;
     }
+
+    public Long getTempsAturat() {
+        return tempsAturat;
+    }
+
+    public void setTempsAturat(Long tempsAturat) {
+        this.tempsAturat = tempsAturat;
+    }
+    
+    
 
     public List<PuntGPS> getPuntsGPS() {
         return puntsGPS;

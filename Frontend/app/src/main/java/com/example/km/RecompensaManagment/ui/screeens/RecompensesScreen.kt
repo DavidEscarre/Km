@@ -18,13 +18,16 @@ import com.example.km.PuntGPSManagment.ui.viewmodels.PuntGPSViewModel
 import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
 import com.example.km.core.models.User
 import com.example.km.navigation.BottomNavigationBar
+import com.example.km.navigation.TopBar
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun RecompensesScreen(navController: NavController, userState: State<User?>) {
     val scrollState = rememberScrollState()
+
     Scaffold(
+        topBar = { TopBar("Recompenses", userState.value, navController)},
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
 

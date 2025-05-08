@@ -83,6 +83,7 @@ public class RutaLogic {
        OldRuta.setSaldo(ruta.getSaldo());
        OldRuta.setVelocitatMax(ruta.getVelocitatMax());
        OldRuta.setVelocitatMitjana(ruta.getVelocitatMitjana());
+       OldRuta.setTempsAturat(ruta.getTempsAturat());
       // OldRuta.setPuntsGPS(ruta.getPuntsGPS());
        
        logger.info("Oldruta Dist: "+OldRuta.getDistancia());

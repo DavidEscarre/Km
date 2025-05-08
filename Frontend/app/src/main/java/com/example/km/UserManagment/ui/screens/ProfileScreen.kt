@@ -45,6 +45,7 @@ import androidx.navigation.NavController
 import com.example.km.UserManagment.ui.viewmodels.LoginViewModel
 import com.example.km.core.models.User
 import com.example.km.navigation.BottomNavigationBar
+import com.example.km.navigation.TopBar
 import kotlinx.coroutines.launch
 
 
@@ -80,6 +81,7 @@ fun ProfileScreen(context: Context,loginViewModel: LoginViewModel, navController
         }
     ) {
         Scaffold(
+            topBar = { TopBar("Perfil", userState.value, navController)},
             bottomBar = { BottomNavigationBar(navController) }
         ) { paddingValues ->
 

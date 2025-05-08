@@ -68,7 +68,7 @@ class RutaViewModel(): ViewModel() {
 
                     _ruta.value = response.body()
 
-                    val resPunts = puntGPSRepo.getPuntGPSByIdRuta(id)
+                   /* val resPunts = puntGPSRepo.getPuntGPSByIdRuta(id)
                     if(resPunts.isSuccessful) {
 
                         Log.d("RutaById", "puntsGPS size ruta($id): ${resPunts.body()?.size}. ")
@@ -77,7 +77,7 @@ class RutaViewModel(): ViewModel() {
 
                     }else{
                         Log.e("RutaById", "Els puntsGPS de la ruta id: $id no s'han pogut trobar")
-                    }
+                    }*/
                 }else{
                     Log.e("RutaById", "La ruta no sa pogut trobar")
                     _ruta.value = null

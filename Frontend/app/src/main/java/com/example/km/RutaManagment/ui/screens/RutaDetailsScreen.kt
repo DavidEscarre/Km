@@ -1,13 +1,11 @@
 package com.example.km.RutaManagment.ui.screens
 
 import android.os.Build
-import android.text.Layout
-import android.util.LayoutDirection
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,9 +17,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -37,7 +35,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -45,16 +42,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
@@ -68,14 +60,15 @@ import com.example.km.core.models.User
 import com.example.km.core.utils.bitmapDescriptorFromVectorDp
 import com.example.km.core.utils.enums.EstatRuta
 import com.example.km.navigation.BottomNavigationBar
+import com.example.km.navigation.TopBar
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.Circle
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
-import kotlinx.coroutines.awaitAll
 import java.time.Duration
 import java.time.LocalDateTime
 
@@ -88,316 +81,457 @@ fun RutaDetailsScreen(
     puntGPSViewModel: PuntGPSViewModel,
     navController: NavController,
     userState: State<User?>
-
 ) {
     val user: User? = userState.value
 
-
-
-
+    // Cámara y puntos
     val moveCameraTrigger = remember { mutableStateOf(false) }
     val cameraPositionState = rememberCameraPositionState()
-    val locationList = remember { mutableStateListOf<LatLng>() }
+    var locationList by remember { mutableStateOf<List<LatLng>>(emptyList<LatLng>()) }
     var startPoint by remember { mutableStateOf<LatLng?>(null) }
-    var endPoint   by remember { mutableStateOf<LatLng?>(null) }
+    var endPoint by remember { mutableStateOf<LatLng?>(null) }
+    var center by remember { mutableStateOf<LatLng?>(null) }
 
-    val context = LocalContext.current
-    val density = LocalDensity.current
+    // Overlay para lat/lng
+    var selectedLocation by remember { mutableStateOf<LatLng?>(null) }
+    var showOverlay by remember { mutableStateOf(false) }
 
-    val iconInicio =  bitmapDescriptorFromVectorDp(
-            resId = R.drawable.banderasstart,
-            width = 64.dp,
-            height = 64.dp
+    val iconInicio = bitmapDescriptorFromVectorDp(
+        resId = R.drawable.banderasstart,
+        width = 64.dp,
+        height = 64.dp
     )
-
     val iconFin = bitmapDescriptorFromVectorDp(
-            resId = R.drawable.banderaend,
-            width = 64.dp,
-            height = 64.dp
+        resId = R.drawable.banderaend,
+        width = 64.dp,
+        height = 64.dp
     )
 
+    // Observamos ruta y puntos
     val ruta by rutaViewModel.ruta.collectAsState()
-  //  val iconInicio = bitmapDescriptorFromVector()
-   // val iconFin = bitmapDescriptorFromVector(R.drawable.banderaend)
-    var centro   by remember { mutableStateOf<LatLng?>(null) }
+    val punts by puntGPSViewModel.puntGPSRutaList.collectAsState()
 
-    // Cuando cambie rutaId, se ejecuta UNA VEZ
+    // Al cambiar rutaId, limpiamos datos previos y cargamos nuevos
     LaunchedEffect(rutaId) {
-        rutaId?.let { rutaViewModel.findById(it) }
-
-    }
-
-
-    LaunchedEffect(rutaId) {
-
-
-        ruta?.puntsGPS?.let { punts ->
-
-            val firstPunt = punts.minByOrNull { it.id } //id minima o primer punt
-            val lastPunt  = punts.maxByOrNull { it.id } //id maxima o ultim punt
-            Log.d("RutaDetailsScreen", "start: $startPoint, end: $endPoint, center: $centro")
-
-            Log.d("RutaDetailsScreen", "location lsit size: ${locationList.size}")
-
-            startPoint = firstPunt?.let { LatLng(it.latitud, it.longitud) }
-            endPoint   = lastPunt?.let  { LatLng(it.latitud, it.longitud) }
-            Log.d("RutaDetailsScreen", "start: $startPoint, end: $endPoint, center: $centro")
-            locationList.clear()
-            punts.forEach { punt ->
-                locationList += LatLng(punt.latitud, punt.longitud)
-            }
-
-            //centrar camara en un punt mitja
-            if (locationList.isNotEmpty()) {
-
-                val LatMitjana = locationList.map { it.latitude }.average()
-                val LngMitjana = locationList.map { it.longitude }.average()
-                centro = LatLng(LatMitjana, LngMitjana)
-                Log.d("RutaDetailsScreen", "start: $startPoint, end: $endPoint, center: $centro")
-
-                cameraPositionState.move(
-                    CameraUpdateFactory.newLatLngZoom(centro!!,18f)
-                )
-            }
+        rutaId?.let {
+            locationList = emptyList()
+            selectedLocation = null
+            showOverlay = false
+            startPoint = null
+            endPoint = null
+            center = null
+            rutaViewModel.findById(it)
+            puntGPSViewModel.fetchAllByRuteId(it)
         }
     }
 
+    // Cuando llegan los puntos, actualizamos lista y cámara
+    LaunchedEffect(punts) {
+        if (punts.isNotEmpty()) {
+            locationList = emptyList()
+            punts.sortedBy { it.id }.forEach { punt ->
+                locationList += LatLng(punt.latitud, punt.longitud)
+            }
+            startPoint = locationList.firstOrNull()
+            endPoint = locationList.lastOrNull()
+            val latAvg = locationList.map { it.latitude }.average()
+            val lngAvg = locationList.map { it.longitude }.average()
+            center = LatLng(latAvg, lngAvg)
+            center?.let { cameraPositionState.move(CameraUpdateFactory.newLatLngZoom(it, 17f)) }
+        }
+    }
 
     Scaffold(
-        bottomBar = { BottomNavigationBar(navController) }
-    ) { paddingValues ->
-
-        // Si ruta aún no ha llegado, muestro un loader y corto la composición
+        topBar = { TopBar("Detalls Ruta", user, navController) },
+        bottomBar = { BottomNavigationBar(navController) })
+    { paddingValues ->
         if (ruta == null) {
             Box(
-                modifier = Modifier
+                Modifier
                     .fillMaxSize()
                     .padding(paddingValues),
                 contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
+            ) { CircularProgressIndicator() }
             return@Scaffold
         }
+
         Column(
-            modifier = Modifier.fillMaxSize().padding(paddingValues)
+            Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
         ) {
+            // Mapa con tamaño fijo
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(400.dp)
+                    .clip(RoundedCornerShape(6.dp))
+                    .border(BorderStroke(2.dp, Color.Black), RoundedCornerShape(6.dp))
+            ) {
 
-                Box(modifier = Modifier
-                    .fillMaxWidth()  // Asegura que no se desborde
-                    .height(400.dp)  // Altura razonable para el mapa
-                    .clip( shape = RoundedCornerShape(bottomStartPercent =6, bottomEndPercent = 6))
-                    .border(BorderStroke(2.dp,Color.Black), shape = RoundedCornerShape(bottomStartPercent =6, bottomEndPercent = 6))
-
-                ){
-                    // Muestra el mapa
                     GoogleMap(
-                        cameraPositionState = cameraPositionState
+                        cameraPositionState = cameraPositionState,
+                        modifier = Modifier.matchParentSize()
                     ) {
-                        startPoint?.let { location ->
-                            Marker(anchor = Offset(0.3f, 0.80f),state = MarkerState(position = location), title = "Inici", icon= iconInicio)
-                        }
-                        endPoint?.let { location ->
-                            Marker(anchor = Offset(0.31f, 0.76f),state = MarkerState(position = location), title = "final", icon= iconFin)
-                        }
-
-                        if (locationList.isNotEmpty()) {
-                            Polyline(points = locationList, color = Color.DarkGray, width = 30f)
-                        }
-                    }
-
-                    // Botón para centrar
-                    IconButton(
-                        onClick = { moveCameraTrigger.value = true },
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
-
-                            .padding(bottom = 10.dp, start = 10.dp)
-                            .size(50.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.center_camera),
-                            contentDescription = "centrar camara",
-                            tint = Color(0f,0f,0f,0.8f),
-                            modifier = Modifier.size(76.dp)
-                        )
-                    }
-
-                    // Solo mueve la cámara si se ha presionado el botón
-                    LaunchedEffect(moveCameraTrigger.value) {
-                        if (moveCameraTrigger.value && centro != null) {
-                            cameraPositionState.animate(
-                                CameraUpdateFactory.newLatLngZoom(centro!!, 17f),
-                                durationMs = 600
+                        startPoint?.let { Marker(state = MarkerState(it), title = "Inici", icon = iconInicio) }
+                        endPoint?.let { Marker(state = MarkerState(it), title = "Final", icon = iconFin) }
+                        locationList.forEach { loc ->
+                            Circle(
+                                center = loc,
+                                radius = 5.0,
+                                strokeColor = Color.Red,
+                                fillColor = Color.Red.copy(alpha = 0.7f),
+                                clickable = true,
+                                onClick = { selectedLocation = loc; showOverlay = true }
                             )
-                            moveCameraTrigger.value = false
+                        }
+                        if (locationList.size > 1) Polyline(points = locationList, color = Color.Blue, width = 8f)
+                    }
+
+                if (showOverlay && selectedLocation != null) {
+                    Box(
+                        Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(16.dp)
+                            .background(Color.White.copy(alpha = 0.9f), RoundedCornerShape(8.dp))
+                            .border(BorderStroke(1.dp, Color.Gray), RoundedCornerShape(8.dp))
+                            .clickable { showOverlay = false }
+                            .padding(12.dp)
+                    ) {
+                        Column {
+                            Text("Lat: %.5f".format(selectedLocation!!.latitude), fontWeight = FontWeight.Bold)
+                            Text("Lng: %.5f".format(selectedLocation!!.longitude), fontWeight = FontWeight.Bold)
+                            Text("Toca para cerrar", fontSize = 12.sp, color = Color.Gray)
                         }
                     }
                 }
-
-            Card(modifier = Modifier
-
-                    .padding(20.dp)
-                    .background(Color.Gray, RoundedCornerShape(25.dp))
-                    .align(Alignment.CenterHorizontally)
-                    .shadow(6.dp, RoundedCornerShape(25.dp)),
-            ){
-                // Calculate duration between start and end (or now)
-                val end = ruta?.dataFinal ?: LocalDateTime.now()
-                val duration = Duration.between(ruta?.dataInici ?: LocalDateTime.now(), end)
-                val hours = duration.toHours()
-                val minutes = duration.minusHours(hours).toMinutes()
-                val seconds = duration.minusHours(hours).minusMinutes(minutes).seconds
-                val timeText = String.format("%02d:%02d:%02d", hours, minutes, seconds)
-
-                Row(Modifier.fillMaxSize()) {
-                    Column(Modifier.fillMaxHeight().weight(1.6f).padding(top = 30.dp, bottom = 10.dp, start = 10.dp, end = 10.dp)) {
-                        Text(
-                            buildAnnotatedString {
-                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontSize = 30.sp)) {
-                                    append("Temps ")
-                                }
-                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace, fontSize = 25.sp )) {
-                                    append(timeText)
-                                }
-                            }, textAlign = TextAlign.Center,
-                                lineHeight = 32.sp
-                            )
-                        Spacer(Modifier.height(22.dp))
-                        Text(
-                            buildAnnotatedString {
-                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontSize = 30.sp)) {
-                                    append("Distancia ")
-                                }
-
-                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace, fontSize = 25.sp )) {
-                                    append(ruta?.distancia.toString())
-                                }
-                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontFamily = FontFamily.Default, fontSize = 19.sp )) {
-                                    append("Km")
-                                }
-                            },
-                                textAlign = TextAlign.Center,
-                                lineHeight = 32.sp
-
-                           )
-                        Spacer(Modifier.height(22.dp))
-                        Card(Modifier.fillMaxHeight().padding(start = 10.dp, bottom = 12.dp).shadow(4.dp,RoundedCornerShape(8.dp)),
-                            colors = CardColors(Color.DarkGray,Color.DarkGray,Color.DarkGray,Color.DarkGray),
-                            shape = RoundedCornerShape(8.dp)
-                        ){
-
-                            Text("Velocitat",Modifier.align(Alignment.CenterHorizontally), color = Color.White,
-                                textAlign = TextAlign.Center,
-                                fontWeight = FontWeight.Bold, fontSize = 30.sp
-                            )
-
-                            Text(
-                                buildAnnotatedString {
-                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Light, fontSize = 23.sp)) {
-                                        append("Mitjana: ")
-                                    }
-                                    withStyle(style = SpanStyle(fontFamily = FontFamily.Monospace, fontSize = 19.sp )) {
-                                        append(ruta?.velocitatMitjana.toString())
-                                    }
-                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontFamily = FontFamily.Default, fontSize = 12.sp )) {
-                                        append("Km/h")
-                                    }
-                                },
-                                Modifier.padding(5.dp),
-                                color = Color.White,
-                                textAlign = TextAlign.Left,
-                                lineHeight = 32.sp
-                            )
-                            Text(
-                                buildAnnotatedString {
-                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Light, fontSize = 23.sp)) {
-                                        append("Maxima: ")
-                                    }
-                                    withStyle(style = SpanStyle(fontFamily = FontFamily.Monospace, fontSize = 19.sp )) {
-                                        append(ruta?.velocitatMax.toString())
-                                    }
-                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontFamily = FontFamily.Default, fontSize = 12.sp )) {
-                                        append("Km/h")
-                                    }
-                                },
-                                Modifier.padding(5.dp),
-                                color = Color.White,
-                                textAlign = TextAlign.Left,
-                                lineHeight = 32.sp
-
-                            )
-                        }
-
+                IconButton(
+                    onClick = { moveCameraTrigger.value = true },
+                    modifier = Modifier.align(Alignment.BottomStart).padding(10.dp).size(50.dp)
+                ) { Icon(painter = painterResource(R.drawable.center_camera), contentDescription = "Centrar cámara", tint = Color.Black.copy(alpha = 0.8f)) }
+                LaunchedEffect(moveCameraTrigger.value) {
+                    if (moveCameraTrigger.value && center != null) {
+                        cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(center!!, 17f), durationMs = 600)
+                        moveCameraTrigger.value = false
                     }
-                    Column(Modifier.fillMaxHeight().weight(1f).padding(10.dp)) {
+                }
+            }
 
-                        Text("Saldo",Modifier.padding(top = 20.dp, start = 12.dp), color = Color.DarkGray,
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold, fontSize = 30.sp
-                        )
-                        val saldo = ruta?.saldo ?: 0.0
-                        Card(
-                            Modifier.padding(top = 8.dp).shadow(6.dp,RoundedCornerShape(8.dp)),
-                            shape = RoundedCornerShape(8.dp),
+            // Sección de datos con scroll
+            Column(
+                Modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp)
+            ) {
+                Card(
+                    modifier = Modifier
 
-                            colors = CardDefaults.cardColors(
-                                containerColor = if (saldo >= 0) Color(0xFF2ECC71) else Color(0xFFE74C3C),
-                                contentColor = Color.White
-                            )
+                        .padding(20.dp)
+                        .background(Color.Gray, RoundedCornerShape(25.dp))
+                        .align(Alignment.CenterHorizontally)
+                        .shadow(6.dp, RoundedCornerShape(25.dp)),
+
+                    ) {
+
+                    val end = ruta?.dataFinal ?: LocalDateTime.now()
+                    val duration = Duration.between(ruta?.dataInici ?: LocalDateTime.now(), end)
+                    val hours = duration.toHours()
+                    val minutes = duration.minusHours(hours).toMinutes()
+                    val seconds = duration.minusHours(hours).minusMinutes(minutes).seconds
+                    val timeText = String.format("%02d:%02d:%02d", hours, minutes, seconds)
+
+                    val millisAturat = ruta?.tempsAturat ?: 0L
+                    val totalSecondsAturat = millisAturat / 1000
+                    val hoursAtur = totalSecondsAturat / 3600
+                    val minutesAtur = ((totalSecondsAturat % 3600) / 60)
+                    val secondsAtur = totalSecondsAturat % 60
+                    val timeAturatText =
+                        String.format("%02d:%02d:%02d", hoursAtur, minutesAtur, secondsAtur)
+
+                    Row(Modifier.fillMaxWidth()) {
+                        Column(
+                            Modifier.fillMaxHeight().weight(1.65f)
+                                .padding(top = 30.dp, bottom = 10.dp, start = 10.dp, end = 10.dp)
                         ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
-                            ) {
+                            Text(
+                                buildAnnotatedString {
+                                    withStyle(
+                                        style = SpanStyle(
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 30.sp
+                                        )
+                                    ) {
+                                        append("Temps ")
+                                    }
+                                    withStyle(
+                                        style = SpanStyle(
+                                            fontWeight = FontWeight.Bold,
+                                            fontFamily = FontFamily.Monospace,
+                                            fontSize = 25.sp
+                                        )
+                                    ) {
+                                        append(timeText)
+                                    }
+                                }, textAlign = TextAlign.Center,
+                                lineHeight = 32.sp
+                            )
+                            Spacer(Modifier.height(12.dp))
+                            Text(
+                                buildAnnotatedString {
+                                    withStyle(
+                                        style = SpanStyle(
+                                            fontWeight = FontWeight.Normal,
+                                            fontSize = 28.sp
+                                        )
+                                    ) {
+                                        append("Temps aturat ")
+                                    }
+                                    withStyle(
+                                        style = SpanStyle(
+                                            fontWeight = FontWeight.Bold,
+                                            fontFamily = FontFamily.Monospace,
+                                            fontSize = 25.sp
+                                        )
+                                    ) {
+                                        append(timeAturatText)
+                                    }
+                                }, textAlign = TextAlign.Center,
+                                lineHeight = 32.sp
 
-                                Text(
-                                    text = "${if (saldo >= 0) "+" else "-"}${saldo}",
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Bold
+                            )
+                            Spacer(Modifier.height(12.dp))
+                            Text(
+                                buildAnnotatedString {
+                                    withStyle(
+                                        style = SpanStyle(
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 30.sp
+                                        )
+                                    ) {
+                                        append("Distancia ")
+                                    }
+
+                                    withStyle(
+                                        style = SpanStyle(
+                                            fontWeight = FontWeight.Bold,
+                                            fontFamily = FontFamily.Monospace,
+                                            fontSize = 25.sp
+                                        )
+                                    ) {
+                                        append(ruta?.distancia.toString())
+                                    }
+                                    withStyle(
+                                        style = SpanStyle(
+                                            fontWeight = FontWeight.Bold,
+                                            fontFamily = FontFamily.Default,
+                                            fontSize = 19.sp
+                                        )
+                                    ) {
+                                        append("Km")
+                                    }
+                                },
+                                textAlign = TextAlign.Center,
+                                lineHeight = 32.sp
+
+                            )
+
+                            Text(
+                                buildAnnotatedString {
+                                    withStyle(
+                                        style = SpanStyle(
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 24.sp
+                                        )
+                                    ) {
+                                        append("Data: ")
+                                    }
+                                    withStyle(
+                                        style = SpanStyle(
+                                            fontWeight = FontWeight.Bold,
+                                            fontFamily = FontFamily.Monospace,
+                                            fontSize = 20.sp
+                                        )
+                                    ) {
+                                        append(ruta?.dataInici?.toLocalDate().toString())
+                                    }
+                                }, textAlign = TextAlign.Center,
+                                lineHeight = 32.sp
+                            )
+                            Spacer(Modifier.height(22.dp))
+
+
+                        }
+                        Column(Modifier.fillMaxHeight().weight(1f).padding(8.dp)) {
+
+                            Text(
+                                "Saldo",
+                                Modifier.padding(top = 20.dp, start = 12.dp),
+                                color = Color.DarkGray,
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 30.sp
+                            )
+                            val saldo = ruta?.saldo ?: 0.0
+                            Card(
+                                Modifier.padding(top = 8.dp).shadow(6.dp, RoundedCornerShape(8.dp)),
+                                shape = RoundedCornerShape(8.dp),
+
+                                colors = CardDefaults.cardColors(
+                                    containerColor = if (saldo >= 0) Color(0xFF2ECC71) else Color(
+                                        0xFFE74C3C
+                                    ),
+                                    contentColor = Color.White
                                 )
-                                Spacer(Modifier.width(12.dp))
-                                Icon(
-                                    painter = painterResource(R.drawable.coins),
-                                    contentDescription = null,
-                                    tint = Color.White
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+                                ) {
+
+                                    Text(
+                                        text = "${if (saldo >= 0) "+" else "-"}${saldo}",
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Spacer(Modifier.width(12.dp))
+                                    Icon(
+                                        painter = painterResource(R.drawable.coins),
+                                        contentDescription = null,
+                                        tint = Color.White
+                                    )
+                                }
+                            }
+                            val isPendent = ruta?.estat == EstatRuta.PENDENT
+                            val isValidada = ruta?.estat == EstatRuta.VALIDA
+                            val container = if (isValidada && !isPendent) Color(0xFF2ECC71) else {
+                                if (!isValidada && !isPendent) Color(0xFFE74C3C) else Color.Gray
+                            }
+                            val content = Color.White
+                            Text(
+                                "Estat",
+                                Modifier.padding(top = 30.dp, start = 20.dp),
+                                color = Color.DarkGray,
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 30.sp
+                            )
+                            Button(
+                                onClick = { /* Acción si procede */ },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = container,
+                                    contentColor = content,
+                                    disabledContainerColor = container,
+                                    disabledContentColor = content
+                                ),
+                                modifier = Modifier.padding(top = 10.dp),
+                                shape = RoundedCornerShape(8.dp)
+                            ) {
+                                Text(
+                                    text = if (isValidada && !isPendent) "Validada" else if (!isValidada && !isPendent) "No validada" else "Pendent",
+                                    color = Color.White
                                 )
                             }
                         }
-                        val isPendent = ruta?.estat == EstatRuta.PENDENT
-                        val isValidada = ruta?.estat == EstatRuta.VALIDA
-                        val container = if (isValidada && !isPendent) Color(0xFF2ECC71) else {
-                            if(!isValidada && !isPendent) Color(0xFFE74C3C) else Color.Gray
-                        }
-                        val content = Color.White
-                        Text("Estat",Modifier.padding(top = 30.dp, start = 20.dp), color = Color.DarkGray,
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold, fontSize = 30.sp
-                        )
-                        Button(
-                            onClick = { /* Acción si procede */ },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = container,
-                                contentColor = content,
-                                disabledContainerColor = container,
-                                disabledContentColor = content
+
+
+                    }
+                    Row(Modifier.fillMaxWidth()) {
+                        Card(
+                            Modifier.fillMaxHeight().fillMaxWidth()
+                                .padding(start = 10.dp, bottom = 12.dp)
+                                .shadow(4.dp, RoundedCornerShape(8.dp)),
+                            colors = CardColors(
+                                Color.DarkGray,
+                                Color.DarkGray,
+                                Color.DarkGray,
+                                Color.DarkGray
                             ),
-                            modifier = Modifier.padding(top = 10.dp),
                             shape = RoundedCornerShape(8.dp)
                         ) {
+
                             Text(
-                                text = if (isValidada && !isPendent) "Validada" else if(!isValidada && !isPendent) "No validada" else "Pendent",
-                                color = Color.White
+                                "Velocitat",
+                                Modifier.align(Alignment.CenterHorizontally),
+                                color = Color.White,
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 30.sp
+                            )
+
+                            Text(
+                                buildAnnotatedString {
+                                    withStyle(
+                                        style = SpanStyle(
+                                            fontWeight = FontWeight.Light,
+                                            fontSize = 28.sp
+                                        )
+                                    ) {
+                                        append("Mitjana: ")
+                                    }
+                                    withStyle(
+                                        style = SpanStyle(
+                                            fontFamily = FontFamily.Monospace,
+                                            fontSize = 23.sp
+                                        )
+                                    ) {
+                                        append(ruta?.velocitatMitjana.toString())
+                                    }
+                                    withStyle(
+                                        style = SpanStyle(
+                                            fontWeight = FontWeight.Bold,
+                                            fontFamily = FontFamily.Default,
+                                            fontSize = 17.sp
+                                        )
+                                    ) {
+                                        append(" Km/h")
+                                    }
+                                },
+                                Modifier.padding(10.dp),
+                                color = Color.White,
+                                textAlign = TextAlign.Left,
+                                lineHeight = 32.sp
+                            )
+                            Text(
+                                buildAnnotatedString {
+                                    withStyle(
+                                        style = SpanStyle(
+                                            fontWeight = FontWeight.Light,
+                                            fontSize = 28.sp
+                                        )
+                                    ) {
+                                        append("Maxima: ")
+                                    }
+                                    withStyle(
+                                        style = SpanStyle(
+                                            fontFamily = FontFamily.Monospace,
+                                            fontSize = 23.sp
+                                        )
+                                    ) {
+                                        append(ruta?.velocitatMax.toString())
+                                    }
+                                    withStyle(
+                                        style = SpanStyle(
+                                            fontWeight = FontWeight.Bold,
+                                            fontFamily = FontFamily.Default,
+                                            fontSize = 17.sp
+                                        )
+                                    ) {
+                                        append(" Km/h")
+                                    }
+                                },
+                                Modifier.padding(10.dp),
+                                color = Color.White,
+                                textAlign = TextAlign.Left,
+                                lineHeight = 32.sp
+
                             )
                         }
                     }
 
-
                 }
 
             }
-
         }
-
     }
 }

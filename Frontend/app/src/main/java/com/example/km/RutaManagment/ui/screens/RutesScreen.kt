@@ -40,6 +40,7 @@ import com.example.km.core.models.Ruta
 import com.example.km.core.models.User
 import com.example.km.core.utils.enums.EstatRuta
 import com.example.km.navigation.BottomNavigationBar
+import com.example.km.navigation.TopBar
 import java.time.Duration
 import java.time.LocalDateTime
 
@@ -62,6 +63,7 @@ fun RutesScreen(
     val rutas by rutaViewModel.rutas.collectAsState(initial = emptyList())
 
     Scaffold(
+        topBar = { TopBar("Rutes", user, navController)},
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
 
@@ -75,7 +77,7 @@ fun RutesScreen(
         ) {
 
             items(rutas) { ruta ->
-                RutaItem(ruta, navController)
+                RutaItem(ruta, navController, puntGPSViewModel)
             }
         }
 
@@ -84,7 +86,7 @@ fun RutesScreen(
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun RutaItem(ruta: Ruta, navController: NavController) {
+fun RutaItem(ruta: Ruta, navController: NavController, puntGPSViewModel: PuntGPSViewModel) {
     // Calculate duration between start and end (or now)
     val end = ruta.dataFinal ?: LocalDateTime.now()
     val duration = Duration.between(ruta.dataInici, end)
@@ -100,6 +102,7 @@ fun RutaItem(ruta: Ruta, navController: NavController) {
             contentColor = Color.White
         ),
         onClick = {
+
             navController.navigate("ruta_details/${ruta.id}")
         },
         elevation = CardDefaults.cardElevation(4.dp),
