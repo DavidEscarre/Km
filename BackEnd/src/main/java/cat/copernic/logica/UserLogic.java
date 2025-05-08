@@ -9,8 +9,10 @@ import cat.copernic.controllers.API.UserApiController;
 import cat.copernic.enums.Rol;
 import cat.copernic.repository.UserRepo;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,12 +152,95 @@ public class UserLogic {
             User savedUser = userRepo.save(user);
             return savedUser.getEmail();
         } catch (Exception e) {
-            System.out.println("1111111111111111111111111111111111111111111111111111111111");
+          
+            return null;
+        }
+
+    }
+    public String updateUserAndImage(User user, MultipartFile imageFile) {
+        
+        try {
+            if (imageFile != null && !imageFile.isEmpty()) {
+                user.setFoto(convertImageToBlob(imageFile));
+            }
+            
+           // user.setWord(passwordEncoder.encode(user.getWord()));
+            User savedUser = userRepo.save(user);
+            return savedUser.getEmail();
+        } catch (Exception e) {
+           
             return null;
         }
 
     }
     
+    public String updateUser(User newUser) {
+        
+        try {
+            User oldUser = userRepo.findById(newUser.getEmail()).orElse(null);
+            if(oldUser == null){
+                return "NOT_FOUND";
+            }
+            
+            oldUser.setAdreca(newUser.getAdreca());
+            oldUser.setEmail(newUser.getEmail());
+            oldUser.setEstat(newUser.isEstat());
+            oldUser.setNom(newUser.getNom());
+            oldUser.setObservacions(newUser.getObservacions());
+            oldUser.setRecompensas(newUser.getRecompensas());
+            oldUser.setResetToken(newUser.getResetToken());
+            oldUser.setRol(newUser.getRol());
+            oldUser.setRutes(newUser.getRutes());
+            oldUser.setSaldoDisponible(newUser.getSaldoDisponible());
+            oldUser.setTelefon(newUser.getTelefon());
+            oldUser.setTokenExpiration(newUser.getTokenExpiration());
+            oldUser.setWord(newUser.getWord());
+            
+            User savedUser = userRepo.save(oldUser);
+            return savedUser.getEmail();
+        } catch (Exception e) {
+            return null;
+        }
+
+    }
+    
+    public String verifyToken (String email, String token)throws Exception{
+        
+        
+        User user = userRepo.findById(email).orElse(null);
+        if(user != null){
+            if((user.getResetToken().equals(token))){
+               if(user.getTokenExpiration().isAfter(LocalDateTime.now())){
+                    user.setResetToken(null);
+                    user.setTokenExpiration(null);
+                    logger.info("token verificat.");
+                    User saverUser = userRepo.save(user);
+                    return saverUser.getEmail();
+               }else{
+                   return "EXPIRED_TOKEN";
+               }
+            }else{
+                 return "INCORRECT_TOKEN";
+            }
+        }else{
+            return null;
+        }
+        
+    }
+        public String tokenGenerator(){
+            String token = null;
+            int longitud = 6;
+            String letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            StringBuilder resultado = new StringBuilder();
+            Random random = new Random();
+
+            for (int i = 0; i < longitud; i++) {
+                int index = random.nextInt(letras.length());
+                resultado.append(letras.charAt(index));
+            }
+                token = resultado.toString();
+                return token;
+        }
     
         public byte[] convertImageToBlob(MultipartFile file) throws IOException {
         return file.getBytes();

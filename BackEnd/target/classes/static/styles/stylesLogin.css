@@ -98,3 +98,60 @@ html, body {
 .header {
   display: none;
 }
+
+.error {
+  background-color: #ff4d4d; /* rojo más suave que #ff5959 */
+  color: white;
+  padding: 0px 24px;
+  border-radius: 8px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 16px;
+  box-shadow: 0 0 12px rgba(255, 77, 77, 0.4);
+  /* border-left: 6px solid #ff1a1a; */
+  margin: 16px 0;
+  max-width: 600px;
+  line-height: 1.4;
+}
+
+
+.errorMsg {
+  background-color: #ff4d4d; /* rojo más suave que #ff5959 */
+  color: white;
+  padding: 0px 24px;
+  border-radius: 8px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 16px;
+  box-shadow: 0 0 12px rgba(255, 77, 77, 0.4);
+  /* border-left: 6px solid #ff1a1a; */
+  margin: 16px 0;
+  max-width: 600px;
+  line-height: 1.4;
+}
+
+/* Contenedor SVG centrado */
+#succesPassRecover-img {
+  display: block;
+  margin: 40px auto;
+  min-width: 600px; /* ajusta según necesites */
+  max-width: 900px;
+  min-height: auto;
+  max-height: auto;
+}
+
+/* Estilo base de trazos y formas */
+#succesPassRecover-img circle,
+#succesPassRecover-img path {
+  stroke: #00ff99;    /* verde moderno */
+  fill: none;
+  /* aplica un halo al trazo del SVG, no al contenedor */
+  filter: drop-shadow(0 0 4px #00ff99);
+  transition: filter 0.25s ease-out, transform 0.25s ease-out;
+}
+
+/* Efecto hover/entrada suave */
+#succesPassRecover-img:hover circle,
+#succesPassRecover-img:hover path {
+  /* intensifica el brillo al posar el ratón */
+  filter: drop-shadow(0 0 6px #00ff99);
+  transform: scale(1.01);
+}

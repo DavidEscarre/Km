@@ -84,6 +84,12 @@ public class User implements UserDetails{
     @JsonIgnore
     private List<Ruta> rutes = new ArrayList<>();
    
+    @Column(nullable = true)
+    private String resetToken;
+    
+    @Column(nullable = true)
+    private LocalDateTime tokenExpiration;
+    
     //constructors
     
     public User() {
@@ -106,6 +112,26 @@ public class User implements UserDetails{
         this.recompensas = recompensas;
         this.rutes = rutes;
     }
+    
+    //Getters y Setters
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public LocalDateTime getTokenExpiration() {
+        return tokenExpiration;
+    }
+
+    public void setTokenExpiration(LocalDateTime tokenExpiration) {
+        this.tokenExpiration = tokenExpiration;
+    }
+    
+    
 
     public List<Recompensa> getRecompensas() {
         return recompensas;

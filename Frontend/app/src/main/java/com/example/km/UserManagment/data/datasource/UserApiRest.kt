@@ -6,6 +6,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface UserApiRest {
@@ -21,6 +22,12 @@ interface UserApiRest {
 
     @DELETE("delete/{userEmail}")
     suspend fun deleteUserByEmail(@Path("userEmail") userEmail: String): Response<Void>
-}
+
+    @PUT("updatePassword/{userEmail}")
+    suspend fun updatePassword(@Path("userEmail") userEmail: String, @Body password: String): Response<User?>
+
+
+
+    }
 
 

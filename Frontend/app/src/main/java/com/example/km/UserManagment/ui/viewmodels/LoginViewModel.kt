@@ -25,6 +25,7 @@ class LoginViewModel: ViewModel()  {
     val userState: StateFlow<User?> get() = _userState
 
 
+
     private val _email = MutableStateFlow<String>("")
     val email: StateFlow<String> get() = _email
 
@@ -129,6 +130,57 @@ class LoginViewModel: ViewModel()  {
 
             _userState.value = null
             navController.navigate("login")
+        }
+
+    }
+    fun verifyToken(email: String, token: String, onSuccess: () -> Unit, onError: (String) -> Unit ){
+
+        viewModelScope.launch {
+            try{
+                val response = AuthRepo.verifyToken(email, token)
+                if(response.isSuccessful){
+                    onSuccess()
+
+                }else{
+                    Log.e("LoginViewM:VerifyToken", "❌ Error al verificar el token de recuperacion.")
+                    val errorBody = response.errorBody()?.string()
+                    val errorMessage =
+                        "❌ ${response.code()} - $errorBody"
+                    onError(errorMessage)
+                }
+            }catch(e: Exception){
+                e.printStackTrace()
+            }
+
+
+        }
+
+    }
+    fun forgotPassword(email: String, onSuccess: () -> Unit, onError: (String) -> Unit ){
+
+        viewModelScope.launch {
+            try {
+
+                val response = AuthRepo.forgotPassword(email)
+                if(response.isSuccessful){
+                    if(response.body().equals("token Enviado")){
+                        onSuccess()
+                    }else{
+                        onError(response.body().toString())
+                    }
+                }else{
+                    Log.e("LoginViewM:ForgotPasswd", "❌ Error enviar el correo electronico de recuperacion")
+                    val errorBody = response.errorBody()?.string()
+                    val errorMessage =
+                        "❌ ${response.code()} - $errorBody"
+                    onError(errorMessage)
+                }
+
+
+            }catch(e: Exception){
+                e.printStackTrace()
+            }
+
         }
 
     }

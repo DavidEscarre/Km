@@ -25,6 +25,7 @@ import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
 import com.example.km.SistemaManagment.data.repositories.SistemaRepositoryImpl
 import com.example.km.SistemaManagment.ui.viewmodels.SistemaViewModel
 import com.example.km.UserManagment.ui.viewmodels.LoginViewModel
+import com.example.km.UserManagment.ui.viewmodels.UserViewModel
 import com.example.km.core.models.Sistema
 import com.example.km.core.models.User
 import com.example.km.main.screens.MainScreen
@@ -45,7 +46,7 @@ class MainActivity : ComponentActivity(), OnMapsSdkInitializedCallback {
             KmTheme {
                 val sistemaViewModel: SistemaViewModel = viewModel()
                // val sistema = getSistemaFromBackend(sistemaViewModel)
-
+                val userViewModel: UserViewModel = viewModel()
                 val navController: NavHostController = rememberNavController()
                 val loginViewModel: LoginViewModel = viewModel()
                 val rutaViewModel: RutaViewModel = viewModel()
@@ -59,7 +60,7 @@ class MainActivity : ComponentActivity(), OnMapsSdkInitializedCallback {
 
                 // Aquí guardamos el usuario autenticado
                 val userState = loginViewModel.userState.collectAsState()
-                AppNavigation(sistemaViewModel, puntGPSViewModel, rutaViewModel, navController, loginViewModel, userState)
+                AppNavigation(userViewModel, sistemaViewModel, puntGPSViewModel, rutaViewModel, navController, loginViewModel, userState)
             }
         }
         /*setContent {

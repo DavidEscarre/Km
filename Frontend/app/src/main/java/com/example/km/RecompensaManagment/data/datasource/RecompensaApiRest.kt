@@ -10,8 +10,10 @@ interface RecompensaApiRest {
     @GET("all")
     suspend fun findAll(): Response<List<Recompensa>>
 
+
+
     @GET("byId/{recompensaId}")
-    suspend fun getRecompensaById(@Path("recompensaId") recompensaId: Long): Response<Recompensa>
+    suspend fun getRecompensaById(@Path("recompensaId") recompensaId: Long): Response<Recompensa?>
 }
 
 

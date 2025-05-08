@@ -1,0 +1,32 @@
+package com.example.km.RutaManagment.data.repositories
+
+import android.os.Build
+import androidx.annotation.RequiresApi
+import com.example.km.RecompensaManagment.data.datasource.RecompensaApiRest
+import com.example.km.RecompensaManagment.data.datasource.RecompensaRetrofitInstance
+import com.example.km.RutaManagment.domain.repositories.RecompensaRepository
+import com.example.km.SistemaManagment.data.repositories.SistemaRepositoryImpl
+import com.example.km.core.models.Recompensa
+import retrofit2.Response
+
+@RequiresApi(Build.VERSION_CODES.O)
+class RecompensaRepositoryImpl: RecompensaRepository {
+    private val sistemaRepo: SistemaRepositoryImpl = SistemaRepositoryImpl()
+
+    val recompensaApiRest: RecompensaApiRest =  RecompensaRetrofitInstance.retrofitInstance.create(RecompensaApiRest::class.java)
+    override suspend fun findAll(): Response<List<Recompensa>> {
+        val response = recompensaApiRest.findAll()
+        return response
+    }
+
+    override suspend fun getRecompensaById(recompensaId: Long): Response<Recompensa?> {
+        val response = recompensaApiRest.getRecompensaById(recompensaId)
+        return response
+    }
+
+    //val rutaApiRest = RutaRetrofitInstance.retrofitInstance.create()
+
+
+
+
+}

@@ -37,4 +37,21 @@ class UserViewModel: ViewModel()  {
         }
     }
 
+
+    fun updatePasswordUser(email: String, newPassword: String){
+
+        viewModelScope.launch {
+            val response =userRepo.updatePassword(email, newPassword)
+            if(response.isSuccessful){
+                Log.d("UserViewModel", "Usuari actualitzat ${email}")
+
+            }else{
+                Log.e("UserViewModel", "Usuari no actualitzat ${email}")
+
+            }
+
+
+        }
+    }
+
 }

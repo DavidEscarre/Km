@@ -359,7 +359,9 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel,  u
                 fontSize = 14.sp,
                 modifier = Modifier.clickable { navController.navigate("passwordRecover") }
             )
-            Button(
+
+
+           /* Button(
                 onClick = {
                     coroutineScope.launch {
                         Handler(Looper.getMainLooper()).post {
@@ -375,7 +377,7 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel,  u
             ){
                 Text("Entrar sin login", color = Color.Black, fontSize = 21.sp, fontWeight = FontWeight(900))
 
-            }
+            }*/
         }
     }
 

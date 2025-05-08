@@ -45,8 +45,12 @@ public class User {
 
     private List<Recompensa> recompenses = new ArrayList<>();
     private List<Ruta> rutes = new ArrayList<>();
-    //constructors
 
+    private String resetToken;
+
+    private LocalDateTime tokenExpiration;
+
+    //Constructors
 
     public User() {
     }
@@ -67,6 +71,23 @@ public class User {
         this.recompenses = recompenses;
     }
 
+    //Getters y Setters
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public LocalDateTime getTokenExpiration() {
+        return tokenExpiration;
+    }
+
+    public void setTokenExpiration(LocalDateTime tokenExpiration) {
+        this.tokenExpiration = tokenExpiration;
+    }
     public List<Recompensa> getRecompenses() {
         return recompenses;
     }

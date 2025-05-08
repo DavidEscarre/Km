@@ -56,21 +56,24 @@ import com.example.km.RutaManagment.ui.screens.RutesScreen
 import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
 import com.example.km.SistemaManagment.ui.viewmodels.SistemaViewModel
 import com.example.km.UserManagment.ui.screens.LoginScreen
+import com.example.km.UserManagment.ui.screens.PasswordRecoverScreen
 import com.example.km.UserManagment.ui.screens.ProfileScreen
 import com.example.km.UserManagment.ui.viewmodels.LoginViewModel
+import com.example.km.UserManagment.ui.viewmodels.UserViewModel
 import com.example.km.core.models.User
 import com.example.km.main.screens.MainScreen
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AppNavigation(sistemaViewModel: SistemaViewModel, puntGPSViewModel: PuntGPSViewModel, rutaViewModel: RutaViewModel, navController: NavController, loginViewModel: LoginViewModel, userState: State<User?>) {
+fun AppNavigation(userViewModel :UserViewModel ,sistemaViewModel: SistemaViewModel, puntGPSViewModel: PuntGPSViewModel, rutaViewModel: RutaViewModel, navController: NavController, loginViewModel: LoginViewModel, userState: State<User?>) {
     val navController = rememberNavController()
     val context = LocalContext.current
    // val rutaViewModel: RutaViewModel = viewModel()
     //val puntGPSViewModel: PuntGPSViewModel = viewModel()
     NavHost(navController = navController, startDestination = "login") {
         composable("login") { LoginScreen(navController, loginViewModel, userState ) }
+        composable("passwordRecover") { PasswordRecoverScreen(loginViewModel,navController, userViewModel, userState) }
 
 
         // Pantalla Home amb Bottom Navigation
