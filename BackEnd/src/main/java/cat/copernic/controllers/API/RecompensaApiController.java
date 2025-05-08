@@ -6,6 +6,8 @@ package cat.copernic.controllers.API;
 
 import cat.copernic.Entity.Recompensa;
 import cat.copernic.logica.RecompensaLogic;
+import cat.copernic.logica.UserLogic;
+import jakarta.annotation.security.PermitAll;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +27,13 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/rest/recompenses")
+@CrossOrigin(origins = "*")  // Permitir acceso desde cualquier origen
 public class RecompensaApiController {
     
     @Autowired
     private RecompensaLogic recompensaLogic;
+    @Autowired
+    private UserLogic userLogic;
     
     Logger logger = LoggerFactory.getLogger(RecompensaApiController.class);
         
@@ -84,4 +89,35 @@ public class RecompensaApiController {
         
         return response;        
     }
+    
+    
+    @GetMapping("/byCiclistaEmail/{ciclistaEmail}")
+    @PermitAll  // Permitir acceso sin autenticación
+    public ResponseEntity<List<Recompensa>> getAllByCiclistaEmail(@PathVariable String ciclistaEmail){
+        
+        ResponseEntity<List<Recompensa>> response;
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-store"); //no usar caché
+        
+        try {
+            logger.info("Cercant recompenses amb idCiclista: {}", "ciclistaId: "+ciclistaEmail);
+            if(!userLogic.existsByEmail(ciclistaEmail)){
+                logger.info("No s'ha trobat cap ciclista amb idCiclista: {}", "ciclistaId: "+ciclistaEmail);
+                return new ResponseEntity<>( HttpStatus.NOT_FOUND);
+            }else{
+                List<Recompensa> recompensas = recompensaLogic.getAllByCiclistaEmail(ciclistaEmail);
+                
+                logger.info("Rutas trobades: {}", "ciclistaEmail: "+ciclistaEmail); 
+                return new ResponseEntity<>(recompensas, headers, HttpStatus.OK);
+
+            } 
+        } catch (Exception e) {
+            logger.error("Error intern del servidor al intentar trovar la ruta {}", "Error mesage: "+e.getMessage()); 
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+              
+    }
+    
 }

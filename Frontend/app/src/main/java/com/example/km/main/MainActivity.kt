@@ -21,6 +21,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.km.PuntGPSManagment.ui.viewmodels.PuntGPSViewModel
+import com.example.km.RutaManagment.ui.viewmodels.RecompensaViewModel
 import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
 import com.example.km.SistemaManagment.data.repositories.SistemaRepositoryImpl
 import com.example.km.SistemaManagment.ui.viewmodels.SistemaViewModel
@@ -51,7 +52,7 @@ class MainActivity : ComponentActivity(), OnMapsSdkInitializedCallback {
                 val loginViewModel: LoginViewModel = viewModel()
                 val rutaViewModel: RutaViewModel = viewModel()
                 val puntGPSViewModel: PuntGPSViewModel = viewModel()
-
+                val recompensaViewModel: RecompensaViewModel = viewModel()
                 //puntGPSViewModel.setPrecisio(sistema.precisioPunts)
 
                 /*val puntGPSViewModel = ViewModelProvider(this, PuntGPSViewModelFactory(application))
@@ -60,7 +61,7 @@ class MainActivity : ComponentActivity(), OnMapsSdkInitializedCallback {
 
                 // Aquí guardamos el usuario autenticado
                 val userState = loginViewModel.userState.collectAsState()
-                AppNavigation(userViewModel, sistemaViewModel, puntGPSViewModel, rutaViewModel, navController, loginViewModel, userState)
+                AppNavigation(recompensaViewModel, userViewModel, sistemaViewModel, puntGPSViewModel, rutaViewModel, navController, loginViewModel, userState)
             }
         }
         /*setContent {

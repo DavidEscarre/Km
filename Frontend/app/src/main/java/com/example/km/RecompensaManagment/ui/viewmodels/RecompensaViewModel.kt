@@ -6,11 +6,9 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.km.RutaManagment.data.repositories.RecompensaRepositoryImpl
-import com.example.km.RutaManagment.data.repositories.RutaRepositoryImpl
-import com.example.km.core.models.PuntGPS
 import com.example.km.core.models.Recompensa
-import com.example.km.core.models.Ruta
-import com.example.km.core.utils.enums.EstatRuta
+import com.example.km.core.models.User
+import com.example.km.core.utils.enums.EstatRecompensa
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -18,39 +16,40 @@ import kotlinx.coroutines.launch
 @RequiresApi(Build.VERSION_CODES.O)
 class RecompensaViewModel(): ViewModel() {
 
-    private val _recompesas = MutableStateFlow<List<Recompensa>>(emptyList<Recompensa>())
-    val recompesas: StateFlow<List<Recompensa>>  = _recompesas
+    private val _recompensas = MutableStateFlow<List<Recompensa>>(emptyList<Recompensa>())
+    val recompensas: StateFlow<List<Recompensa>>  = _recompensas
 
-    private val _recompesa = MutableStateFlow<Recompensa?>(null)
-    val recompesa: StateFlow<Recompensa?>  = _recompesa
-
-
+    private val _recompensa = MutableStateFlow<Recompensa?>(null)
+    val recompensa: StateFlow<Recompensa?>  = _recompensa
 
     private val recompensaRepo = RecompensaRepositoryImpl()
 
 
-/*
     fun fetchAllRecompensas(ciclistaEmail: String){
         viewModelScope.launch {
             try{
-                val response = recompensaRepo.getRecompensaById(ciclistaEmail)
+                val response = recompensaRepo.getAllByCiclistaEmail(ciclistaEmail)
 
                 if(response.isSuccessful){
-                    Log.d("RutaById", "La ruta sa encontrao coñooo")
-                    _recompesas.value = response.body()!!
+                    Log.d("RutaById", "Las Recompensas san encontrao coñooo")
+
+                    val responseALL = recompensaRepo.findAll()
+                    var recompensesDisponibles = responseALL.body()?.filter { it.estat == EstatRecompensa.DISPONIBLE  }
+                    _recompensas.value = response.body()!!.union(recompensesDisponibles!!).toList()
+
                 }else{
-                    Log.e("RutaById", "La ruta no sa pogut trobar")
-                    _recompesas.value = emptyList()
+                    Log.e("RutaById", "Las Recompensas no san pogut trobar")
+                    _recompensas.value = emptyList()
                 }
 
             }catch(e: Exception){
-                _recompesas.value = emptyList()
+                _recompensas.value = emptyList()
                 e.printStackTrace()
 
 
             }
         }
-    }*/
+    }
     fun findById(id: Long){
         viewModelScope.launch {
 
@@ -59,15 +58,15 @@ class RecompensaViewModel(): ViewModel() {
                 if(response.isSuccessful){
                     Log.d("RecompensaById", "La recompensa sa encontrao coñooo")
 
-                    _recompesa.value = response.body()
+                    _recompensa.value = response.body()
 
                 }else{
                     Log.e("RecompensaById", "La recompensa no sa pogut trobar")
-                    _recompesa.value = null
+                    _recompensa.value = null
                 }
 
             }catch(e: Exception){
-                _recompesa.value = null
+                _recompensa.value = null
                 e.printStackTrace()
 
 

@@ -11,6 +11,9 @@ interface RecompensaApiRest {
     suspend fun findAll(): Response<List<Recompensa>>
 
 
+    @GET("byCiclistaEmail/{ciclistaEmail}")
+    suspend fun getAllByCiclistaEmail(@Path("ciclistaEmail") ciclistaEmail: String): Response<List<Recompensa>>
+
 
     @GET("byId/{recompensaId}")
     suspend fun getRecompensaById(@Path("recompensaId") recompensaId: Long): Response<Recompensa?>

@@ -60,4 +60,13 @@ public class RecompensaLogic {
         }
 
     }
+     public List<Recompensa> getAllByCiclistaEmail(String ciclistaEmail) throws Exception{
+        List<Recompensa> ret = new ArrayList<>();
+        
+        ret = recompensaRepo.findAllByCiclista_Email(ciclistaEmail);
+        
+        return ret;
+        
+    }
+    
 }

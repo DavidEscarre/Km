@@ -47,8 +47,10 @@ public class Recompensa {
     private EstatRecompensa estat = EstatRecompensa.DISPONIBLE;
 
     @Column(nullable = false)
-    private LocalDateTime dataCreacio;
-
+    private LocalDateTime dataCreacio = LocalDateTime.now();
+    
+    private LocalDateTime dataReserva;
+    
     private LocalDateTime dataAssignacio;
     
     private LocalDateTime dataRecollida;
@@ -63,7 +65,7 @@ public class Recompensa {
     public Recompensa() {
     }
 
-    public Recompensa(String nom, String descripcio, String observacions, double preu, LocalDateTime dataCreacio, LocalDateTime dataAssignacio, LocalDateTime dataRecollida, User ciclista, String puntBescanvi) {
+    public Recompensa(String nom, String descripcio, String observacions, double preu, LocalDateTime dataCreacio, LocalDateTime dataAssignacio, LocalDateTime dataRecollida, User ciclista, String puntBescanvi, LocalDateTime dataReserva) {
         this.nom = nom;
         this.descripcio = descripcio;
         this.observacions = observacions;
@@ -71,11 +73,12 @@ public class Recompensa {
         this.dataCreacio = dataCreacio;
         this.dataAssignacio = dataAssignacio;
         this.dataRecollida = dataRecollida;
+        this.dataReserva = dataReserva;
         this.ciclista = ciclista;
         this.puntBescanvi = puntBescanvi;
     }
 
-    public Recompensa(Long id, String nom, String descripcio, String observacions, double preu, LocalDateTime dataCreacio, LocalDateTime dataAssignacio, LocalDateTime dataRecollida, User ciclista, String puntBescanvi) {
+    public Recompensa(Long id, String nom, String descripcio, String observacions, double preu, LocalDateTime dataCreacio, LocalDateTime dataAssignacio, LocalDateTime dataRecollida, User ciclista, String puntBescanvi, LocalDateTime dataReserva) {
         this.id = id;
         this.nom = nom;
         this.descripcio = descripcio;
@@ -84,6 +87,7 @@ public class Recompensa {
         this.dataCreacio = dataCreacio;
         this.dataAssignacio = dataAssignacio;
         this.dataRecollida = dataRecollida;
+        this.dataReserva = dataReserva;
         this.ciclista = ciclista;
         this.puntBescanvi = puntBescanvi;
     }
@@ -175,6 +179,14 @@ public class Recompensa {
 
     public void setPuntBescanvi(String puntBescanvi) {
         this.puntBescanvi = puntBescanvi;
+    }
+
+    public LocalDateTime getDataReserva() {
+        return dataReserva;
+    }
+
+    public void setDataReserva(LocalDateTime dataReserva) {
+        this.dataReserva = dataReserva;
     }
     
     

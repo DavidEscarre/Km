@@ -8,9 +8,11 @@ interface RecompensaRepository {
 
     suspend fun getRecompensaById(recompensaId: Long): Response<Recompensa?>
 
+
+
     //suspend fun createRuta(ciclista: RequestBody, dataInici: RequestBody, dataFinal: RequestBody, puntsGPS: RequestBody): Response<Long>
 
-    //  suspend fun getAllByCiclistaEmail(ciclistaEmail: String): Response<List<Ruta>>
+     suspend fun getAllByCiclistaEmail(ciclistaEmail: String): Response<List<Recompensa>>
 
 
 }

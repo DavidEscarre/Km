@@ -24,6 +24,11 @@ class RecompensaRepositoryImpl: RecompensaRepository {
         return response
     }
 
+    override suspend fun getAllByCiclistaEmail(ciclistaEmail: String): Response<List<Recompensa>> {
+        val response = recompensaApiRest.getAllByCiclistaEmail(ciclistaEmail)
+        return response
+    }
+
     //val rutaApiRest = RutaRetrofitInstance.retrofitInstance.create()
 
 
