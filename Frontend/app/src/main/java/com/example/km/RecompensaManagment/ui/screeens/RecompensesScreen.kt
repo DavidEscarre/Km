@@ -42,16 +42,25 @@ fun RecompensesScreen(
 
     if (user != null) {
         Log.d("RutaScreen", "fetching ....")
-        recompe.fetchAllRutas(user.email)
+      //  recompe.fetchAllRutas(user.email)
     }
     // Collect the list of rutas from the ViewModel
-    val rutas by rutaViewModel.rutas.collectAsState(initial = emptyList())
+  //  val rutas by rutaViewModel.rutas.collectAsState(initial = emptyList())
 
     Scaffold(
         topBar = { TopBar("Recompenses", userState.value, navController)},
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFF0F0F0))
+                .padding(paddingValues),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
 
+        }
+        /*
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -64,7 +73,7 @@ fun RecompensesScreen(
             items(rutas) { ruta ->
                 RutaItem(ruta, navController, puntGPSViewModel)
             }
-        }
+        }*/
     }
 
 
