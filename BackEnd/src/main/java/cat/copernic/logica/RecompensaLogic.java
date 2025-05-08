@@ -68,5 +68,11 @@ public class RecompensaLogic {
         return ret;
         
     }
+     
+    public void deleteRecompensa(Long recompensaId) throws Exception{
+        
+        recompensaRepo.deleteById(recompensaId);
+
+    }
     
 }

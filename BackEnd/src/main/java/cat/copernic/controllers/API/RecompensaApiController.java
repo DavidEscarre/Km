@@ -5,6 +5,7 @@
 package cat.copernic.controllers.API;
 
 import cat.copernic.Entity.Recompensa;
+import cat.copernic.enums.EstatRecompensa;
 import cat.copernic.logica.RecompensaLogic;
 import cat.copernic.logica.UserLogic;
 import jakarta.annotation.security.PermitAll;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -119,5 +121,7 @@ public class RecompensaApiController {
         
               
     }
+    
+    
     
 }

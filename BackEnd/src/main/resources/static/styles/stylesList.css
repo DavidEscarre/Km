@@ -281,11 +281,35 @@
       background-color: #ffb3b3; /* Rojo clarito */
       color: #fff;
     }
+    .delete-button:disabled {
+      background-color: #b5b5b5; /* Rojo clarito */
+      color: #d9d9d9;
+    }
     .delete-button:hover {
       background-color: #ff8f8f;
     }
-    
-    
+    .detail-button{
+        font-size: 1.3rem;
+        padding: 5px 28px;
+        border: none;
+        font-weight: 800;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        background-color: #212121; /* Rojo clarito */
+        color: #fff;
+    }
+    .detail-button:hover{
+        font-size: 1.3rem;
+        padding: 5px 28px;
+        border: none;
+        font-weight: 800;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        background-color: #f7f5f5; /* Rojo clarito */
+        color: #212121;
+    }
     /* ==== LISTA DE RECOMPENSAS (TARJETAS) ==== */
     .recompensa-list {
         display: flex;

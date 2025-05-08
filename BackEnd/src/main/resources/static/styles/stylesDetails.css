@@ -1,0 +1,240 @@
+/* ==== RESETEO BÁSICO ==== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: sans-serif;
+    }
+
+    body {
+      background-color: #fff;
+      color: #333;
+    }
+
+    /* ==== CABECERA Y NAVEGACIÓN ==== */
+    header {
+      background-color: #2b2b2b;
+      color: #fff;
+      padding: 1rem;
+    }
+    header h1 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    nav {
+      display: flex;
+      gap: 1rem;
+    }
+    .nav-button {
+      background-color: #444;
+      border: none;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      border-radius: 4px;
+    }
+    .nav-button:hover {
+      background-color: #666;
+    }
+    .nav-button.active {
+      background-color: #f9c00c; /* Color resaltado para la sección activa */
+      color: #000;
+    }
+    
+      .logout-container {
+        position: absolute;  /* Posiciona el icono */
+        top: 50px; /* Ajusta la distancia desde arriba */
+        right: 10px; /* Lo alinea a la derecha */
+    }
+     .logout-icon {
+        width: 32px;
+        height: 32px;
+        filter: drop-shadow(0 0 2px white); /* Simula grosor extra */
+        filter: invert(1); /*Convierte el color del SVG a blanco */
+        cursor: pointer; /* Cambia el cursor para indicar que es clickeable */
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .logout-icon:hover {
+        transform: scale(1.1); /* Efecto de zoom al pasar el mouse */
+    }
+    /* ==== CONTENEDOR PRINCIPAL ==== */
+    .container {
+      max-width: 1200px;
+      margin: 1rem auto;
+      padding: 0 1rem;
+    }
+
+
+.card {
+    background-color: #333;
+    color: white;
+    border-radius: 15px;
+    padding: 25px;
+    width: 90%;
+    height: 90%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.user-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-avatar img {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #ccc;
+}
+   /* Contenedor del precio */
+.recompensa-preu-container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        width: 50%;
+        background-color: #333232;
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #444;
+        filter: drop-shadow(0 0 2px white)
+}
+/* Precio */
+    .recompensa-preu {
+        color: #fff;
+        
+        
+        /* Se puede poner un color distintivo para resaltar el precio */
+    }
+
+
+.saldo {
+   
+    display: flex;
+    align-items: center;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.coin-icon {
+    display: inline-block;
+    width: 38px;
+    height: 38px;
+    filter: drop-shadow(0 0 2px white); /* Simula grosor extra */
+}
+
+.user-info {
+    margin-top: 20px;
+    line-height: 1.8;
+}
+
+.status-actiu {
+    background-color: #90ee90;
+    padding: 4px 12px;
+    border-radius: 12px;
+    color: black;
+    font-weight: bold;
+}
+
+.status-desactivat {
+    background-color: #e57373;
+    padding: 4px 12px;
+    border-radius: 12px;
+    color: white;
+    font-weight: bold;
+}
+.user-nom{
+    font-weight: bold;
+    font-size: 55px
+}
+.actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+}
+
+.actions button {
+    background-color: #999;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.actions button:hover {
+    background-color: #bbb;
+}
+
+/* Pestañas */
+.tabs {
+    margin-top: 20px;
+    border-bottom: 2px solid #ddd;
+    
+}
+
+.tab-button {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+.tab-button.active {
+    background: #fafafa;
+    border: 5px;
+    border-color: #ffffff;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    color: #333;
+}
+
+.back-container{
+}
+.arrow-back-icon{
+     width: 32px;
+        height: 32px;
+        filter: drop-shadow(0 0 2px white); /* Simula grosor extra */
+        filter: invert(1); /*Convierte el color del SVG a blanco */
+        cursor: pointer; /* Cambia el cursor para indicar que es clickeable */
+        transition: transform 0.2s ease-in-out;
+}
+.arrow-back-icon:hover{
+     transform: scale(1.1); 
+}
+
+
+/* Secciones */
+.tab-section {
+    margin-top: 20px;
+}
+
+/* Cards rutas */
+.ruta-card, .recompensa-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.ruta-card-section1 p,
+.recompensa-card-section1 div {
+    margin: 4px 0;
+}
+
+.ruta-saldo-container, .recompensa-preu-container {
+    display: flex;
+    align-items: center;
+}

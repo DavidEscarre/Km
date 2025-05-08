@@ -41,7 +41,7 @@
         </form>
     </div>
     
-    <!-- Lista de recompensas -->
+    <!-- Lista de recompenses -->
     <section class="recompensa-list">
         <div class="recompensa-card" th:each="recompensa : ${recompenses}">
            
@@ -89,7 +89,13 @@
             <div class="recompensa-actions">
                 <!-- Sustituimos "Editar" por "Asignar" según la imagen -->
                 <button class="assign-button">Asignar</button>
-                <button class="delete-button">Eliminar</button>
+                <button
+                    class="delete-button"
+                    th:disabled="${recompensa.estat.name() != 'DISPONIBLE'}"
+                    th:text="${recompensa.estat.name() != 'DISPONIBLE'} ? 'No disponible' : 'Eliminar'">
+                    th:onclick="|if(confirm('Estàs segur?')) window.location.href='@{/recompenses/delete/{id}(id=${recompensa.id})}';|">
+                    Eliminar
+                </button>
             </div>
             
         </div>

@@ -4,8 +4,12 @@
  */
 package cat.copernic.controllers.web;
 
+import cat.copernic.Entity.Recompensa;
+import cat.copernic.Entity.Ruta;
 import cat.copernic.Entity.User;
 import cat.copernic.enums.Rol;
+import cat.copernic.logica.RecompensaLogic;
+import cat.copernic.logica.RutaLogic;
 import cat.copernic.logica.UserLogic;
 import java.time.LocalDateTime;
 import java.util.Base64;
@@ -19,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,6 +40,11 @@ public class UserWebController {
     @Autowired
     private UserLogic userLogic;  // Servicio para gestionar los clientes
 
+    @Autowired
+    private RecompensaLogic recompensaLogic;  
+    
+    @Autowired
+    private RutaLogic rutaLogic;  
     /**
      * Muestra la lista de todos los usuarios en el sistema.
      *
@@ -108,7 +118,39 @@ public class UserWebController {
             return "create-user";
         }
             
+    }
+    
+    @GetMapping("/getByEmail/{email}")
+    public String veureDetallsUsuari(@PathVariable String email, Model model) {
+    try {
+        User usuari = userLogic.getUser(email);
+        
+        List<Recompensa> recompensas = recompensaLogic.getAllByCiclistaEmail(email);
+        List<Ruta> rutas = rutaLogic.getAllByCiclistaEmail(email);
+        
+        model.addAttribute("recompensas", recompensas);
+        model.addAttribute("rutas", rutas);
+        if (usuari == null) {
+            model.addAttribute("errorMessage", "Usuari no trobat.");
+            return "users-list";
         }
+
+        // Si tiene foto, convertirla a Base64
+        if (usuari.getFoto() != null) {
+            
+            String base64Image = Base64.getEncoder().encodeToString(usuari.getFoto());
+            model.addAttribute("userImage", base64Image);
+        }
+        
+
+        model.addAttribute("usuari", usuari);
+        return "user-details";  // nombre del archivo HTML
+    } catch (Exception e) {
+        e.printStackTrace();
+        model.addAttribute("errorMessage", "Error al carregar els detalls de l’usuari.");
+        return "users-list";
+    }
+}
     
 
     
