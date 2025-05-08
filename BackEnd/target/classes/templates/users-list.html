@@ -49,7 +49,10 @@
                     <p><strong>Estat:</strong> <span class="status active">Actiu</span></p>
                     <p><strong>Rol:</strong> <span th:text="${user.rol}"></span></p>
                 </div>
-                <div class="user-actions">
+                <div class="details-button">
+                    <form th:action="@{/users/getByEmail/{email}(email=${user.email})}" method="get">
+                        <button class="detail-button" type="submit">Ver Detalles</button>
+                    </form>
                     <button class="edit-button">Editar</button>
                     <button class="delete-button">Eliminar</button>
                 </div>

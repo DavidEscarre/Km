@@ -5,6 +5,7 @@
 package cat.copernic.controllers.web;
 
 import cat.copernic.Entity.Recompensa;
+import cat.copernic.enums.EstatRecompensa;
 import cat.copernic.logica.RecompensaLogic;
 import java.time.LocalDateTime;
 import java.util.Base64;
@@ -16,8 +17,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -86,6 +89,28 @@ public class RecompensaWebController {
             return "create-recompensa";
         }
             
+    }
+    
+    @GetMapping("/delete/{id}")
+    public String deleteRecompensa(@PathVariable("id") Long recompensaId,
+                                   Model model,
+                                   Authentication authentication) {
+        try{
+            Recompensa recompensa = recompensaLogic.getRecompensa(recompensaId);
+            if (recompensa == null) {
+                model.addAttribute("errorMessage", "Recompensa no trobada: " + recompensaId);
+                return "redirect:/recompenses";
+            }
+            if (recompensa.getEstat() != EstatRecompensa.DISPONIBLE) {
+                model.addAttribute("errorMessage", "Només es poden eliminar recompenses en estat disponible.");
+                return "redirect:/recompenses";
+            }
+            recompensaLogic.deleteRecompensa(recompensaId);
+            return "redirect:/recompenses";
+        }catch(Exception e){
+             return "redirect:/recompenses";
         }
+        
+    }
     
 }
