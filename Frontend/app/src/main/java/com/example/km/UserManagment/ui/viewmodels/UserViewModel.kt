@@ -21,6 +21,8 @@ class UserViewModel: ViewModel()  {
     val user: StateFlow<User?> get() = _user
 
 
+
+
     fun findByEmail(email: String){
 
         viewModelScope.launch {

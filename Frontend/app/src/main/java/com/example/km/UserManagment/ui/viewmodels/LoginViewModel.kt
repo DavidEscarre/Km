@@ -32,15 +32,37 @@ class LoginViewModel: ViewModel()  {
     private val _word = MutableStateFlow<String>("")
     val word: StateFlow<String> get() = _word
 
+    private val _emailRecContr = MutableStateFlow<String>("")
+    val emailRecContr: StateFlow<String> get() = _emailRecContr
+
+    private val _wordRecContr = MutableStateFlow<String>("")
+    val wordRecContr: StateFlow<String> get() = _wordRecContr
+
     private val _emailError = MutableStateFlow<String?>(null)
     val emailError: StateFlow<String?>  get() = _emailError
     private val _wordError = MutableStateFlow<String?>(null)
     val wordError: StateFlow<String?> get() = _wordError
 
+    private val _confirmWordError = MutableStateFlow<String?>(null)
+    val confirmWordError: StateFlow<String?> get() = _confirmWordError
+
+
+    private val _emailRecContrError = MutableStateFlow<String?>(null)
+    val emailRecContrError: StateFlow<String?>  get() = _emailRecContrError
+    private val _wordRecContrError = MutableStateFlow<String?>(null)
+    val wordRecContrError: StateFlow<String?> get() = _wordRecContrError
+    private val _tokenError = MutableStateFlow<String?>(null)
+    val tokenError: StateFlow<String?> get() = _tokenError
+
     private val _loginError = MutableStateFlow<String?>(null)
     val loginError: StateFlow<String?> get() = _loginError
 
+
+    private val _RecContrError = MutableStateFlow<String?>(null)
+    val RecContrError: StateFlow<String?> get() = _RecContrError
+
     val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$".toRegex()
+    val tokenRegex ="^[A-Z0-9]{6}$".toRegex()
 
     fun onEmailChange(newEmail: String) {
         _email.value = newEmail
@@ -52,12 +74,12 @@ class LoginViewModel: ViewModel()  {
         validateFields()
     }
 
+
+
     fun validateFields(): Boolean {
         var isValid = true
         Log.d("VALIDATE_FIELDS", "EMAIL: ${_email.value}")
         Log.d("VALIDATE_FIELDS", "word: ${_word.value}")
-
-        //Esta desavilitat per a proves
 
         if(!email.value.matches(emailRegex)){
             _emailError.value = "Correu electronic inválid."
@@ -141,14 +163,19 @@ class LoginViewModel: ViewModel()  {
                 if(response.isSuccessful){
                     onSuccess()
 
+                    _RecContrError.value = null
                 }else{
+
                     Log.e("LoginViewM:VerifyToken", "❌ Error al verificar el token de recuperacion.")
                     val errorBody = response.errorBody()?.string()
                     val errorMessage =
                         "❌ ${response.code()} - $errorBody"
+
+                    _RecContrError.value = errorBody
                     onError(errorMessage)
                 }
             }catch(e: Exception){
+               // _RecContrError.value = "Error intern del servidor"
                 e.printStackTrace()
             }
 
@@ -164,24 +191,100 @@ class LoginViewModel: ViewModel()  {
                 val response = AuthRepo.forgotPassword(email)
                 if(response.isSuccessful){
                     if(response.body().equals("token Enviado")){
+                        _RecContrError.value = null
                         onSuccess()
                     }else{
+                        _RecContrError.value = response.body().toString()
                         onError(response.body().toString())
                     }
                 }else{
                     Log.e("LoginViewM:ForgotPasswd", "❌ Error enviar el correo electronico de recuperacion")
                     val errorBody = response.errorBody()?.string()
+                    _RecContrError.value = errorBody
                     val errorMessage =
                         "❌ ${response.code()} - $errorBody"
                     onError(errorMessage)
                 }
 
-
             }catch(e: Exception){
+              //  _RecContrError.value = "Error intern del servidor"
                 e.printStackTrace()
+            }
+        }
+    }
+
+    fun onEmailRecContrChange(newEmail: String) {
+        _emailRecContr.value = newEmail
+        validateEmail(newEmail)
+    }
+
+    fun onTokenChange(token: String) {
+        validateToken(token)
+    }
+
+
+    fun onPasswordRecContrChange(newPassword: String, confirmWord: String) {
+        _wordRecContr.value = newPassword
+        validatePasswords(newPassword, confirmWord)
+    }
+
+    fun validateToken(token: String): Boolean {
+        var isValid = true
+        Log.d("UserVM-VALIDATE_Token ","Token: ${token}")
+
+        if(!token.matches(tokenRegex)){
+            _tokenError.value = "EL token ha de tenir 6 caracters (A-Z i 0-9)."
+            isValid = false
+        }else{
+            _tokenError.value = null
+        }
+        return isValid
+    }
+
+
+    fun validateEmail(email: String): Boolean {
+        var isValid = true
+        Log.d("UserVM-VALIDATE_Email ","EMAIL: ${email}")
+
+        if(!email.matches(emailRegex)){
+            _emailRecContrError.value = "Correu electronic inválid."
+            isValid = false
+        }else{
+
+            _emailRecContrError.value = null
+        }
+        return isValid
+    }
+
+
+    fun validatePasswords(word: String, confirmWord: String): Boolean {
+        var isValid = true
+        Log.d("UserVM-VALIDATE_Word", "word: ${word}")
+        Log.d("UserVM-VALIDATE_confirmWord", "confirmWord: ${confirmWord}")
+        if(word.length == 0){
+
+            _wordRecContrError.value = "La contrasenya no pot esta vuida."
+            isValid = false
+        }
+        else if(confirmWord.length == 0){
+            _confirmWordError.value = "La contrasenya no pot esta vuida."
+            isValid = false
+        }else{
+            if(word.equals(confirmWord)){
+                _confirmWordError.value = null
+                _wordRecContrError.value = null
+            }else{
+                _confirmWordError.value = "Les contrasenyes no coincideixen."
+                _wordRecContrError.value = null
+               // _wordRecContrError.value = "Les contrasenyes no coincideixen."
+                isValid = false
             }
 
         }
 
+
+
+
+        return isValid
     }
 }
