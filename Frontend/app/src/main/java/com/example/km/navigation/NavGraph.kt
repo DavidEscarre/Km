@@ -1,15 +1,11 @@
 package com.example.km.navigation
 
-import android.content.pm.verify.domain.DomainVerificationUserState
-import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -25,11 +21,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,11 +31,9 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -59,6 +51,7 @@ import com.example.km.SistemaManagment.ui.viewmodels.SistemaViewModel
 import com.example.km.UserManagment.ui.screens.LoginScreen
 import com.example.km.UserManagment.ui.screens.PasswordRecoverScreen
 import com.example.km.UserManagment.ui.screens.ProfileScreen
+import com.example.km.UserManagment.ui.screens.EditProfileScreen
 import com.example.km.UserManagment.ui.viewmodels.LoginViewModel
 import com.example.km.UserManagment.ui.viewmodels.UserViewModel
 import com.example.km.core.models.User
@@ -82,7 +75,8 @@ fun AppNavigation(recompensaViewModel: RecompensaViewModel, userViewModel :UserV
 
         composable("rutes") { RutesScreen(rutaViewModel, puntGPSViewModel, navController, userState) }
         composable("recompenses") { RecompensesScreen(navController, userState, recompensaViewModel) }
-        composable("profile") { ProfileScreen(rutaViewModel, recompensaViewModel, context, loginViewModel, navController, userState) }
+        composable("profile") { ProfileScreen(userViewModel, rutaViewModel, recompensaViewModel, context, loginViewModel, navController, userState) }
+        composable("updateProfile") { EditProfileScreen(userViewModel, rutaViewModel, recompensaViewModel, context, loginViewModel, navController, userState) }
 
         composable(
             "ruta_details/{rutaId}",

@@ -26,6 +26,8 @@ interface UserApiRest {
     @PUT("updatePassword/{userEmail}")
     suspend fun updatePassword(@Path("userEmail") userEmail: String, @Body password: String): Response<User?>
 
+    @PUT("update/{userEmail}")
+    suspend fun update(@Path("userEmail") userEmail: String, @Body updatedUser: User): Response<User?>
 
 
     }

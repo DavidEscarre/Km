@@ -204,15 +204,17 @@ public class UserLogic {
             oldUser.setEstat(newUser.isEstat());
             oldUser.setNom(newUser.getNom());
             oldUser.setObservacions(newUser.getObservacions());
-            oldUser.setRecompensas(newUser.getRecompensas());
+          
             oldUser.setResetToken(newUser.getResetToken());
             oldUser.setRol(newUser.getRol());
-            oldUser.setRutes(newUser.getRutes());
+        
             oldUser.setSaldoDisponible(newUser.getSaldoDisponible());
             oldUser.setTelefon(newUser.getTelefon());
             oldUser.setTokenExpiration(newUser.getTokenExpiration());
             oldUser.setWord(newUser.getWord());
-            
+            if(newUser.getFoto() != null){
+                 oldUser.setFoto(newUser.getFoto());
+            }
             User savedUser = userRepo.save(oldUser);
             return savedUser.getEmail();
         } catch (Exception e) {

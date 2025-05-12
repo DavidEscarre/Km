@@ -23,6 +23,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .requestMatchers("/rest/puntgps/**").permitAll()  // Permitir todas las rutas REST
             .requestMatchers("/rest/**").permitAll()  // Permitir todas las rutas REST
             .requestMatchers("/rest/users/updatePassword/**").permitAll()
+            .requestMatchers("/rest/users/update/**").permitAll()
             .requestMatchers("/rest/recompenses/**").permitAll()    
                 
             .requestMatchers("/api/auth/login").permitAll()
