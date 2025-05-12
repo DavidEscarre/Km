@@ -124,7 +124,7 @@ fun PasswordRecoverScreen(
             onClick = { navController.popBackStack() },
             modifier = Modifier
                 .align(Alignment.TopStart)
-                .padding(start = 16.dp, bottom = 0.dp, top = 32.dp) // Espaciado desde el borde
+                .padding(start = 16.dp, bottom = 0.dp, top = 32.dp)
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
@@ -186,28 +186,8 @@ fun PasswordRecoverScreen(
                         .padding(bottom = 10.dp, top = 16.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                   // Spacer(Modifier.width(12.dp))
                     BikeProgressBar(currentStep)
-
-                  /*  val steps = listOf("Email", "Token", "Contraseña")
-                    steps.forEachIndexed { index, step ->
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = step,
-                                color = if (currentStep == index + 1) Color.Blue else Color.Gray
-                            )
-                            Box(
-                                modifier = Modifier
-                                    .size(8.dp)
-                                    .background(
-                                        if (currentStep == index + 1) Color.Blue else Color.Gray,
-                                        shape = CircleShape
-                                    )
-                            )
-                        }
-                    }*/
                 }
-
                 when (currentStep) {
                     1 -> {
                         Card(

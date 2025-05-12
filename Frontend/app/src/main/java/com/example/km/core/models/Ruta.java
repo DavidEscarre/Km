@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi;
 
 import com.example.km.core.utils.enums.EstatRuta;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -190,14 +191,34 @@ public class Ruta {
         this.velocitatMax = velocitatMax;
     }
 
-
-
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     public String getDurada() {
+        // Si falta cualquiera de las fechas, devolvemos un placeholder
+        if (this.dataInici == null || this.dataFinal == null) {
+            return " - ";
+        }
+
+        // Calculamos la duración entre dataInici y dataFinal
+        Duration duration = Duration.between(this.dataInici, this.dataFinal);
+
+        long hours = duration.toHours();
+        long minutes = duration.minusHours(hours).toMinutes();
+        long seconds = duration
+                .minusHours(hours)
+                .minusMinutes(minutes)
+                .getSeconds();
+
+        // Formateamos a "HH:mm:ss"
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+/*
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public String getDurada() {
+
         // Validación en caso de que dataFinal sea nulo
         if (this.dataInici == null || this.dataFinal == null) {
-            return "No disponible";
+            return " - ";
         }
 
         ZoneId zoneId = ZoneId.systemDefault();
@@ -214,6 +235,6 @@ public class Ruta {
         // Formateo a "Xh Ym"
         return  String.format("%dh %02dmin", hores, minuts);
 
-    }
+    }*/
 
 }
