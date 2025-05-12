@@ -123,9 +123,9 @@ class RutaRepositoryImpl: RutaRepository {
 
 
         ruta.saldo = BigDecimal(saldo).setScale(2, RoundingMode.HALF_UP).toDouble()
-        ruta.distancia = BigDecimal(distancia).setScale(2, RoundingMode.HALF_UP).toDouble()
-        ruta.velocitatMax = BigDecimal(velMax).setScale(2, RoundingMode.HALF_UP).toDouble()
-        ruta.velocitatMitjana = BigDecimal(velMig).setScale(2, RoundingMode.HALF_UP).toDouble()
+        ruta.distancia = BigDecimal(distancia).setScale(3, RoundingMode.HALF_UP).toDouble()
+        ruta.velocitatMax = BigDecimal(velMax).setScale(3, RoundingMode.HALF_UP).toDouble()
+        ruta.velocitatMitjana = BigDecimal(velMig).setScale(3, RoundingMode.HALF_UP).toDouble()
 
 
         val response = rutaApiRest.updateRuta(ruta)

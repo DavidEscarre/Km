@@ -89,10 +89,11 @@
             <div class="recompensa-actions">
                 <!-- Sustituimos "Editar" por "Asignar" según la imagen -->
                 <button class="assign-button">Asignar</button>
+                
                 <button
                     class="delete-button"
                     th:disabled="${recompensa.estat.name() != 'DISPONIBLE'}"
-                    th:text="${recompensa.estat.name() != 'DISPONIBLE'} ? 'No disponible' : 'Eliminar'">
+                    th:text="${recompensa.estat.name() != 'DISPONIBLE'} ? 'No disponible' : 'Eliminar'"
                     th:onclick="|if(confirm('Estàs segur?')) window.location.href='@{/recompenses/delete/{id}(id=${recompensa.id})}';|">
                     Eliminar
                 </button>

@@ -19,6 +19,11 @@ class RecompensaViewModel(): ViewModel() {
     private val _recompensas = MutableStateFlow<List<Recompensa>>(emptyList<Recompensa>())
     val recompensas: StateFlow<List<Recompensa>>  = _recompensas
 
+    private val _recompensasUser = MutableStateFlow<List<Recompensa>>(emptyList<Recompensa>())
+    val recompensasUser: StateFlow<List<Recompensa>>  = _recompensasUser
+
+
+
     private val _recompensa = MutableStateFlow<Recompensa?>(null)
     val recompensa: StateFlow<Recompensa?>  = _recompensa
 
@@ -50,6 +55,25 @@ class RecompensaViewModel(): ViewModel() {
             }
         }
     }
+    fun fetchAllUserRecompensas(ciclistaEmail: String){
+        viewModelScope.launch {
+            try{
+                val response = recompensaRepo.getAllByCiclistaEmail(ciclistaEmail)
+                if(response.isSuccessful){
+                    Log.d("RutaById", "Las Recompensas san encontrao coñooo")
+                    _recompensasUser.value = response.body()!!
+                }else{
+                    Log.e("RutaById", "Las Recompensas no san pogut trobar")
+                    _recompensasUser.value = emptyList()
+                }
+            }catch(e: Exception){
+                _recompensasUser.value = emptyList()
+                e.printStackTrace()
+            }
+        }
+    }
+
+
     fun findById(id: Long){
         viewModelScope.launch {
 

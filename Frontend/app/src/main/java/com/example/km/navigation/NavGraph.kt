@@ -82,7 +82,7 @@ fun AppNavigation(recompensaViewModel: RecompensaViewModel, userViewModel :UserV
 
         composable("rutes") { RutesScreen(rutaViewModel, puntGPSViewModel, navController, userState) }
         composable("recompenses") { RecompensesScreen(navController, userState, recompensaViewModel) }
-        composable("profile") { ProfileScreen(context, loginViewModel, navController, userState) }
+        composable("profile") { ProfileScreen(rutaViewModel, recompensaViewModel, context, loginViewModel, navController, userState) }
 
         composable(
             "ruta_details/{rutaId}",
