@@ -36,8 +36,10 @@ class UserRepositoryImpl: UserRepository {
         return response
     }
 
-
-
+    override suspend fun update(userEmail: String, updatedUser: User): Response<User?> {
+        val response = userApiRest.update(userEmail, updatedUser)
+        return response
+    }
 
 
 }

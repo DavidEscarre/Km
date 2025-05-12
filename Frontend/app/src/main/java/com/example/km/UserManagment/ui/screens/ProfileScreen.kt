@@ -3,6 +3,9 @@ package com.example.km.UserManagment.ui.screens
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Build
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -28,8 +31,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -62,8 +67,10 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.input.key.Key.Companion.A
+import androidx.compose.ui.input.key.Key.Companion.I
 import androidx.compose.ui.input.key.Key.Companion.W
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -80,6 +87,7 @@ import com.example.km.R
 import com.example.km.RutaManagment.ui.viewmodels.RecompensaViewModel
 import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
 import com.example.km.UserManagment.ui.viewmodels.LoginViewModel
+import com.example.km.UserManagment.ui.viewmodels.UserViewModel
 import com.example.km.core.models.Recompensa
 import com.example.km.core.models.Ruta
 import com.example.km.core.models.User
@@ -95,13 +103,33 @@ import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ProfileScreen(rutaViewModel: RutaViewModel, recompensaViewModel: RecompensaViewModel, context: Context,loginViewModel: LoginViewModel, navController: NavController, userState: State<User?>) {
+fun ProfileScreen(userViewModel: UserViewModel, rutaViewModel: RutaViewModel, recompensaViewModel: RecompensaViewModel, context: Context,loginViewModel: LoginViewModel, navController: NavController, userState: State<User?>) {
     val scrollState = rememberScrollState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
     val user = userState.value
-    val imageBitmap = user?.foto?.let { base64ToBitmap(it) }
+    val imageBitmap by userViewModel.profileImageBitmap.collectAsState()
+
+    var selectedImageUri by remember { mutableStateOf<android.net.Uri?>(null) }
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var showChangeImageDialog by remember { mutableStateOf(false)
+    }
+
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+
+        if(uri != null){
+            selectedImageUri = uri // Guarda la URI seleccionada en una variable de estado
+            user?.let{
+                userViewModel.updateUser( user.email , user, uri, context)
+                userViewModel.getProfileImage(user)
+            }
+            Toast.makeText(context, "Imagen actualizada", Toast.LENGTH_SHORT).show()
+        }
+
+
+    }
 
     val historialRecompensas by recompensaViewModel.recompensasUser.collectAsState()
     val historialRutas by rutaViewModel.rutas.collectAsState()
@@ -110,6 +138,7 @@ fun ProfileScreen(rutaViewModel: RutaViewModel, recompensaViewModel: RecompensaV
         if(user != null){
             recompensaViewModel.fetchAllUserRecompensas(user.email)
             rutaViewModel.fetchAllRutas(user.email)
+            userViewModel.getProfileImage(user)
         }
 
 
@@ -126,16 +155,30 @@ fun ProfileScreen(rutaViewModel: RutaViewModel, recompensaViewModel: RecompensaV
                     Text("Menu",Modifier.align(Alignment.CenterHorizontally), fontSize = 34.sp, fontWeight = FontWeight(900), color = Color(0xFF3E3E3E))
                     Spacer(modifier = Modifier.height(12.dp))
                     HorizontalDivider(modifier = Modifier.width(300.dp).align(Alignment.CenterHorizontally),1.dp, Color(0xFF3E3E3E), )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Row(modifier = Modifier.fillMaxWidth().clickable
-                  { loginViewModel.logOut(context, navController) }
-                      .background(Color(0xFF2b2b2b)).align(Alignment.CenterHorizontally),
-                      Arrangement.Center
+                    Spacer(modifier = Modifier.height(32.dp))
 
-                      ) {
-                        Text("Logout", color = Color.White, fontSize = 23.sp, fontWeight = FontWeight(700))
+                    Row(modifier = Modifier.fillMaxWidth().padding(16.dp).clickable
+                    { navController.navigate("updateProfile") }
+                        .background(Color(0xFF2b2b2b)).align(Alignment.CenterHorizontally),
+                        Arrangement.Center
+
+                    ) {
+                        Text("Editar perfil", color = Color.White, fontSize = 23.sp, fontWeight = FontWeight(700))
+                        Spacer(Modifier.width(16.dp))
+                        Icon(imageVector = Icons.Default.Edit, "Editar perfil d'usuari", tint = Color.White)
                     }
 
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Row(modifier = Modifier.fillMaxWidth().padding(16.dp).clickable
+                    { loginViewModel.logOut(context, navController) }
+                        .background(Color(0xFF2b2b2b)).align(Alignment.CenterHorizontally),
+                        Arrangement.Center
+                    ) {
+                        Text("Logout", color = Color.White, fontSize = 23.sp, fontWeight = FontWeight(700), textAlign = TextAlign.Center)
+                        Spacer(Modifier.width(16.dp))
+                        Icon(imageVector = Icons.Default.ExitToApp, "Tancar Sessio", tint = Color.White)
+                    }
                 }
             }
         }
@@ -179,14 +222,14 @@ fun ProfileScreen(rutaViewModel: RutaViewModel, recompensaViewModel: RecompensaV
 
                     if (imageBitmap != null) {
                         Image(
-                            bitmap = imageBitmap.asImageBitmap(),
+                            bitmap = imageBitmap!!.asImageBitmap(),
                             contentDescription = "Imatge de perfil.",
                             modifier = Modifier
                                 .size(200.dp)
-                                .border(BorderStroke(1.dp,Color.Black), shape =CircleShape )
+                                .border(BorderStroke(1.dp,Color.Black), shape = CircleShape )
                                 .clip(CircleShape)
-                                .clickable {  },
-                            contentScale = ContentScale.Crop
+                                .clickable { showChangeImageDialog = true },
+                            contentScale = ContentScale.FillWidth
                         )
                     } else {
                         Image(
@@ -195,7 +238,23 @@ fun ProfileScreen(rutaViewModel: RutaViewModel, recompensaViewModel: RecompensaV
                             modifier = Modifier
                                 .size(200.dp)
                                 .clip(RoundedCornerShape(50.dp))
-                                .clickable {   }
+                                .clickable { showChangeImageDialog = true },
+                        )
+                    }
+
+                    if (showChangeImageDialog) {
+                        ChangeImageDialog(
+                            onDismiss = { showChangeImageDialog = false },
+                            onConfirm = {
+                                try {
+                                    launcher.launch("image/*")
+                                    showChangeImageDialog = false
+                                } catch (_: java.lang.RuntimeException) {
+
+                                } catch (_: java.lang.NullPointerException){
+
+                                }
+                            }
                         )
                     }
 
@@ -588,11 +647,29 @@ fun RecompensaCard(
                     EstatRecompensaCard(Modifier.size(110.dp, 26.dp).padding(0.dp).align(Alignment.CenterVertically), recompensa)
                 }
             }
-            //Preu
+
             SaldoRecompensaCard((Modifier.align(Alignment.TopEnd).offset(x= (-12).dp, y= (10).dp)), recompensa)
-            // Estat
+
 
         }
 
     }
+}
+@Composable
+fun ChangeImageDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Cambiar imatge de perfil") },
+        text = { Text("¿Vols cambiar la teva imatge de perfil?") },
+        confirmButton = {
+            Button(onClick = onConfirm) {
+                Text("Seleccionar imatge")
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismiss) {
+                Text("Cancelar")
+            }
+        }
+    )
 }

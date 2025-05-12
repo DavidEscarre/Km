@@ -143,69 +143,81 @@ public class UserApiController {
     public ResponseEntity<User> updatePassword(@PathVariable String userEmail, @RequestBody String password) {
        
         ResponseEntity<User> response;
-
-        
         logger.info("User ID from URL: " + userEmail);
-        
-       
         try {
-            
-            
-            
             User existingUser = userLogic.getUser(userEmail);
 
             if (existingUser != null) {
                 User updatedUser = existingUser;
                 updatedUser.setWord(passwordEncoder.encode(password.substring(1, password.length()-1)));
-              userLogic.updateUser(updatedUser);
+            userLogic.updateUser(updatedUser);
 
               
                 return new ResponseEntity<>(existingUser, HttpStatus.OK);
             }else{
                  return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
+        } catch (Exception e) {
+            logger.error("ERROR UPDATE: " + e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+    
+    @PutMapping("/update/{userEmail}")
+    @PermitAll
+    public ResponseEntity<User> update(@PathVariable String userEmail, @RequestBody User updatedUser) {
+        ResponseEntity<User> response;
 
-           
+        
+        logger.info("User ID from URL: " + userEmail);
+        logger.info("Updated User Object: " + updatedUser);
+
+        try {
+            Optional<User> existingUserOptional = userRepo.findById(userEmail);
+
+            if (existingUserOptional.isPresent()) {
+                String res = userLogic.updateUser(updatedUser);
+                if(res.equals("NOT_FOUND")){
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }else if(res.equals(userEmail)){
+                      User user = userLogic.getUser(userEmail);
+                      logger.error("UPDATED USER: "+userEmail);
+                      return new ResponseEntity<>(user, HttpStatus.OK);
+                }else{
+                     logger.error("ERROR UPDATE InternalServer Error in UserLogic");
+                     return ResponseEntity.internalServerError().build();
+                }
+              
+            }else{
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+               
+            }
+
 
         } catch (Exception e) {
             logger.error("ERROR UPDATE: " + e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
     }
-    /*
-    @PutMapping("/update/{userId}")
-    public ResponseEntity<User> update(@PathVariable Long userId, @RequestBody User updatedUser) {
-        ResponseEntity<User> response;
+    
+   /* @PutMapping("/update-profile-image/{userEmail}")
+    public ResponseEntity<?> updateProfileImage(@PathVariable String userEmail, @RequestParam("image") MultipartFile imageFile) {
+        try{
+            User user = userLogic.getUser(userEmail);
+            if(user != null){
+                   userLogic.updateUserAndImage(user, imageFile);
+                return ResponseEntity.ok(user); // Devuelve el usuario actualizado en JSON
+            }else{
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        
-        logger.info("User ID from URL: " + userId);
-        logger.info("Updated User Object: " + updatedUser);
-
-        try {
-            Optional<User> existingUserOptional = userRepo.findById(userId);
-
-            if (existingUserOptional.isPresent()) {
-                User existingUser = existingUserOptional.get();
-
-                // Actualizar solo los campos necesarios
-                existingUser.setName(updatedUser.getName());
-                existingUser.setEmail(updatedUser.getEmail());
-                existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
-                existingUser.setImage(updatedUser.getImage());
-                existingUser.setStatus(updatedUser.isStatus());
-                existingUser.setRole(updatedUser.getRole());
-
-                userRepo.save(existingUser);
-                return new ResponseEntity<>(existingUser, HttpStatus.OK);
             }
-
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        } catch (Exception e) {
+        }catch(Exception e){
             logger.error("ERROR UPDATE: " + e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
-    }*/
+        
+     
+    }   */
     
     
     
