@@ -416,6 +416,7 @@ fun ProfileScreen(userViewModel: UserViewModel, rutaViewModel: RutaViewModel, re
                             if (!historialRecompensas.isNullOrEmpty()) {
                                 historialRecompensas.forEach { recompensa ->
                                     RecompensaCard(
+                                        navController,
                                         recompensa = recompensa,
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -559,11 +560,13 @@ fun SaldoRutaCard(modifier: Modifier, ruta: Ruta){
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun RecompensaCard(
+    navController: NavController,
     recompensa: Recompensa,
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier,
+        onClick = {navController.navigate("recompensa_details/${recompensa.id}")},
         elevation = CardDefaults.cardElevation(4.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
