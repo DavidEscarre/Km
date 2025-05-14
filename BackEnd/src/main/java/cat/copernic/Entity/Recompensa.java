@@ -19,6 +19,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import org.hibernate.annotations.CreationTimestamp;
 /**
  *
@@ -191,7 +192,14 @@ public class Recompensa {
     
     
     
-    
+     public String getDataFormategada(LocalDateTime data) {
+        if (data == null) {
+            return " - ";
+        }
+        // Format “dd/MM/yyyy HH:mm”
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return data.format(fmt);
+    }
     
     
 
