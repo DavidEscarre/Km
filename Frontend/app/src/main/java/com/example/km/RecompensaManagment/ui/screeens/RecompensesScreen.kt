@@ -55,6 +55,7 @@ fun RecompensesScreen(
     navController: NavController,
     userState: State<User?>,
     recompensaViewModel: RecompensaViewModel
+
 ) {
     val scrollState = rememberScrollState()
     val user: User? = userState.value
@@ -81,7 +82,7 @@ fun RecompensesScreen(
         ) {
 
             items(recompensas) { recompensa ->
-                RecompensaItem(recompensa)
+                RecompensaItem(recompensa,navController)
             }
         }
     }
@@ -89,7 +90,7 @@ fun RecompensesScreen(
 }
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun RecompensaItem(recompensa: Recompensa) {
+fun RecompensaItem(recompensa: Recompensa, navController: NavController) {
     // Formatter per a dates dd/MM/yyyy
     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
@@ -119,7 +120,7 @@ fun RecompensaItem(recompensa: Recompensa) {
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .clickable {
-                // navController.navigate("recompensa_details/${recompensa.id}")
+                 navController.navigate("recompensa_details/${recompensa.id}")
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {

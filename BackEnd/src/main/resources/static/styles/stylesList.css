@@ -112,6 +112,10 @@
         align-items: center;
         gap: 8px;
     }
+    .ruta-data {
+        font-size: 1.2rem;
+        margin-bottom: 0.3rem;
+    }
     
     .ruta-info {
       flex: 1; /* Para ocupar el espacio disponible */
@@ -433,6 +437,30 @@
     .status.pendent {
         background-color: #999; /* gris */
     }
+    
+    .status {
+    background-color: #fff; /* Verde claro */
+    color: #000; /* Por defecto en blanco */
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-left: 0.3rem;
+}
+
+.status.No_valida {
+    background-color: #ff7f50; /* coral */
+    color: #fff; /* Por defecto en blanco */
+}
+
+.status.Valida {
+    background-color: #71e376; /* color verde */
+    color: #fff; /* Por defecto en blanco */
+}
+
+.status.Pendent {
+    background-color: #999; /* gris */
+    color: #fff; /* Por defecto en blanco */
+}
 
     /* Punt bescanvi */
     .recompensa-puntbescanvi {

@@ -6,7 +6,9 @@ package cat.copernic.logica;
 
 import cat.copernic.Entity.PuntGPS;
 import cat.copernic.Entity.Ruta;
+import cat.copernic.Entity.User;
 import cat.copernic.controllers.API.UserApiController;
+import cat.copernic.enums.EstatRuta;
 import cat.copernic.repository.RutaRepo;
 import cat.copernic.repository.UserRepo;
 import java.time.ZoneId;
@@ -26,6 +28,9 @@ public class RutaLogic {
     
     @Autowired
     private RutaRepo rutaRepo;
+    
+    @Autowired
+    private UserRepo userRepo;
     Logger logger = LoggerFactory.getLogger(UserApiController.class);
     
     
@@ -44,12 +49,54 @@ public class RutaLogic {
         
         return ret;
     }
-    
-    public Ruta getRuta(Long id)throws Exception{
+     public Ruta getRuta(Long id)throws Exception{
         
         Ruta ret = rutaRepo.findById(id).orElse(null);
         
         return ret;
+    }
+      public Ruta invalidarRuta(Long id)throws Exception{
+        
+        try{
+            Ruta ret = rutaRepo.findById(id).orElse(null);
+            if(ret != null){
+                ret.setEstat(EstatRuta.NO_VALIDA);
+                User ciclista = ret.getCiclista();
+                if(ciclista.getSaldoDisponible()>= ret.getSaldo()){
+                    ciclista.setSaldoDisponible(ciclista.getSaldoDisponible()-ret.getSaldo());
+                }else{
+                     ciclista.setSaldoDisponible(0);
+                }
+               
+                
+                userRepo.save(ciclista);
+                rutaRepo.save(ret);
+            }
+            return ret;
+        }catch(Exception e){
+            return null;
+        }
+        
+    }
+    
+    public Ruta validarRuta(Long id)throws Exception{
+        
+       try{
+            Ruta ret = rutaRepo.findById(id).orElse(null);
+            if(ret != null){
+                
+                ret.setEstat(EstatRuta.VALIDA);
+                User ciclista = ret.getCiclista();
+               
+                ciclista.setSaldoDisponible(ciclista.getSaldoDisponible()+ret.getSaldo());
+                
+                userRepo.save(ciclista);
+                rutaRepo.save(ret);
+            }
+            return ret;
+        }catch(Exception e){
+            return null;
+        }
     }
     public boolean existsById(Long id)throws Exception
     {

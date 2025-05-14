@@ -22,8 +22,10 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
@@ -82,9 +84,7 @@ public class Ruta {
         this.ciclista = ciclista;
         this.dataInici = dataInici;
     }
- 
     
-
     public Ruta(Long id, User ciclista, LocalDateTime dataInici, LocalDateTime dataFinal, List<PuntGPS> puntsGPS) {
         this.id = id;
         this.ciclista = ciclista;
@@ -129,8 +129,6 @@ public class Ruta {
         this.tempsAturat = tempsAturat;
     }
     
-    
-
     public List<PuntGPS> getPuntsGPS() {
         return puntsGPS;
     }
@@ -138,7 +136,6 @@ public class Ruta {
     public void setPuntsGPS(List<PuntGPS> puntsGPS) {
         this.puntsGPS = puntsGPS;
     }
-
     
     public Long getId() {
         return id;
@@ -212,27 +209,33 @@ public class Ruta {
         this.velocitatMax = velocitatMax;
     }
     
-    public String getDurada() {
-        // Validación en caso de que dataFinal sea nulo
-        if (this.dataInici == null || this.dataFinal == null) {
-            return "No disponible";
+    
+    public String getDataFormategada(LocalDateTime data) {
+        if (data == null) {
+            return " - ";
         }
-        
-        ZoneId zoneId = ZoneId.systemDefault();
-
-        long startMillis = this.dataInici.atZone(zoneId).toInstant().toEpochMilli();
-        long endMillis = this.dataFinal.atZone(zoneId).toInstant().toEpochMilli();
-
-        long durada = (endMillis - startMillis) / 1000;
-        
-          
-        long hores = durada / 3600;
-        long minuts = (durada % 3600 ) /60;
-        long segons = durada-(hores*3600)- minuts;
-        // Formateo a "Xh Ym"
-       return  String.format("%dh %02dmin", hores, minuts);
-        
+        // Format “dd/MM/yyyy HH:mm”
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return data.format(fmt);
     }
     
-    
+    public String getDurada() {
+        // Si falta cualquiera de las fechas, devolvemos un placeholder
+        if (this.dataInici == null || this.dataFinal == null) {
+            return " - ";
+        }
+
+        // Calculamos la duración entre dataInici y dataFinal
+        Duration duration = Duration.between(this.dataInici, this.dataFinal);
+
+        long hours = duration.toHours();
+        long minutes = duration.minusHours(hours).toMinutes();
+        long seconds = duration
+                .minusHours(hours)
+                .minusMinutes(minutes)
+                .getSeconds();
+
+        // Formateamos a "HH:mm:ss"
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
 }

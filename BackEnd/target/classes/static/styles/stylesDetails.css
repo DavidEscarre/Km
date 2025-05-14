@@ -234,7 +234,180 @@
     margin: 4px 0;
 }
 
+.details-card-section1 {
+   
+    align-self: center;
+    
+}
+.details-ruta-info p{
+    font-size: 20px;
+    line-height: 1.8;
+    margin-bottom: .5rem;
+}
 .ruta-saldo-container, .recompensa-preu-container {
     display: flex;
     align-items: center;
+}
+
+
+/* INFO RUTA */
+
+.user-info { line-height: 1.8; }
+.user-info p { margin-bottom: .5rem; }
+.highlight { color: #e57373; font-weight: bold; }
+
+/* MAPA */
+.map-container {
+  color: #000; 
+  align-content: center;
+  align-self: end;
+  margin-top: 20px;
+  border: 2px solid #555;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 80%;
+  width: 33%;
+}
+#map {
+  width: 100%;
+  height: 100%;
+}
+.details-card-section1-horizontal {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+/* Contenedor de toda la info a la izquierda del mapa */
+.details-ruta-info {
+  display: flex;
+  justify-content: space-between;
+  width: 55%;
+  gap: 2rem;
+}
+
+/* Parte izquierda de la info (fecha, velocitats...) */
+.details-ruta-info-left {
+  flex: 2;
+}
+
+/* Parte derecha de la info (estat i saldo) */
+.details-ruta-info-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 1rem;
+  padding-top: 0.5rem;
+}
+
+.ruta-saldo-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    width: 100%;
+    background-color: #333232;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #444;
+    filter: drop-shadow(0 0 2px white)
+
+}
+
+.ruta-saldo {
+    color: #fff
+}
+.status {
+    background-color: #fff; /* Verde claro */
+    color: #000; /* Por defecto en blanco */
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-left: 0.3rem;
+}
+
+.status.No_valida {
+    background-color: #ff7f50; /* coral */
+    color: #fff; /* Por defecto en blanco */
+}
+
+.status.Valida {
+    background-color: #71e376; /* color verde */
+    color: #fff; /* Por defecto en blanco */
+}
+
+.status.Pendent {
+    background-color: #999; /* gris */
+    color: #fff; /* Por defecto en blanco */
+}
+.ruta-estat {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.95rem;
+    }
+.details-ruta-info {
+  width: 50%;
+  line-height: 1.8;
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.map-container {
+  width: 45%;
+  height: 450px;
+  border: 2px solid #555;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+/* Botones abajo */
+.actions-ruta {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.btn-validar,
+.btn-invalidar {
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-validar {
+  background-color: #4caf50;
+  color: white;
+}
+
+.btn-validar:hover {
+  background-color: #45a049;
+}
+
+.btn-invalidar {
+  background-color: #f44336;
+  color: white;
+}
+
+.btn-invalidar:hover {
+  background-color: #e53935;
 }
