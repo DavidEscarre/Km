@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Detalls de la Ruta</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/styles/stylesDetails.css">
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYCpdhFdv_CqksH2dBe3sCxlTAUhQphEU"></script>
+    </head>
+    <body>
+        <header class="header">
+            <h1>Detalls de la Ruta</h1>
+            <nav>
+                <a href="/"><button class="nav-button">SISTEMA</button></a>
+                <a href="/rutes"><button class="nav-button active">RUTES</button></a>
+                <a href="/users"><button class="nav-button">USUARIS</button></a>
+                <a href="/recompenses"><button class="nav-button">RECOMPENSES</button></a>
+                <a href="/logout" class="logout-container">
+                    <img class="logout-icon" src="/images/logout.svg" alt="Cerrar sesión">
+                </a>
+            </nav>
+        </header>
+
+        <main class="container">
+            <div class="card">
+                <a href="/rutes" class="back-container">
+                    <img class="arrow-back-icon" src="/images/arrow-back.svg" alt="Tornar enrere">
+                </a>
+
+                <div class="details-card-section1-horizontal">
+
+                    <!-- Info a la izquierda -->
+                    <div class="details-ruta-info">
+                        <div class="details-ruta-info-left">
+                             <p><strong>Ciclista:</strong>
+                                <span th:text="${ruta.ciclista.nom +', '+ ruta.ciclista.email}">01/01/2025 10:00</span>
+                            </p>
+                            <p><strong>Data de la ruta:</strong>
+                                <span th:text="${ruta.getDataFormategada(ruta.dataInici)}">01/01/2025 10:00</span>
+                            </p>
+                            <p><strong>Distància recorreguda:</strong>
+                                <span th:text="${ruta.distancia} + ' km'">27540 m</span>
+                            </p>
+                            <p><strong>Temps total de la ruta:</strong>
+                                <span th:text="${ruta.durada}">01:23:00</span>
+                            </p>
+                            <p><strong>Velocitat màxima:</strong>
+                                <span th:text="${ruta.velocitatMax} + ' km/h'"
+                                      th:classappend="${ruta.velocitatMax > sistemaMaxVel} ? ' highlight'">32.11 km/h</span>
+                            </p>
+                            <p><strong>Velocitat mitjana:</strong>
+                                <span th:text="${ruta.velocitatMitjana} + ' km/h'">12.52 km/h</span>
+                            </p>
+                            <p><strong>Temps parat:</strong>
+                                <span th:text="${tempsAturat}">00:05:301</span>
+                            </p>
+                            
+                        </div>
+                        <div class="details-ruta-info-right">
+                            
+                            <div class="ruta-estat">
+                                <strong>Estat:</strong>
+                                <span class="status"
+                                      th:classappend="${(ruta.estat.name() == 'NO_VALIDA') ? 'No_valida' :
+                                      (ruta.estat.name() == 'VALIDA') ? 'Valida' : 'Pendent' }">
+                                    <span th:text="${ruta.estat}"></span>
+                                </span>
+
+                            </div>
+                            
+                            <div class="ruta-saldo-container">
+                                <span class="ruta-saldo" th:text="${ruta.saldo}">500</span>
+                                <img class="price-icon" src="/images/coins_icon.svg" alt="">               
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <!-- Mapa a la derecha -->
+                    <div class="map-container">
+                        <div id="map"></div>
+                        <script th:inline="javascript">
+                            let coordenadas = [[${coordenadas}]];
+
+                            function initMap() {
+                              const primer = coordenadas[0];
+                              const ultim = coordenadas[coordenadas.length - 1];
+
+                              let map = new google.maps.Map(document.getElementById('map'), {
+                                zoom: 17,
+                                center: { lat: primer[0], lng: primer[1] }
+                              });
+
+                              let path = coordenadas.map(c => ({ lat: c[0], lng: c[1] }));
+
+                              // Polilínia
+                              let poly = new google.maps.Polyline({
+                                path: path,
+                                geodesic: true,
+                                strokeColor: '#FF0000',
+                                strokeOpacity: 1.0,
+                                strokeWeight: 2
+                              });
+                              poly.setMap(map);
+
+                              // Marker INICIO con icono personalizado
+                            new google.maps.Marker({
+                              position: { lat: primer[0], lng: primer[1] },
+                              map: map,
+                              icon: {
+                                url: '/images/inici.svg',
+                                scaledSize: new google.maps.Size(32, 32) 
+                              },
+                              title: 'Inici',
+                            });
+                            new google.maps.Marker({
+                                position: { lat: ultim[0], lng: ultim[1] },
+                                map: map,
+                                icon: {
+                                    url: '/images/fi.svg',
+                                    scaledSize: new google.maps.Size(32, 32) 
+                                },
+                                title: 'Final',
+                             });
+
+                              // Marcadores intermedios (sin inicio ni final)
+                              for (let i = 1; i < coordenadas.length - 1; i++) {
+                                const coord = coordenadas[i];
+                                const latLng = { lat: coord[0], lng: coord[1] };
+
+                                let marker = new google.maps.Marker({
+                                  position: latLng,
+                                  map: map,
+                                  icon: {
+                                    path: google.maps.SymbolPath.CIRCLE,
+                                    scale: 5,
+                                    fillColor: '#4285F4',
+                                    fillOpacity: 1,
+                                    strokeColor: '#ffffff',
+                                    strokeWeight: 1
+                                  },
+                                });
+
+                                marker.addListener('click', () => {
+                                  new google.maps.InfoWindow({
+                                    content: `Lat: ${latLng.lat.toFixed(6)}, Lng: ${latLng.lng.toFixed(6)}`
+                                  }).open(map, marker);
+                                });
+                              }
+                            }
+
+                            window.onload = initMap;
+                        </script>
+                    </div>
+                </div>
+
+                <!-- Botones abajo del todo -->
+                <div class="actions-ruta">
+                    <div th:if="${ruta.estat.name() == 'NO_VALIDA'}">
+                        <form th:action="@{'/rutes/validar/' + ${ruta.id}}" method="post">
+                            <button class="btn-validar" type="submit">✅ Validar</button>
+                        </form>
+                    </div>
+                    <div th:if="${ruta.estat.name() == 'VALIDA'}">
+                        <form th:action="@{'/rutes/invalidar/' + ${ruta.id}}" method="post">
+                            <button class="btn-invalidar" type="submit">❌ Invalidar</button>
+                        </form>
+                    </div>
+                    
+                </div>
+    
+ 
+  </div>
+</main>
+</body>
+</html>

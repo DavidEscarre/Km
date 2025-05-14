@@ -42,6 +42,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.km.PuntGPSManagment.ui.viewmodels.PuntGPSViewModel
 import com.example.km.R
+import com.example.km.RecompensaManagment.ui.screeens.RecompensaDetailScreen
 import com.example.km.RecompensaManagment.ui.screeens.RecompensesScreen
 import com.example.km.RutaManagment.ui.screens.RutaDetailsScreen
 import com.example.km.RutaManagment.ui.screens.RutesScreen
@@ -90,6 +91,20 @@ fun AppNavigation(recompensaViewModel: RecompensaViewModel, userViewModel :UserV
                     puntGPSViewModel = puntGPSViewModel,
                     navController = navController,
                     userState = userState
+                )
+            }
+        }
+        composable(
+            "recompensa_details/{recompensaId}",
+            arguments = listOf(navArgument("recompensaId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val recompensaId = backStackEntry.arguments?.getLong("recompensaId")
+            recompensaId?.let {
+                RecompensaDetailScreen(
+                    recompensaId = it,
+                    recompensaViewModel = recompensaViewModel,
+                    userState = userState,
+                    navController = navController
                 )
             }
         }

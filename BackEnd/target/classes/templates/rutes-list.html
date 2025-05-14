@@ -38,6 +38,9 @@
                      
                       <!--  <h3 class="ruta-ciclista" th:text="${ruta.ciclista}"></h3> -->
                     <p>
+                      <strong>Data i hora</strong> <span class="ruta-data" th:text="${ruta.getDataFormategada(ruta.dataInici)}"></span> 
+                    </p>
+                    <p>
                       <strong>Ciclista:</strong> <span class="ruta-ciclista" th:text="${ruta.ciclista.nom +', '+ ruta.ciclista.email}"></span> 
                     </p>
                     <p>
@@ -47,7 +50,15 @@
                       <strong>Durada:</strong> <span class="ruta-temps" th:text="${ruta.durada}"></span> 
                     </p>
                   
-                    <p><strong>Estat:</strong> <span th:text="${ruta.estat}"></span></p>
+                    <div class="ruta-estat">
+                                <strong>Estat:</strong>
+                                <span class="status"
+                                      th:classappend="${(ruta.estat.name() == 'NO_VALIDA') ? 'No_valida' :
+                                      (ruta.estat.name() == 'VALIDA') ? 'Valida' : 'Pendent' }">
+                                    <span th:text="${ruta.estat}"></span>
+                                </span>
+
+                            </div>
                     
                  </div>
                   <div class="ruta-card-section2">
@@ -57,15 +68,22 @@
                         <img class="price-icon" src="/images/coins_icon.svg" alt="">               
                     </div>
                   
-                    <p><strong>Velocitat Mitjana</strong> <span th:text="${ruta.velocitatMitjana}"></span></p>
-                     <p><strong>Velocitat Maxima</strong> <span th:text="${ruta.velocitatMax}"></span></p>
+                    <p><strong>Velocitat Mitjana</strong> <span th:text="${ruta.velocitatMitjana + ' km/h'}">km/h</span></p>
+                    <p><strong>Velocitat Maxima</strong> <span th:text="${ruta.velocitatMax + ' km/h'}"></span></p>
+                    <p th:if="${ruta.velocitatMax >= sistemaMaxVel}"
+                       style="color: red; font-weight: bold;">
+                        Atenció: aquesta ruta supera la velocitat màxima permesa de <span th:text="${sistemaMaxVel}"></span> km/h!
+                    </p>
+                    
                  </div>
                  
                     
                     
                 
                 <div class="ruta-actions">
-                    <button class="edit-button">Editar</button>
+                     <form th:action="@{/rutes/getById/{id}(id=${ruta.id})}" method="get">
+                        <button class="detail-button" type="submit">Veure detalls</button>
+                    </form>
                     <button class="delete-button">Eliminar</button>
                 </div>
             </div>
