@@ -64,6 +64,24 @@ public class RecompensaWebController {
             return "error-page";  // Página personalizada de error
         }
     }
+    @GetMapping("/getById/{id}")
+    public String ListAllRecompenses(@PathVariable("id") Long id, Model model, Authentication authentication) {
+        try {
+           Recompensa recompensa = recompensaLogic.getRecompensa(id);
+
+      
+            model.addAttribute("recompensa", recompensa);
+            return "recompensa-details"; // Página que muestra la lista de clientes
+        } catch (Exception e) {
+            // Registra el error para depuración
+            e.printStackTrace();
+            if(authentication != null){
+            model.addAttribute("authorities", authentication.getAuthorities());
+            }
+            model.addAttribute("errorMessage", "Ha ocurrido un error al cargar la lista de clientes.");
+            return "error-page";  // Página personalizada de error
+        }
+    }
     
     @GetMapping("/create")
     public String createRecompesa(Model model, Authentication authentication) {

@@ -168,6 +168,30 @@ fun RecompensaDetailScreen(
                             fontSize = 17.sp,
                             color = Color(0xFFAAAAAA)
                         )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "Descripció:",
+                            fontSize = 19.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.White
+                        )
+                        Text(
+                            text = recompensa!!.descripcio,
+                            fontSize = 17.sp,
+                            color = Color(0xFFAAAAAA)
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "Observacions:",
+                            fontSize = 19.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.White
+                        )
+                        Text(
+                            text = recompensa!!.observacions,
+                            fontSize = 17.sp,
+                            color = Color(0xFFAAAAAA)
+                        )
                     }
                     Row(Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center){
