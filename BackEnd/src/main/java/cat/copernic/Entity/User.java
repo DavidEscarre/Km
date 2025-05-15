@@ -78,11 +78,11 @@ public class User implements UserDetails{
     
     @OneToMany(mappedBy = "ciclista", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonIgnore
-    private List<Recompensa> recompensas = new ArrayList<>();
+    private List<Recompensa> recompensas;
     
     @OneToMany(mappedBy = "ciclista", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonIgnore
-    private List<Ruta> rutes = new ArrayList<>();
+    private List<Ruta> rutes;
    
     @Column(nullable = true)
     private String resetToken;
@@ -93,11 +93,15 @@ public class User implements UserDetails{
     //constructors
     
     public User() {
+        this.rutes = new ArrayList<>();
+        this.recompensas = new ArrayList<>();
         
     }
 
     public User(String email, String nom, String observacions, Rol rol, boolean estat, double saldoDisponible,
             LocalDateTime dataAlta, String word, byte[] foto, String telefon, String adreca, List<Recompensa> recompensas, List<Ruta> rutes) {
+        this.rutes = new ArrayList<>();
+        this.recompensas = new ArrayList<>();
         this.email = email;
         this.nom = nom;
         this.observacions = observacions;

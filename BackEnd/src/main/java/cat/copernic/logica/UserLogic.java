@@ -246,23 +246,68 @@ public class UserLogic {
         }
         
     }
-        public String tokenGenerator(){
-            String token = null;
-            int longitud = 6;
-            String letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-            StringBuilder resultado = new StringBuilder();
-            Random random = new Random();
-
-            for (int i = 0; i < longitud; i++) {
-                int index = random.nextInt(letras.length());
-                resultado.append(letras.charAt(index));
-            }
-                token = resultado.toString();
-                return token;
-        }
     
-        public byte[] convertImageToBlob(MultipartFile file) throws IOException {
+    public String tokenGenerator(){
+        String token = null;
+        int longitud = 6;
+        String letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder resultado = new StringBuilder();
+        Random random = new Random();
+
+        for (int i = 0; i < longitud; i++) {
+            int index = random.nextInt(letras.length());
+            resultado.append(letras.charAt(index));
+        }
+            token = resultado.toString();
+            return token;
+    }
+    
+    public byte[] convertImageToBlob(MultipartFile file) throws IOException {
         return file.getBytes();
     }
+
+    public String addSaldo(double saldoAfeixir, String email){
+        try{
+            User user = getUser(email);
+            if(user == null){
+                return "USER_NOT_FOUND";
+            }else{
+                user.setSaldoDisponible(user.getSaldoDisponible() + saldoAfeixir);
+                userRepo.save(user);
+                return "SALDO_ADDED";
+            }
+        }catch(Exception e){
+            return e.getMessage();
+        }
+    }
+    
+    public String substractSaldo(double saldoSubstraer, String email){
+        try{
+            User user = getUser(email);
+            if(user == null){
+                return "USER_NOT_FOUND";
+            }else{
+                if(user.getSaldoDisponible() - saldoSubstraer < 0){
+                    user.setSaldoDisponible(0);
+                    userRepo.save(user);
+                    return "SALDO_SUBSTRACTED";
+                }else{
+                    user.setSaldoDisponible(user.getSaldoDisponible() - saldoSubstraer);
+                    userRepo.save(user);
+                    return "SALDO_SUBSTRACTED";
+                }
+                
+            }
+        }catch(Exception e){
+            return e.getMessage();
+        }
+    }    
+        
+        
+        
+        
+        
+        
+        
 }
 
