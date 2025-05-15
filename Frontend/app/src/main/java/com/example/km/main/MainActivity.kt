@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -46,10 +48,13 @@ class MainActivity : ComponentActivity(), OnMapsSdkInitializedCallback {
         setContent {
             KmTheme {
                 val sistemaViewModel: SistemaViewModel = viewModel()
-               // val sistema = getSistemaFromBackend(sistemaViewModel)
+                val loginViewModel: LoginViewModel = viewModel()
+
+                val user by loginViewModel.userState.collectAsState()
+
+                // val sistema = getSistemaFromBackend(sistemaViewModel)
                 val userViewModel: UserViewModel = viewModel()
                 val navController: NavHostController = rememberNavController()
-                val loginViewModel: LoginViewModel = viewModel()
                 val rutaViewModel: RutaViewModel = viewModel()
                 val puntGPSViewModel: PuntGPSViewModel = viewModel()
                 val recompensaViewModel: RecompensaViewModel = viewModel()
@@ -61,6 +66,8 @@ class MainActivity : ComponentActivity(), OnMapsSdkInitializedCallback {
 
                 // Aquí guardamos el usuario autenticado
                 val userState = loginViewModel.userState.collectAsState()
+
+
                 AppNavigation(recompensaViewModel, userViewModel, sistemaViewModel, puntGPSViewModel, rutaViewModel, navController, loginViewModel, userState)
             }
         }

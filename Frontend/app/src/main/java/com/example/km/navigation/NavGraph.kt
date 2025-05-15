@@ -25,6 +25,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -35,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -63,12 +66,26 @@ import kotlin.math.roundToLong
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AppNavigation(recompensaViewModel: RecompensaViewModel, userViewModel :UserViewModel ,sistemaViewModel: SistemaViewModel, puntGPSViewModel: PuntGPSViewModel, rutaViewModel: RutaViewModel, navController: NavController, loginViewModel: LoginViewModel, userState: State<User?>) {
-    val navController = rememberNavController()
+fun AppNavigation(
+    recompensaViewModel: RecompensaViewModel,
+    userViewModel :UserViewModel,
+    sistemaViewModel: SistemaViewModel,
+    puntGPSViewModel: PuntGPSViewModel,
+    rutaViewModel: RutaViewModel,
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    userState: State<User?>) {
+
+
     val context = LocalContext.current
-   // val rutaViewModel: RutaViewModel = viewModel()
+     //val navController = rememberNavController()
+     // val rutaViewModel: RutaViewModel = viewModel()
     //val puntGPSViewModel: PuntGPSViewModel = viewModel()
-    NavHost(navController = navController, startDestination = "login") {
+
+   // val user by loginViewModel.userState.collectAsState()
+    val startDest = if (userState.value != null) "home" else "login"
+
+    NavHost(navController = navController, startDestination = startDest) {
         composable("login") { LoginScreen(navController, loginViewModel, userState ) }
         composable("passwordRecover") { PasswordRecoverScreen(loginViewModel,navController, userViewModel, userState) }
 
