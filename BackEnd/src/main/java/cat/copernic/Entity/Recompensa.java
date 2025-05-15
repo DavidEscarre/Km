@@ -192,7 +192,7 @@ public class Recompensa {
     
     
     
-     public String getDataFormategada(LocalDateTime data) {
+    public String getDataFormategada(LocalDateTime data) {
         if (data == null) {
             return " - ";
         }
@@ -200,7 +200,7 @@ public class Recompensa {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         return data.format(fmt);
     }
-    
+   
     
 
 }

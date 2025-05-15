@@ -27,6 +27,9 @@ class RecompensaViewModel(): ViewModel() {
     private val _recompensa = MutableStateFlow<Recompensa?>(null)
     val recompensa: StateFlow<Recompensa?>  = _recompensa
 
+    private val _recompensaError = MutableStateFlow<String?>(null)
+    val recompensaError: StateFlow<String?>  = _recompensaError
+
     private val recompensaRepo = RecompensaRepositoryImpl()
 
 
@@ -34,24 +37,18 @@ class RecompensaViewModel(): ViewModel() {
         viewModelScope.launch {
             try{
                 val response = recompensaRepo.getAllByCiclistaEmail(ciclistaEmail)
-
                 if(response.isSuccessful){
                     Log.d("RutaById", "Las Recompensas san encontrao coñooo")
-
                     val responseALL = recompensaRepo.findAll()
                     var recompensesDisponibles = responseALL.body()?.filter { it.estat == EstatRecompensa.DISPONIBLE  }
                     _recompensas.value = response.body()!!.union(recompensesDisponibles!!).toList()
-
                 }else{
                     Log.e("RutaById", "Las Recompensas no san pogut trobar")
                     _recompensas.value = emptyList()
                 }
-
             }catch(e: Exception){
                 _recompensas.value = emptyList()
                 e.printStackTrace()
-
-
             }
         }
     }
@@ -73,28 +70,69 @@ class RecompensaViewModel(): ViewModel() {
         }
     }
 
+    fun reservarRecompensa(id: Long, email: String){
+        viewModelScope.launch {
+            try{
+                val response = recompensaRepo.reservarRecompensa(id,email)
+                if(response.isSuccessful){
+                    Log.d("RecompensaById", "La recompensa sareservado  coñooo")
+                    findById(id)
+                    _recompensaError.value = null
+                }else{
+                    val errorMessage = response.errorBody()?.string() ?: "Error desconegut"
+                    _recompensaError.value = errorMessage.toString()
+                    Log.e("RecompensaById", "La recompensa no sa pogut reservar: $errorMessage")
+
+                    Log.e("RecompensaById", "La recompensa no sa pogut reservar")
+                }
+            }catch(e: Exception){
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun anularReservaRecompensa(id: Long, email: String){
+        viewModelScope.launch {
+            try{
+                val response = recompensaRepo.anularReservaRecompensa(id,email)
+                if(response.isSuccessful){
+                    Log.d("RecompensaById", "La reserva de la recompensa ha sido anulada  coñooo")
+                    findById(id)
+                    _recompensaError.value = null
+                }else{
+                    _recompensaError.value = response.body()
+                    Log.e("RecompensaById", "La reserva de la recompensa no sa podido anulada coñooo")
+                }
+            }catch(e: Exception){
+                e.printStackTrace()
+            }
+        }
+    }
 
     fun findById(id: Long){
         viewModelScope.launch {
-
             try{
                 val response = recompensaRepo.getRecompensaById(id)
                 if(response.isSuccessful){
                     Log.d("RecompensaById", "La recompensa sa encontrao coñooo")
-
+                    _recompensaError.value = null
                     _recompensa.value = response.body()
-
                 }else{
                     Log.e("RecompensaById", "La recompensa no sa pogut trobar")
                     _recompensa.value = null
+                    _recompensaError.value = null
                 }
-
             }catch(e: Exception){
                 _recompensa.value = null
+                _recompensaError.value = null
                 e.printStackTrace()
-
-
             }
+        }
+    }
+
+    fun resetFetchedRecompensa(){
+        viewModelScope.launch {
+            _recompensa.value = null
         }
     }
 

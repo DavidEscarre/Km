@@ -206,6 +206,7 @@ fun TopBar(title: String, user: User?, navController: NavController) {
                 }
             },
             actions = {
+
                 val saldo = user?.saldoDisponible ?: 0.00
                 Card(
                     modifier = Modifier

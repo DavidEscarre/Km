@@ -15,12 +15,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -120,6 +123,75 @@ public class RecompensaApiController {
         }
         
               
+    }
+    
+    @PostMapping(value = "/reservar/{recompensaId}", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> reservarRecompensa(@PathVariable Long recompensaId, @RequestParam String email){
+          
+        ResponseEntity<String> response;
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-store"); //no usar caché
+        headers.setContentType(MediaType.TEXT_PLAIN);
+        
+        try {
+            if(!recompensaLogic.existsById(recompensaId)){
+             
+                return new ResponseEntity<>("Recompensa no trobada", headers, HttpStatus.NOT_FOUND);
+            }else if(recompensaLogic.getRecompensa(recompensaId).getEstat()==EstatRecompensa.DISPONIBLE){
+                
+                String res = recompensaLogic.reservarRecompensa(recompensaId, email);
+                if(res.equals("USER_YA_TIENE")){
+                    return new ResponseEntity<>("L'usuari te reserves o assignacions actives.", headers, HttpStatus.FORBIDDEN);
+                }else if(res.equals("USER_SALDO_INSUFICIENT")){
+                    return new ResponseEntity<>( "Saldo insuficient.", headers, HttpStatus.FORBIDDEN);
+                }else if(res.equals(recompensaId.toString())){
+                    Recompensa recompensa = recompensaLogic.getRecompensa(recompensaId);
+                    return new ResponseEntity<>(recompensa.getId().toString(), headers, HttpStatus.OK);
+                }else{
+                    return new ResponseEntity<>( "Recompensa no trobada.", headers,HttpStatus.NOT_FOUND);
+                }
+               
+            }else{
+                return new ResponseEntity<>("Recompensa no disponible.", headers, HttpStatus.FORBIDDEN);
+            }
+        } catch (Exception e) {
+            logger.error("Error intern del servidor al intentar reservar la recompensa", "Error mesage: "+e.getMessage()); 
+            return new ResponseEntity<>("Error intern del servidor.", headers,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+         
+    }
+    
+    @PostMapping(value = "/anularReserva/{recompensaId}", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> anularReservaRecompensa(@PathVariable Long recompensaId, @RequestParam String email){
+          
+        ResponseEntity<Recompensa> response;
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-store"); //no usar caché
+        headers.setContentType(MediaType.TEXT_PLAIN);
+        try {
+            if(!recompensaLogic.existsById(recompensaId)){
+             
+                return new ResponseEntity<>( "Recompensa no trobada.",HttpStatus.NOT_FOUND);
+            }else if(recompensaLogic.getRecompensa(recompensaId).getEstat()==EstatRecompensa.RESERVADA){
+                String res = recompensaLogic.anularReservaRecompensa(recompensaId, email);
+                if(res.equals(recompensaId.toString())){
+                    Recompensa recompensa = recompensaLogic.getRecompensa(recompensaId);
+                    return new ResponseEntity<>(recompensa.getId().toString(), headers, HttpStatus.OK);
+                }else{
+                    return new ResponseEntity<>("Error de la recompensa." ,HttpStatus.FORBIDDEN);
+                }
+            }else{
+                return new ResponseEntity<>("Recompensa no reservada.", HttpStatus.FORBIDDEN);
+            }
+        } catch (Exception e) {
+            logger.error("Error intern del servidor al intentar reservar la recompensa", "Error mesage: "+e.getMessage()); 
+            return new ResponseEntity<>("Error intern del servidor.",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+         
     }
     
     

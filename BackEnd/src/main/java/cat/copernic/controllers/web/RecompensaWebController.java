@@ -97,16 +97,13 @@ public class RecompensaWebController {
                 model.addAttribute("errorMessage", "Camps incorrectes");
                 return "redirect:/recompenses/create";
             }
-           
             recompensa.setDataCreacio(LocalDateTime.now());
             recompensaLogic.createRecompensa(recompensa);
-                
             return "redirect:/recompenses";
             
         }catch(Exception e){
             return "create-recompensa";
         }
-            
     }
     
     @GetMapping("/delete/{id}")
@@ -129,6 +126,47 @@ public class RecompensaWebController {
              return "redirect:/recompenses";
         }
         
+    }
+    
+    @PostMapping("/assignar/{id}")
+    public String assignarRecompesa(@PathVariable("id") Long id, Model model, Authentication authentication) {
+        
+        
+        try {
+            Recompensa recompensa = recompensaLogic.getRecompensa(id);
+            if (recompensa == null) {
+                model.addAttribute("errorMessage", "Recompensa no trobada.");
+                return "redirect:/recompenses/getById/" + id.toString();
+            }else{
+                
+                String res = recompensaLogic.assignarRecompensa(id);
+                if(res.equals("USER_NOT_FOUND")){
+                    model.addAttribute("errorMessage", "Usuari recompensa no trobat.");
+                    return "redirect:/recompenses/getById/" + id.toString();
+                
+                }else if(res.equals("RECOMPENSA_NO_RESERVADA")){
+                    model.addAttribute("errorMessage", "La recompensa no esta reservada.");
+                    return "redirect:/recompenses/getById/" + id.toString();
+                }else if(res.equals("USER_SALDO_INSUFICIENT")){
+                    model.addAttribute("errorMessage", "El ciclista de la recompensa no te actualment saldo suficient.");
+                    return "redirect:/recompenses/getById/" + id.toString();
+                }else if(res.equals(id.toString())){
+                    model.addAttribute("errorMessage",null);
+                    return "redirect:/recompenses/getById/" + id.toString();
+                }else{
+                    model.addAttribute("errorMessage",res);
+                    return "redirect:/recompenses/getById/" + id.toString();
+                    
+                }
+                
+            }
+           
+            
+            
+        }catch(Exception e){
+            return "redirect:/recompenses/getById/" + id.toString();
+        }
+            
     }
     
 }

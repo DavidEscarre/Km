@@ -39,6 +39,7 @@ class UserViewModel: ViewModel()  {
 
     }
 
+
     fun updateUser(userEmail: String, updatedUser: User, imageUri: Uri?, context: Context) {
         viewModelScope.launch {
             // actualitzar imatge posantsela al usuari si hi ha
@@ -74,26 +75,7 @@ class UserViewModel: ViewModel()  {
         }
 
     }
-  /*  fun uploadProfileImage(userEmail: String, uri: Uri, context: Context) {
-        viewModelScope.launch {
 
-            val file = uriToFile(uri, context) // Convierte Uri a archivo
-            //val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-           // val imagePart = MultipartBody.Part.createFormData("image", file.name, requestFile)
-
-            try {
-                val response =userRepo.update(email)
-                if (response.isSuccessful) {
-                    profileImageUri.value = uri
-                } else {
-                    Log.e("UserViewModel", "Error al actualizar imagen")
-                }
-            } catch (e: Exception) {
-                Log.e("UserViewModel", "Excepción: ${e.message}")
-            }
-        }
-    }
-    */*/
     private fun uriToFile(uri: Uri, context: Context): File {
         val inputStream = context.contentResolver.openInputStream(uri)
         val tempFile = File.createTempFile("profile", ".jpg", context.cacheDir)

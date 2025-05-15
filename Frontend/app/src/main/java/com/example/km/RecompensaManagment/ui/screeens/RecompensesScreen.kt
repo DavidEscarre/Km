@@ -27,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -59,13 +60,16 @@ fun RecompensesScreen(
 ) {
     val scrollState = rememberScrollState()
     val user: User? = userState.value
+    val recompensas by recompensaViewModel.recompensas.collectAsState()
 
-    if (user != null) {
-        Log.d("RecompensaScreen", "fetching ....")
-        recompensaViewModel.fetchAllRecompensas(user.email)
+    LaunchedEffect(Unit) {
+        if (user != null) {
+            Log.d("RecompensaScreen", "fetching ....")
+            recompensaViewModel.fetchAllRecompensas(user.email)
+        }
     }
-    // Collect the list of rutas from the ViewModel
-    val recompensas by recompensaViewModel.recompensas.collectAsState(initial = emptyList())
+
+
 
     Scaffold(
         topBar = { TopBar("Recompenses", userState.value, navController)},

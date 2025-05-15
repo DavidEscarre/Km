@@ -11,3 +11,5 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val  SoftBlack = Color(0xFF3E3E3E)
+
+val errorMessageColor = Color(0xFFfc5f53)
