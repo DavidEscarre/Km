@@ -35,14 +35,13 @@ class RecompensaRepositoryImpl: RecompensaRepository {
     }
     override suspend fun anularReservaRecompensa(recompensaId: Long, email: String): Response<String> {
         val response = recompensaApiRest.anularReservaRecompensa(recompensaId, email)
-
-
-
-
         return response
     }
-    //val rutaApiRest = RutaRetrofitInstance.retrofitInstance.create()
 
+    override suspend fun recollirRecompensa(recompensaId: Long, email: String): Response<String> {
+        val response = recompensaApiRest.recollirRecompensa(recompensaId, email)
+        return response
+    }
 
 
 

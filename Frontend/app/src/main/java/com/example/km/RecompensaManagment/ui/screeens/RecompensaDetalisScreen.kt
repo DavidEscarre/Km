@@ -6,12 +6,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -40,45 +44,79 @@ fun RecompensaDetailScreen(
     userState: State<User?>,
     navController: NavController
 ) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    var showEntregatImage by remember { mutableStateOf(false) }
+
     val scrollState = rememberScrollState()
-    val user: User? = userState.value
 
     LaunchedEffect(recompensaId) {
-        recompensaId?.let { recompensaViewModel.findById(recompensaId) }
+        recompensaId?.let { recompensaViewModel.findById(it) }
     }
 
     val recompensa by recompensaViewModel.recompensa.collectAsState()
     val recompensaError by recompensaViewModel.recompensaError.collectAsState()
-
-
-
-
-
+    if(recompensa?.estat==EstatRecompensa.RECOLLIDA){
+        showEntregatImage = true
+    }
     Scaffold(
         topBar = { TopBar("Detalls de Recompensa", userState.value, navController) },
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
-        if (recompensa == null) {
-            Text("Recompensa no trobada.")
-        }else{
-            Box(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxSize()
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(Color(0xFFfafafa), Color(0xFFFFFF))
-                        )
+
+        Box(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(Color(0xFFfafafa), Color(0xFFFFFF))
                     )
-                    .padding(16.dp)
-            ) {
+                )
+                .padding(16.dp)
+        ) {
+            if (recompensa == null) {
+                Text("Recompensa no trobada.")
+            } else {
+
+
+                // Contingut principal
                 Card(
                     shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(containerColor = Color(0xFF2C2C2C)),
-                    modifier = Modifier.fillMaxWidth().align(Alignment.Center)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.Center)
                 ) {
                     Column(modifier = Modifier.padding(24.dp)) {
-                        // Header row
+
+                        // Pantalla ENTREGAT
+                        if (showEntregatImage) {
+
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    painter = painterResource( R.drawable.success),
+                                    contentDescription = "ENTREGAT EXITOSAMENT",
+                                    tint = Color.Green
+                                )
+                                Text(
+                                    text = "ENTREGAT",
+                                    color = Color.White,
+                                    fontSize = 48.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    textAlign = TextAlign.Center
+                                )
+
+
+                            }
+
+                        }
+                        // Encapçalament
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -93,60 +131,33 @@ fun RecompensaDetailScreen(
                             SaldoRecompensaCard(Modifier, recompensa!!)
                         }
                         Spacer(modifier = Modifier.height(16.dp))
+                        // Estat
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(
-                                text = "Estat: ",
+                                text = "Estat:",
                                 fontSize = 22.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White
                             )
                             EstatRecompensa(recompensa!!.estat)
                         }
-
-
-
-
                         Spacer(modifier = Modifier.height(12.dp))
-                        // Dates section
+                        // Dates
                         RecompensaDateItem(nom = "Creació", data = recompensa!!.dataCreacio)
-                        if(recompensa!!.estat == EstatRecompensa.RESERVADA){
-                            recompensa!!.dataReserva?.let { RecompensaDateItem(nom = "Reserva", data = it) }
-
-                        }else if(recompensa!!.estat == EstatRecompensa.ASSIGNADA){
-                            recompensa!!.dataReserva?.let { RecompensaDateItem(nom = "Reserva", data = it) }
-                            recompensa!!.dataAssignacio?.let {
-                                RecompensaDateItem(
-                                    nom = "Assignació",
-                                    data = it
-                                )
-                            }
-                        }else if(recompensa!!.estat == EstatRecompensa.RECOLLIDA){
-                            recompensa!!.dataReserva?.let { RecompensaDateItem(nom = "Reserva", data = it) }
-                            recompensa!!.dataAssignacio?.let {
-                                RecompensaDateItem(
-                                    nom = "Assignació",
-                                    data = it
-                                )
-                            }
-                            recompensa!!.dataRecollida?.let {
-                                RecompensaDateItem(
-                                    nom = "Recollida",
-                                    data = it
-                                )
-                            }
-                        }
-
-
+                        recompensa!!.dataReserva?.let { RecompensaDateItem(nom = "Reserva", data = it) }
+                        recompensa!!.dataAssignacio?.let { RecompensaDateItem(nom = "Assignació", data = it) }
+                        recompensa!!.dataRecollida?.let { RecompensaDateItem(nom = "Recollida", data = it) }
+                        // Ciclista
                         recompensa!!.ciclista?.let {
                             Spacer(modifier = Modifier.height(12.dp))
                             Text(
                                 text = "Usuari",
                                 fontSize = 23.sp,
-                                color = Color(0xFFFFFFFF)
+                                color = Color.White
                             )
                             Text(
                                 text = "Nom: ${it.nom}",
@@ -158,11 +169,9 @@ fun RecompensaDetailScreen(
                                 fontSize = 19.sp,
                                 color = Color(0xFFCCCCCC)
                             )
-
                         }
-
                         Spacer(modifier = Modifier.height(16.dp))
-
+                        // Punt de bescanvi
                         Text(
                             text = "Punt de bescanvi:",
                             fontSize = 19.sp,
@@ -175,6 +184,7 @@ fun RecompensaDetailScreen(
                             color = Color(0xFFAAAAAA)
                         )
                         Spacer(modifier = Modifier.height(16.dp))
+                        // Descripció i observacions
                         Text(
                             text = "Descripció:",
                             fontSize = 19.sp,
@@ -199,72 +209,136 @@ fun RecompensaDetailScreen(
                             color = Color(0xFFAAAAAA)
                         )
                     }
-                    if(recompensaError!=null){
-                        Card(Modifier.fillMaxWidth().padding(horizontal = 26.dp),
-                            colors = CardColors(errorMessageColor,Color.White,errorMessageColor, Color.White)
-                        ){
-                            Row(Modifier.fillMaxWidth(),Arrangement.Center){
-                                Text(recompensaError.toString(), color= Color.White, fontSize = 21.sp, textAlign = TextAlign.Center)
+
+                    recompensaError?.let { errorMsg ->
+                        Card(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 26.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.Red,
+                                contentColor = Color.White
+                            )
+                        ) {
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                Arrangement.Center
+                            ) {
+                                Text(
+                                    text = errorMsg,
+                                    fontSize = 21.sp,
+                                    textAlign = TextAlign.Center
+                                )
                             }
-
                         }
-
                     }
 
-                    Row(Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center){
-                        ButtonsActionsRecompensa(userState, recompensaViewModel,navController, recompensa!!)
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        ButtonsActionsRecompensa(
+                            estat = recompensa!!.estat,
+                            onReservar = {
+                                recompensaViewModel.reservarRecompensa(
+                                    recompensa!!.id,
+                                    userState.value!!.email
+                                )
+                            },
+                            onAnular = {
+                                recompensaViewModel.anularReservaRecompensa(
+                                    recompensa!!.id,
+                                    userState.value!!.email
+                                )
+                            },
+                            onRecollir = {
+                                showDialog = true
+                            }
+                        )
                     }
+
+                    // Diàleg per recollir
+                    if (showDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showDialog = false },
+                            title = {
+                                Text(
+                                    text = recompensa!!.nom,
+                                    style = MaterialTheme.typography.headlineMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            },
+                            text = {
+                                Text(
+                                    text = "Punt bescanvi: ${recompensa!!.puntBescanvi}",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(vertical = 8.dp)
+                                )
+                            },
+                            confirmButton = {
+                                Button(
+                                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                                    onClick = {
+                                        recompensaViewModel.recollirRecompensa(
+                                            recompensa!!.id,
+                                            userState.value!!.email
+                                        )
+                                        showDialog = false
+                                        showEntregatImage = true
+                                    }
+                                ) {
+                                    Text("Entregat")
+                                }
+                            }
+                        )
+                    }
+
+                    // Pantalla ENTREGAT
+                   /* if (showEntregatImage) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Color.White),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "ENTREGAT",
+                                color = Color.Green,
+                                fontSize = 48.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                textAlign = TextAlign.Center
+                            )
+                            Icon(
+                                painter = painterResource( R.drawable.success),
+                                contentDescription = "ENTREGAT EXITOSAMENT",
+                                tint = Color.Green
+                            )
+                        }
+                    }*/
+
                 }
-
             }
         }
-
     }
 }
-@RequiresApi(Build.VERSION_CODES.O)
+
 @Composable
-fun ButtonsActionsRecompensa(userState: State<User?>, recompensaViewModel: RecompensaViewModel, navController: NavController, recompensa: Recompensa){
-
-    if(recompensa.estat == EstatRecompensa.DISPONIBLE){
-        Button(
-            onClick = {
-                recompensaViewModel.reservarRecompensa(recompensa.id, userState.value!!.email)
-            },
-            modifier = Modifier.padding(12.dp)
-        ) {
-            Text("Reservar")
-
-        }
-    }else if(recompensa.estat == EstatRecompensa.ASSIGNADA){
-        Button(
-            onClick = {
-
-            },
-            modifier = Modifier.padding(12.dp)
-        ) {
-            Text("Recollir")
-
-        }
-
-    }else if(recompensa.estat == EstatRecompensa.RESERVADA){
-        Button(
-            onClick = {
-                recompensaViewModel.anularReservaRecompensa(recompensa.id, userState.value!!.email)
-            },
-            modifier = Modifier.padding(12.dp)
-        ) {
-            Text("Anular Reserva")
-
-        }
-
+fun ButtonsActionsRecompensa(
+    estat: EstatRecompensa,
+    onReservar: () -> Unit,
+    onAnular: () -> Unit,
+    onRecollir: () -> Unit
+) {
+    when (estat) {
+        EstatRecompensa.DISPONIBLE -> Button(onClick = onReservar) { Text("Reservar") }
+        EstatRecompensa.RESERVADA -> Button(onClick = onAnular) { Text("Anular Reserva") }
+        EstatRecompensa.ASSIGNADA -> Button(onClick = onRecollir) { Text("Recollir") }
+        else -> {}
     }
-
-
-
-
 }
-
 
 @Composable
 fun EstatRecompensa(estat: EstatRecompensa) {

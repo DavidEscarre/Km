@@ -432,6 +432,7 @@
     
     .status.recollida {
         background-color: #2b2b2b; /* color negro */
+        color: #fff;
     }
     
     .status.pendent {

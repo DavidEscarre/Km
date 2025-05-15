@@ -115,14 +115,11 @@ public class RecompensaApiController {
                 
                 logger.info("Rutas trobades: {}", "ciclistaEmail: "+ciclistaEmail); 
                 return new ResponseEntity<>(recompensas, headers, HttpStatus.OK);
-
             } 
         } catch (Exception e) {
             logger.error("Error intern del servidor al intentar trovar la ruta {}", "Error mesage: "+e.getMessage()); 
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        
-              
+        }  
     }
     
     @PostMapping(value = "/reservar/{recompensaId}", produces = MediaType.TEXT_PLAIN_VALUE)
@@ -159,8 +156,6 @@ public class RecompensaApiController {
             logger.error("Error intern del servidor al intentar reservar la recompensa", "Error mesage: "+e.getMessage()); 
             return new ResponseEntity<>("Error intern del servidor.", headers,HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
-         
     }
     
     @PostMapping(value = "/anularReserva/{recompensaId}", produces = MediaType.TEXT_PLAIN_VALUE)
@@ -190,10 +185,51 @@ public class RecompensaApiController {
             logger.error("Error intern del servidor al intentar reservar la recompensa", "Error mesage: "+e.getMessage()); 
             return new ResponseEntity<>("Error intern del servidor.",HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
-         
     }
     
-    
+    @PostMapping("/recollir/{recompensaId}")
+    public ResponseEntity<String> recollirRecompensa(@PathVariable Long recompensaId, @RequestParam String email){
+        Recompensa recompensa;
+        
+        ResponseEntity<String> response;
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-store"); //no usar caché
+        
+        try {
+            
+            logger.info("Cercant recompensa amb id: {}", "recompensaId: "+recompensaId);
+            recompensa = recompensaLogic.getRecompensa(recompensaId);
+            
+            if (recompensa == null){
+            
+                logger.info("Recompensa no trobada: {}", "recompensaId: "+recompensaId); 
+                return new ResponseEntity<>(headers, HttpStatus.NOT_FOUND);
+            }
+            else if (recompensa.getEstat().equals(EstatRecompensa.ASSIGNADA)){
+               String res = recompensaLogic.recollirRecompensa(recompensaId,email);
+               if(res.equals("USER_NOT_FOUND")){
+                    return new ResponseEntity<>("Ciclista de la recompensa no trobat.", headers, HttpStatus.NOT_FOUND);
+               }else if(res.equals("RECOMPENSA_NOT_FOUND")){
+                    return new ResponseEntity<>("Recompensa no trobada.", headers, HttpStatus.NOT_FOUND);
+               }else if(res.equals(recompensaId.toString())){
+                   
+                        return new ResponseEntity<>(recompensa.getId().toString(), headers, HttpStatus.OK);
+
+               }else{
+                    return new ResponseEntity<>("Error intern del servidor.", headers, HttpStatus.FORBIDDEN);
+               }
+            }else{
+                
+                return new ResponseEntity<>("Recompensa no assignada.", headers, HttpStatus.FORBIDDEN);
+            }
+            
+        } catch (Exception e) {
+            logger.error("Error intern del servidor al intentar trovar la recompensa {}", "Error mesage: "+e.getMessage()); 
+            return new ResponseEntity<>("Error intern del servidor.",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+              
+    }
     
 }

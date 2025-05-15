@@ -31,6 +31,8 @@ interface RecompensaApiRest {
     @Headers("Accept: text/plain")
     suspend fun anularReservaRecompensa(@Path("recompensaId") recompensaId: Long, @Query("email") email: String) :Response<String>
 
+    @POST("recollir/{recompensaId}")
+    suspend fun recollirRecompensa(@Path("recompensaId") recompensaId: Long, @Query("email") email: String) :Response<String>
 
 
 }

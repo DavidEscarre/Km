@@ -16,6 +16,8 @@ interface RecompensaRepository {
     suspend fun anularReservaRecompensa(recompensaId: Long, email: String): Response<String>
 
 
+    suspend fun recollirRecompensa(recompensaId: Long, email: String): Response<String>
+
 
 
 
