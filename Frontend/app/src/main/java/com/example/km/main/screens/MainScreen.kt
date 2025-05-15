@@ -99,11 +99,12 @@ fun MainScreen(sistemaViewModel: SistemaViewModel, rutaViewModel: RutaViewModel,
 
     val locationList by puntGPSViewModel.locationList.collectAsState()
     val scrollState = rememberScrollState()
-    LaunchedEffect(Unit) {
-        val sistema = getSistemaFromBackend(sistemaViewModel)
-        puntGPSViewModel.setPrecisio(sistema.precisioPunts)
-        sistemaViewModel.findFirst()
-    }
+
+    val sistema = getSistemaFromBackend(sistemaViewModel)
+    Log.d("SISpolla", sistema.precisioPunts.toString() )
+    puntGPSViewModel.setPrecisio(sistema.precisioPunts)
+    sistemaViewModel.findFirst()
+
     Scaffold(
         topBar = { TopBar("Home", user, navController)},
         bottomBar = { BottomNavigationBar(navController) }
@@ -438,10 +439,10 @@ fun getSistemaFromBackend(sistemaViewModel: SistemaViewModel): Sistema {
     sistemaViewModel.findById(1)
     val sistema = sistemaViewModel.sistema.value
     if(sistema==null){
-        Log.e("Error Sistema MainAct", "Error al carreglar el sistema mainAct")
+        Log.e("Error_Sistema_MainAct", "Error al carreglar el sistema mainAct")
         return Sistema()
     }else{
-        Log.d("Sistema MainAct", "carregat el sistema mainAct")
+        Log.d("Sistema_MainAct", "carregat el sistema mainAct")
         return sistema
     }
 

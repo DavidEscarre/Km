@@ -89,11 +89,18 @@
                <strong>Observacions</strong>
                <p th:text="${recompensa.observacions}"> - </p>
           </div>
+        <div class="error-box" id="errorBox" th:if="${errorMessage}">
+            <button class="close-btn" onclick="document.getElementById('errorBox').style.display='none'">×</button>
+            <p><strong>Error: </strong><span th:text="${errorMessage}">Algo a sortit malament, torna a intentar-ho.</span></p>
+        </div>
             
             <div class="recompensa-actions"> 
                 <div th:if="${recompensa.estat.name() == 'RESERVADA'}">
                     
-                    <button class="assign-button" type="submit">Assignar</button>
+                    
+                    <form th:action="@{'/recompenses/assignar/' + ${recompensa.id}}" method="post">
+                            <button class="assign-button" type="submit">Assignar</button>
+                    </form>
                     
                 </div>
                 <button

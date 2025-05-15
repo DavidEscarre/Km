@@ -36,6 +36,7 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
 
     fun setPrecisio(valor: Long) {
         _precisioPunts.value = valor
+        updateLocationRequest()
         Log.d("PGPSViewModel Precicio", "precicio: ${precisioPunts.value}")
     }
 
@@ -73,7 +74,14 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
         .setMinUpdateIntervalMillis(2000)
         .build()
 
-
+    private fun updateLocationRequest() {
+        locationRequest = LocationRequest.Builder(
+            Priority.PRIORITY_HIGH_ACCURACY, _precisioPunts.value
+        )
+            .setWaitForAccurateLocation(true)
+            .setMinUpdateIntervalMillis(2000)
+            .build()
+    }
 
     private val locationCallback = object : LocationCallback() {
         @SuppressLint("SuspiciousIndentation")
@@ -270,5 +278,6 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
     fun vuidarPuntsLLitaRuta(){
         _puntGPSRutaList.value = emptyList()
     }
+
 
 }

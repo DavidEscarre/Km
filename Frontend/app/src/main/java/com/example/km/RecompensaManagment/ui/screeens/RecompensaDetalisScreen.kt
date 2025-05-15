@@ -8,6 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -17,6 +18,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -24,6 +26,7 @@ import com.example.km.R
 import com.example.km.RutaManagment.ui.viewmodels.RecompensaViewModel
 import com.example.km.core.models.Recompensa
 import com.example.km.core.models.User
+import com.example.km.core.ui.theme.errorMessageColor
 import com.example.km.core.utils.enums.EstatRecompensa
 import com.example.km.core.utils.formatDate
 import com.example.km.navigation.BottomNavigationBar
@@ -40,13 +43,16 @@ fun RecompensaDetailScreen(
     val scrollState = rememberScrollState()
     val user: User? = userState.value
 
-    if (recompensaId != null) {
-        recompensaViewModel.findById(recompensaId)
+    LaunchedEffect(recompensaId) {
+        recompensaId?.let { recompensaViewModel.findById(recompensaId) }
     }
 
-
-    // Collect the list of rutas from the ViewModel
     val recompensa by recompensaViewModel.recompensa.collectAsState()
+    val recompensaError by recompensaViewModel.recompensaError.collectAsState()
+
+
+
+
 
     Scaffold(
         topBar = { TopBar("Detalls de Recompensa", userState.value, navController) },
@@ -69,7 +75,7 @@ fun RecompensaDetailScreen(
                 Card(
                     shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(containerColor = Color(0xFF2C2C2C)),
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 90.dp).align(Alignment.Center)
+                    modifier = Modifier.fillMaxWidth().align(Alignment.Center)
                 ) {
                     Column(modifier = Modifier.padding(24.dp)) {
                         // Header row
@@ -193,23 +199,37 @@ fun RecompensaDetailScreen(
                             color = Color(0xFFAAAAAA)
                         )
                     }
+                    if(recompensaError!=null){
+                        Card(Modifier.fillMaxWidth().padding(horizontal = 26.dp),
+                            colors = CardColors(errorMessageColor,Color.White,errorMessageColor, Color.White)
+                        ){
+                            Row(Modifier.fillMaxWidth(),Arrangement.Center){
+                                Text(recompensaError.toString(), color= Color.White, fontSize = 21.sp, textAlign = TextAlign.Center)
+                            }
+
+                        }
+
+                    }
+
                     Row(Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center){
-                        ButtonsActionsRecompensa(navController, recompensa!!)
+                        ButtonsActionsRecompensa(userState, recompensaViewModel,navController, recompensa!!)
                     }
                 }
+
             }
         }
 
     }
 }
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ButtonsActionsRecompensa(navController: NavController, recompensa: Recompensa){
+fun ButtonsActionsRecompensa(userState: State<User?>, recompensaViewModel: RecompensaViewModel, navController: NavController, recompensa: Recompensa){
 
     if(recompensa.estat == EstatRecompensa.DISPONIBLE){
         Button(
             onClick = {
-
+                recompensaViewModel.reservarRecompensa(recompensa.id, userState.value!!.email)
             },
             modifier = Modifier.padding(12.dp)
         ) {
@@ -230,7 +250,7 @@ fun ButtonsActionsRecompensa(navController: NavController, recompensa: Recompens
     }else if(recompensa.estat == EstatRecompensa.RESERVADA){
         Button(
             onClick = {
-
+                recompensaViewModel.anularReservaRecompensa(recompensa.id, userState.value!!.email)
             },
             modifier = Modifier.padding(12.dp)
         ) {
@@ -239,6 +259,8 @@ fun ButtonsActionsRecompensa(navController: NavController, recompensa: Recompens
         }
 
     }
+
+
 
 
 }
