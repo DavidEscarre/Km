@@ -272,7 +272,7 @@ public class UserLogic {
             if(user == null){
                 return "USER_NOT_FOUND";
             }else{
-                user.setSaldoDisponible(user.getSaldoDisponible() + saldoAfeixir);
+                user.setSaldoDisponible(Math.round(user.getSaldoDisponible() + saldoAfeixir));
                 userRepo.save(user);
                 return "SALDO_ADDED";
             }
@@ -292,7 +292,8 @@ public class UserLogic {
                     userRepo.save(user);
                     return "SALDO_SUBSTRACTED";
                 }else{
-                    user.setSaldoDisponible(user.getSaldoDisponible() - saldoSubstraer);
+                    
+                    user.setSaldoDisponible(Math.round(user.getSaldoDisponible() - saldoSubstraer));
                     userRepo.save(user);
                     return "SALDO_SUBSTRACTED";
                 }

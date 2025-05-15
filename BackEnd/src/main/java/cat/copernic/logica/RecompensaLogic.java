@@ -97,6 +97,29 @@ public class RecompensaLogic {
        
     }
     
+    public String recollirRecompensa(Long id, String email)throws Exception{
+        
+        Recompensa ret = recompensaRepo.findById(id).orElse(null);
+        if(ret!=null){
+            User user = userRepo.findById(email).orElse(null);
+            if(user!=null && ret.getCiclista().equals(user)){
+                ret.setEstat(EstatRecompensa.RECOLLIDA);
+                ret.setDataRecollida(LocalDateTime.now());
+                recompensaRepo.save(ret);
+                
+                return ret.getId().toString();
+            }else{
+                return "USER_NOT_FOUND";
+            }
+            
+ 
+           
+        }else{
+            return "RECOMPENSA_NOT_FOUND";
+        }
+       
+    }
+    
     public String assignarRecompensa(Long id)throws Exception{
         
         Recompensa ret = recompensaRepo.findById(id).orElse(null);

@@ -109,6 +109,24 @@ class RecompensaViewModel(): ViewModel() {
         }
     }
 
+    fun recollirRecompensa(id: Long, email: String){
+        viewModelScope.launch {
+            try{
+                val response = recompensaRepo.recollirRecompensa(id,email)
+                if(response.isSuccessful){
+                    Log.d("RecompensaById", "La recompensa ha sigut recollida")
+                    findById(id)
+                    _recompensaError.value = null
+                }else{
+                    _recompensaError.value = response.body()
+                    Log.e("RecompensaById", "La recompensa  no sa pogut recollir.")
+                }
+            }catch(e: Exception){
+                e.printStackTrace()
+            }
+        }
+    }
+
     fun findById(id: Long){
         viewModelScope.launch {
             try{
