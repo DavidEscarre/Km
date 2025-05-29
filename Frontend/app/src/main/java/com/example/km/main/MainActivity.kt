@@ -33,17 +33,24 @@ import com.example.km.core.models.Sistema
 import com.example.km.core.models.User
 import com.example.km.main.screens.MainScreen
 import com.example.km.core.ui.theme.KmTheme
+import com.example.km.core.utils.FileLoggingTree
 
 import com.example.km.navigation.AppNavigation
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapsSdkInitializedCallback
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class MainActivity : ComponentActivity(), OnMapsSdkInitializedCallback {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+       Timber.plant(Timber.DebugTree())
+        Timber.plant(FileLoggingTree(applicationContext))
+        Timber.d("Timber Logs iniciado.")
+
+
         //MapsInitializer.initialize(applicationContext, MapsInitializer.Renderer.LATEST, this)
         setContent {
             KmTheme {

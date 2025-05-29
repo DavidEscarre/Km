@@ -85,7 +85,7 @@ fun RecompensesScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            items(recompensas) { recompensa ->
+            items(recompensas.reversed()) { recompensa ->
                 RecompensaItem(recompensa,navController)
             }
         }

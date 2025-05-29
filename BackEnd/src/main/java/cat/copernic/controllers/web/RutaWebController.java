@@ -52,7 +52,7 @@ public class RutaWebController {
            
            
             model.addAttribute("sistemaMaxVel", velMax);
-            model.addAttribute("rutes", rutaLogic.findAllRutes());
+            model.addAttribute("rutes", rutaLogic.findAllRutes().reversed());
             return "rutes-list"; 
         } catch (Exception e) {
        

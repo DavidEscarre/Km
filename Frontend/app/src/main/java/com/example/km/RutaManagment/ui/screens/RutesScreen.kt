@@ -76,7 +76,7 @@ fun RutesScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            items(rutas) { ruta ->
+            items(rutas.reversed()) { ruta ->
                 RutaItem(ruta, navController, puntGPSViewModel)
             }
         }

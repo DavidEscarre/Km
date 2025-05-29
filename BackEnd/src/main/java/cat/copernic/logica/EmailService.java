@@ -33,17 +33,17 @@ public class EmailService {
 
             helper.setFrom(fromEmail);
             helper.setTo(to);
-            helper.setSubject("Recuperación de contraseña");
+            helper.setSubject("Recuperació de contrasenya");
 
             // Cuerpo del correo con HTML, usando "cid:logoImage" para referenciar la imagen adjunta
             String htmlContent = "<html>" +
                     "<body style='font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;'>" +
                     "<div style='max-width: 600px; margin: auto; background: #363636; padding: 20px; border-radius: 10px; text-align: center;'>" +
                     "<img src='cid:logoImage' alt='Logo de Km+' style='width: 100px; margin-bottom: 20px;'>" +
-                    "<h2 style='color: #fff6d6;'>Recuperación de Contraseña</h2>" +
-                    "<p style='color: #d4d4d4;'>Has solicitado restablecer tu contraseña. Usa el siguiente código:</p>" +
+                    "<h2 style='color: #fff6d6;'>Recuperació de Contrasenya</h2>" +
+                    "<p style='color: #d4d4d4;'>Has solicitat restablir la teva contrasenya. Usa el següent códi:</p>" +
                     "<h3 style='color: #fff6d6; font-size: 22px; letter-spacing: 0.1em;'>" + token + "</h3>" +
-                    "<p style='color: #d4d4d4;'>Si no solicitaste este cambio, ignora este correo.</p>" +
+                    "<p style='color: #d4d4d4;'>Si no has solicitat cap canvi de contrasenya, ignora aquest correu.</p>" +
                     "</div>" +
                     "</body></html>";
 
@@ -56,7 +56,7 @@ public class EmailService {
             helper.setText(htmlContent, true);  // Indicamos que es HTML
 
             mailSender.send(message);
-            logger.info("Email enviado con exito a: "+ to);
+            logger.info("Email enviat amb exit a: "+ to);
 
        
     }

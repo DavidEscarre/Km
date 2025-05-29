@@ -75,7 +75,7 @@ public class UserWebController {
             model.addAttribute("isAuthenticated", isAuthenticated);
            */
             model.addAttribute("userImages",userImages);
-            model.addAttribute("users", users);
+            model.addAttribute("users", users.reversed());
             return "users-list"; // Página que muestra la lista de clientes
         } catch (Exception e) {
             // Registra el error para depuración

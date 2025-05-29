@@ -118,11 +118,12 @@ public class AuthWebController {
             model.addAttribute("errorMessage", null);
            // User user = userLogic.getUser(email.substring(1, email.length()-1));
            
-            String cleanEmail = email.trim().replaceAll("^\"|\"$", "");
+            String cleanEmail = email.trim().replaceAll("^\"|\"$", "").toLowerCase();
             User user = userLogic.getUser(cleanEmail);
             if (user == null) {
-                model.addAttribute("errorMessage", "Email Incorrecte.");
-                return "forgotPassword";
+               // model.addAttribute("errorMessage", "Email Incorrecte.");
+               // return "forgotPassword";
+                return "redirect:/login/verifyToken/" + UriUtils.encode(cleanEmail, StandardCharsets.UTF_8);  // Hacemos como si enviaramos el email para evitar desverlar info (Manel)
             }
           
             String token = userLogic.tokenGenerator();

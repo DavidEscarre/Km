@@ -145,6 +145,9 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
             )
         }
     }
+    /*fun setLocationListForeground(L) {
+        _puntGPSRutaListActual.value =
+    }*/
 
     fun stopLocationUpdates() {
         fusedLocationClient.removeLocationUpdates(locationCallback)

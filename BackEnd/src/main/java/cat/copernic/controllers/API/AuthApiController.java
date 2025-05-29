@@ -95,9 +95,10 @@ public class AuthApiController {
              logger.info(email.substring(1, email.length()-1));
              HttpHeaders headers = new HttpHeaders();
              headers.add("Cache-Control", "no-store"); 
-            User user = userLogic.getUser(email.substring(1, email.length()-1));
+            User user = userLogic.getUser(email.substring(1, email.length()-1).toLowerCase());
             if (user == null) {
-                return ResponseEntity.badRequest().body("Usuario no encontrado");
+               // return ResponseEntity.badRequest().body("Usuario no encontrado");
+                return ResponseEntity.ok("Email enviado"); // Hacemos como si enviaramos el email para evitar desverlar info (Manel)
             }
           
             String token = userLogic.tokenGenerator();
