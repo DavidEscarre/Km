@@ -54,7 +54,7 @@ import timber.log.Timber
 
 class MainActivity : ComponentActivity(), OnMapsSdkInitializedCallback {
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
        Timber.plant(Timber.DebugTree())
