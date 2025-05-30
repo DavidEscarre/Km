@@ -69,7 +69,7 @@ import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
 
-@RequiresApi(Build.VERSION_CODES.O)
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun AppNavigation(
     recompensaViewModel: RecompensaViewModel,
