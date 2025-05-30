@@ -60,12 +60,13 @@ fun RutesScreen(
     if (user != null) {
         Log.d("RutaScreen", "fetching ....")
         rutaViewModel.fetchAllRutas(user.email)
+        userViewModel.findByEmail(user.email)
     }
     // Collect the list of rutas from the ViewModel
     val rutas by rutaViewModel.rutas.collectAsState(initial = emptyList())
 
     Scaffold(
-        topBar = { TopBar("Rutes", user,userViewModel, navController)},
+        topBar = { TopBar("Rutes", userViewModel.user.collectAsState().value, navController)},
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
 

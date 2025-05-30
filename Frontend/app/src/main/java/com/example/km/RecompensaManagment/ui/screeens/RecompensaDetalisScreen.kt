@@ -61,8 +61,11 @@ fun RecompensaDetailScreen(
     if(recompensa?.estat==EstatRecompensa.RECOLLIDA){
         showEntregatImage = true
     }
+    if(userState !=null){
+        userState.value?.let { userViewModel.findByEmail(it.email) }
+    }
     Scaffold(
-        topBar = { TopBar("Detalls de Recompensa", userState.value, userViewModel,  navController) },
+        topBar = { TopBar("Detalls de Recompensa", userState.value,  navController) },
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
 

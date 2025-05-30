@@ -216,7 +216,7 @@ fun BottomNavigationBar(navController: NavController) {
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(title: String, user: User?, userViewModel: UserViewModel, navController: NavController) {
+fun TopBar(title: String, user: User?, navController: NavController) {
 
 
     Row {
@@ -235,7 +235,7 @@ fun TopBar(title: String, user: User?, userViewModel: UserViewModel, navControll
             },
             actions = {
 
-                user?.let { userViewModel.findByEmail(it.email) }
+             //   user?.let { userViewModel.findByEmail(it.email) }
                 val saldo = user?.saldoDisponible ?: 0.00
                 Card(
                     modifier = Modifier

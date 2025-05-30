@@ -118,11 +118,12 @@ fun EditProfileScreen(
             recompensaViewModel.fetchAllUserRecompensas(it.email)
             rutaViewModel.fetchAllRutas(it.email)
             userViewModel.getProfileImage(it)
+            userViewModel.findByEmail(user.email)
         }
     }
 
     Scaffold(
-        topBar = { TopBar("Editar perfil", user,userViewModel, navController) },
+        topBar = { TopBar("Editar perfil", userViewModel.user.collectAsState().value, navController) },
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
         Column(

@@ -68,13 +68,14 @@ fun RecompensesScreen(
         if (user != null) {
             Log.d("RecompensaScreen", "fetching ....")
             recompensaViewModel.fetchAllRecompensas(user.email)
+            userViewModel.findByEmail(user.email)
         }
     }
 
 
 
     Scaffold(
-        topBar = { TopBar("Recompenses", userState.value,userViewModel, navController)},
+        topBar = { TopBar("Recompenses", userViewModel.user.collectAsState().value, navController)},
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
 

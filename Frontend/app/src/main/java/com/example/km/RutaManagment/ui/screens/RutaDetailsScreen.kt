@@ -112,7 +112,9 @@ fun RutaDetailsScreen(
     // Observamos ruta y puntos
     val ruta by rutaViewModel.ruta.collectAsState()
     val punts by puntGPSViewModel.puntGPSRutaList.collectAsState()
-
+    if(user !=null) {
+        userViewModel.findByEmail(user.email)
+    }
     // Al cambiar rutaId, limpiamos datos previos y cargamos nuevos
     LaunchedEffect(rutaId) {
         rutaId?.let {
@@ -144,7 +146,7 @@ fun RutaDetailsScreen(
     }
 
     Scaffold(
-        topBar = { TopBar("Detalls Ruta", user, userViewModel,navController) },
+        topBar = { TopBar("Detalls Ruta", userViewModel.user.collectAsState().value,navController) },
         bottomBar = { BottomNavigationBar(navController) })
     { paddingValues ->
         if (ruta == null) {

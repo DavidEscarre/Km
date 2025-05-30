@@ -48,7 +48,7 @@ import com.example.km.UserManagment.ui.viewmodels.UserViewModel
 import com.example.km.core.models.Ruta
 import com.example.km.core.models.Sistema
 import com.example.km.core.models.User
-//import com.example.km.core.utils.LocationService
+
 import com.example.km.navigation.BottomNavigationBar
 import com.example.km.navigation.TopBar
 import com.google.android.gms.location.LocationServices
@@ -127,12 +127,15 @@ fun MainScreen(
 
     // Inicialización sistema
     val sistema = getSistemaFromBackend(sistemaViewModel)
- //   puntGPSViewModel.updateServicePrecision()
     puntGPSViewModel.setPrecisio(sistema.precisioPunts)
     sistemaViewModel.findFirst()
+    if(user !=null){
+        userViewModel.findByEmail(user.email)
+    }
+
 
     Scaffold(
-        topBar = { TopBar("Home", user, userViewModel, navController) },
+        topBar = { TopBar("Home", userViewModel.user.collectAsState().value, navController) },
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
         Column(
@@ -211,8 +214,8 @@ fun MainScreen(
                     }
                     rutaActiva = !rutaActiva
                     activadorRuta = true
-                    /*if (rutaActiva) puntGPSViewModel.startLocationService()
-                    else puntGPSViewModel.stopLocationService()*/
+                    if (rutaActiva) puntGPSViewModel.startLocationUpdates()
+                    else puntGPSViewModel.stopLocationUpdates()
                 },
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
@@ -343,8 +346,8 @@ fun AturarRuta(
     userState: State<User?>
 ) {
     // Paramos el servicio de localización en primer plano
-   // puntsGPSViewModel.stopLocationService()
     puntsGPSViewModel.stopLocationUpdates()
+
     val coroutineScope = rememberCoroutineScope()
     val puntsGPSlist by puntsGPSViewModel.puntGPSRutaListActual.collectAsState()
     val rutaActual = rutaViewModel.rutaAct.collectAsState().value
