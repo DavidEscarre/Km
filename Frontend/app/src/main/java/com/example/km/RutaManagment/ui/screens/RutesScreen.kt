@@ -36,6 +36,7 @@ import androidx.navigation.NavController
 import com.example.km.PuntGPSManagment.ui.viewmodels.PuntGPSViewModel
 import com.example.km.R
 import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
+import com.example.km.UserManagment.ui.viewmodels.UserViewModel
 import com.example.km.core.models.Ruta
 import com.example.km.core.models.User
 import com.example.km.core.utils.enums.EstatRuta
@@ -50,6 +51,7 @@ fun RutesScreen(
     rutaViewModel: RutaViewModel,
     puntGPSViewModel: PuntGPSViewModel,
     navController: NavController,
+    userViewModel: UserViewModel,
     userState: State<User?>
 
 ) {
@@ -63,7 +65,7 @@ fun RutesScreen(
     val rutas by rutaViewModel.rutas.collectAsState(initial = emptyList())
 
     Scaffold(
-        topBar = { TopBar("Rutes", user, navController)},
+        topBar = { TopBar("Rutes", user,userViewModel, navController)},
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
 

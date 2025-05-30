@@ -184,7 +184,7 @@ fun ProfileScreen(userViewModel: UserViewModel, rutaViewModel: RutaViewModel, re
         }
     ) {
         Scaffold(
-            topBar = { TopBar("Perfil", userState.value, navController)},
+            topBar = { TopBar("Perfil", userState.value,userViewModel, navController)},
             bottomBar = { BottomNavigationBar(navController) }
         ) { paddingValues ->
 

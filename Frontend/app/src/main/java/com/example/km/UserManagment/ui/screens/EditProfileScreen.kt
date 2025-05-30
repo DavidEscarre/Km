@@ -122,7 +122,7 @@ fun EditProfileScreen(
     }
 
     Scaffold(
-        topBar = { TopBar("Editar perfil", user, navController) },
+        topBar = { TopBar("Editar perfil", user,userViewModel, navController) },
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
         Column(

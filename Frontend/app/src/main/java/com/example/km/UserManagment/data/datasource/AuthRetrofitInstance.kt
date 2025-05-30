@@ -22,6 +22,7 @@ object AuthRetrofitInstance {
     private val retrofit by lazy {
         Retrofit.Builder()
             .baseUrl("http://$URL_IP_APP:8080/api/auth/")
+            //.baseUrl("https://$URL_IP_APP:8443/api/auth/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }

@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -52,6 +53,7 @@ import com.example.km.RutaManagment.ui.screens.RutesScreen
 import com.example.km.RutaManagment.ui.viewmodels.RecompensaViewModel
 import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
 import com.example.km.SistemaManagment.ui.viewmodels.SistemaViewModel
+import com.example.km.UserManagment.data.repositories.UserRepositoryImpl
 import com.example.km.UserManagment.ui.screens.LoginScreen
 import com.example.km.UserManagment.ui.screens.PasswordRecoverScreen
 import com.example.km.UserManagment.ui.screens.ProfileScreen
@@ -60,6 +62,9 @@ import com.example.km.UserManagment.ui.viewmodels.LoginViewModel
 import com.example.km.UserManagment.ui.viewmodels.UserViewModel
 import com.example.km.core.models.User
 import com.example.km.main.screens.MainScreen
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
@@ -91,10 +96,10 @@ fun AppNavigation(
 
 
         // Pantalla Home amb Bottom Navigation
-        composable("home") { MainScreen(sistemaViewModel, rutaViewModel, puntGPSViewModel, navController, userState) }
+        composable("home") { MainScreen(sistemaViewModel, rutaViewModel, puntGPSViewModel, navController,userViewModel, userState) }
 
-        composable("rutes") { RutesScreen(rutaViewModel, puntGPSViewModel, navController, userState) }
-        composable("recompenses") { RecompensesScreen(navController, userState, recompensaViewModel) }
+        composable("rutes") { RutesScreen(rutaViewModel, puntGPSViewModel, navController,userViewModel, userState) }
+        composable("recompenses") { RecompensesScreen(navController, userState,userViewModel, recompensaViewModel) }
         composable("profile") { ProfileScreen(userViewModel, rutaViewModel, recompensaViewModel, context, loginViewModel, navController, userState) }
         composable("updateProfile") { EditProfileScreen(userViewModel, rutaViewModel, recompensaViewModel, context, loginViewModel, navController, userState) }
 
@@ -109,6 +114,7 @@ fun AppNavigation(
                     rutaViewModel = rutaViewModel,
                     puntGPSViewModel = puntGPSViewModel,
                     navController = navController,
+                    userViewModel= userViewModel,
                     userState = userState
                 )
             }
@@ -123,6 +129,7 @@ fun AppNavigation(
                     recompensaId = it,
                     recompensaViewModel = recompensaViewModel,
                     userState = userState,
+                    userViewModel= userViewModel,
                     navController = navController
                 )
             }
@@ -206,10 +213,12 @@ fun BottomNavigationBar(navController: NavController) {
     }
 }
 
-
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(title: String, user: User?, navController: NavController) {
+fun TopBar(title: String, user: User?, userViewModel: UserViewModel, navController: NavController) {
+
+
     Row {
         TopAppBar(
             title = { Text(title, color = Color.White, fontWeight = FontWeight.Bold) },
@@ -226,6 +235,7 @@ fun TopBar(title: String, user: User?, navController: NavController) {
             },
             actions = {
 
+                user?.let { userViewModel.findByEmail(it.email) }
                 val saldo = user?.saldoDisponible ?: 0.00
                 Card(
                     modifier = Modifier

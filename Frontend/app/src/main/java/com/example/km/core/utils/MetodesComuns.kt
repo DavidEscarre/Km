@@ -39,7 +39,7 @@ const val IP_PC = "192.168.67.227"
 const val IP_PCWifiCasa = "192.168.1.107"
 const val IP_DOCKER = "54.123.45.67"
 // URL DE CONEXION DE LA APP
-const val URL_IP_APP =  IP_DOCKER;
+const val URL_IP_APP = IP_VM;
 
 var sistema: Sistema? = null
 

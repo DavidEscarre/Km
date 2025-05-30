@@ -3,6 +3,7 @@ package com.example.km.PuntGPSManagment.ui.viewmodels
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Application
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
@@ -15,6 +16,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.km.PuntGPSManagment.data.repositories.PuntGPSRepositoryImpl
 import com.example.km.PuntGPSManagment.domain.usecases.tempsAturUseCase
 import com.example.km.core.models.PuntGPS
+//import com.example.km.core.utils.LocationService
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -69,10 +71,11 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
     private val _puntGPSRutaList = MutableStateFlow<List<PuntGPS>>(emptyList())
     val puntGPSRutaList: StateFlow<List<PuntGPS>> get() = _puntGPSRutaList
 
-    private var locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, precisioPunts.value)
-        .setWaitForAccurateLocation(true)
-        .setMinUpdateIntervalMillis(2000)
-        .build()
+    private var locationRequest =
+        LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, precisioPunts.value)
+            .setWaitForAccurateLocation(true)
+            .setMinUpdateIntervalMillis(2000)
+            .build()
 
     private fun updateLocationRequest() {
         locationRequest = LocationRequest.Builder(
@@ -88,18 +91,20 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
         @RequiresApi(Build.VERSION_CODES.O)
         override fun onLocationResult(locationResult: LocationResult) {
             locationResult.lastLocation?.let { location ->
-                    val locationLatLng  = LatLng(location.latitude, location.longitude)
-                    setCurrentLocation(locationLatLng)
-                    detectorAtur(locationLatLng)
-                    _locationList.value = _locationList.value + (locationLatLng)
+                val locationLatLng = LatLng(location.latitude, location.longitude)
+                setCurrentLocation(locationLatLng)
+                detectorAtur(locationLatLng)
+                _locationList.value = _locationList.value + (locationLatLng)
 
 
-                    val dataMarcaTemps = LocalDateTime.now()
-                    Log.d("PGPSVM_LocationRes", "punt creat data: ${LocalDateTime.now().second}")
-                    val puntGPSCreat = PuntGPS(location.latitude, location.longitude,dataMarcaTemps)
-                    _puntGPSRutaListActual.value = _puntGPSRutaListActual.value + (puntGPSCreat)
-                    Log.d("PGPSVM_LocationRes", "PungGPS Afeixit a _puntGPSRutaList, size: ${puntGPSRutaListActual.value}")
-
+                val dataMarcaTemps = LocalDateTime.now()
+                Log.d("PGPSVM_LocationRes", "punt creat data: ${LocalDateTime.now().second}")
+                val puntGPSCreat = PuntGPS(location.latitude, location.longitude, dataMarcaTemps)
+                _puntGPSRutaListActual.value = _puntGPSRutaListActual.value + (puntGPSCreat)
+                Log.d(
+                    "PGPSVM_LocationRes",
+                    "PungGPS Afeixit a _puntGPSRutaList, size: ${puntGPSRutaListActual.value}"
+                )
 
 
             }
@@ -112,7 +117,7 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
         override fun onLocationResult(locationResult: LocationResult) {
             locationResult.lastLocation?.let { location ->
 
-                setCurrentLocation(LatLng(location.latitude,location.longitude))
+                setCurrentLocation(LatLng(location.latitude, location.longitude))
             }
         }
     }
@@ -131,6 +136,7 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
             )
         }
     }
+
     fun startLocationUpdatesSimple() {
         if (ActivityCompat.checkSelfPermission(
                 getApplication(),
@@ -145,13 +151,15 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
             )
         }
     }
-    /*fun setLocationListForeground(L) {
-        _puntGPSRutaListActual.value =
-    }*/
+
+    fun setLocationListForeground(puntGPS: PuntGPS) {
+        _puntGPSRutaListActual.value += puntGPS;
+    }
 
     fun stopLocationUpdates() {
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
+
     fun stopLocationUpdatesSimple() {
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
@@ -165,7 +173,7 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
         _currentLocation.value = location
     }
 
-    fun create(puntGPS: PuntGPS, onSuccess: (Long?) -> Unit, onError: (String) -> Unit ){
+    fun create(puntGPS: PuntGPS, onSuccess: (Long?) -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
             try {
 
@@ -174,7 +182,7 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
                 if (response.isSuccessful) {
 
                     Log.d("PuntGPS", "✅ Punt GPS creat")
-                    val puntId =response.body()
+                    val puntId = response.body()
                     onSuccess(puntId)
 
                 } else {
@@ -185,13 +193,14 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
                     onError(errorMessage)
 
                 }
-            }catch(e: Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
 
         }
 
     }
+
     fun fetchAllByRuteId(id: Long) {
         viewModelScope.launch {
             try {
@@ -206,11 +215,11 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
                     val errorBody = response.errorBody()?.string()
                     val errorMessage =
                         "❌ ${response.code()} - $errorBody"
-                     Log.e("PuntGPS", "❌ Error al trobar el punt GPS per la id, $errorMessage")
+                    Log.e("PuntGPS", "❌ Error al trobar el punt GPS per la id, $errorMessage")
 
 
                 }
-            }catch(e: Exception){
+            } catch (e: Exception) {
                 _puntGPSRutaList.value = emptyList()
                 e.printStackTrace()
             }
@@ -218,7 +227,7 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun findById(puntGPSId: Long, onSuccess: () -> Unit, onError: (String) -> Unit ): PuntGPS?{
+    fun findById(puntGPSId: Long, onSuccess: () -> Unit, onError: (String) -> Unit): PuntGPS? {
         var res: PuntGPS? = null
         viewModelScope.launch {
             try {
@@ -241,7 +250,7 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
 
                 }
                 res = response.body()
-            }catch(e: Exception){
+            } catch (e: Exception) {
                 res = null
                 e.printStackTrace()
             }
@@ -250,18 +259,24 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
         return res
     }
 
-    fun detectorAtur(location: LatLng){
-        if(locationList.value.size > 0){
+    fun detectorAtur(location: LatLng) {
+        if (locationList.value.size > 0) {
             val startP = locationList.value.last()
             val results = FloatArray(1)
 
-            Location.distanceBetween(startP.latitude, startP.longitude, location.latitude, location.longitude, results)
-            if(results[0].toDouble() < 1){ // Si la distancia del l'ultim punt es menor a 1 METRE
+            Location.distanceBetween(
+                startP.latitude,
+                startP.longitude,
+                location.latitude,
+                location.longitude,
+                results
+            )
+            if (results[0].toDouble() < 1) { // Si la distancia del l'ultim punt es menor a 1 METRE
 
                 _aturat.value = true
                 tempsAturUseCase.start(viewModelScope)
 
-            }else{
+            } else {
                 _tempsAturAcumulatRuta.value += tempsAtur.value
                 _aturat.value = false
                 tempsAturUseCase.stop()
@@ -270,17 +285,64 @@ class PuntGPSViewModel(application: Application) : AndroidViewModel(application)
         }
 
     }
-    fun ResetTempsAturAcumulat(){
+
+    fun ResetTempsAturAcumulat() {
         _tempsAturAcumulatRuta.value = 0
     }
-    fun ResetTempsAtur(){
+
+    fun ResetTempsAtur() {
         tempsAturUseCase.stop()
         tempsAturUseCase.reset()
     }
 
-    fun vuidarPuntsLLitaRuta(){
+    fun vuidarPuntsLLitaRuta() {
         _puntGPSRutaList.value = emptyList()
     }
-
-
 }
+    /**
+     * Lanza el LocationService en primer plano.
+     */
+    /*
+    fun startLocationService() {
+        val ctx = getApplication<Application>()
+        Intent(ctx, LocationService::class.java).also { intent ->
+            intent.action = LocationService.ACTION_START
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                ctx.startForegroundService(intent)
+                LocationService().setPuntsViewModel(this)
+            } else {
+                ctx.startService(intent)
+            }
+
+        }
+
+
+    }
+
+    /**
+     * Detiene el LocationService.
+     */
+    fun stopLocationService() {
+        val ctx = getApplication<Application>()
+        Intent(ctx, LocationService::class.java).also { intent ->
+            intent.action = LocationService.ACTION_STOP
+            ctx.startService(intent)
+        }
+    }
+
+    /**
+     * Envía al servicio un nuevo intervalo de precisión (en milisegundos).
+     */
+    fun updateServicePrecision(newIntervalMs: Long) {
+        // Actualizamos también nuestro StateFlow interno
+        setPrecisio(newIntervalMs)
+
+        val ctx = getApplication<Application>()
+        Intent(ctx, LocationService::class.java).also { intent ->
+            intent.action = LocationService.ACTION_UPDATE_PRECISION
+            intent.putExtra(LocationService.EXTRA_INTERVAL, newIntervalMs)
+            ctx.startService(intent)
+        }
+    }
+
+}*/
