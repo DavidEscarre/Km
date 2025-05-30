@@ -14,18 +14,18 @@
             <img src="/images/logo.svg" alt="Logo KM+">
             <h1>Km+</h1>
         </div>
-       <p>Introdueix un el teu token de recuperació.</p>
+       <p>Introdueix un el teu codi de recuperació.</p>
         <!-- Formulario de recuperación -->
         <form th:action="@{/login/verifyToken}" method="post" class="login-form">
             <input type="hidden" name="email" th:value="${email}" />
             <!-- Token -->
             <div class="form-group">
-                <label for="token">Token</label>
+                <label for="token">Codi</label>
                 <input type="text"
                        id="token"
                        name="token"
                        th:value="${token}"
-                       placeholder="Ingresa el token recibido"
+                       placeholder="Ingresa el codi rebut."
                        required>
             </div>
 
@@ -35,7 +35,7 @@
             <p th:if="${successMessage}" class="success" th:text="${successMessage}"></p>
 
             <!-- Botón de envío -->
-            <button type="submit" class="btn-login">Validar Token</button>
+            <button type="submit" class="btn-login">Validar Codi</button>
             <a class="forgot-password" href="/login">Iniciar Sessio</a>
         </form>
 

@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.km.R
 import com.example.km.RutaManagment.ui.viewmodels.RecompensaViewModel
+import com.example.km.UserManagment.ui.viewmodels.UserViewModel
 import com.example.km.core.models.Recompensa
 import com.example.km.core.models.User
 import com.example.km.core.utils.enums.EstatRecompensa
@@ -55,6 +56,7 @@ import java.time.format.DateTimeFormatter
 fun RecompensesScreen(
     navController: NavController,
     userState: State<User?>,
+    userViewModel: UserViewModel,
     recompensaViewModel: RecompensaViewModel
 
 ) {
@@ -66,13 +68,14 @@ fun RecompensesScreen(
         if (user != null) {
             Log.d("RecompensaScreen", "fetching ....")
             recompensaViewModel.fetchAllRecompensas(user.email)
+            userViewModel.findByEmail(user.email)
         }
     }
 
 
 
     Scaffold(
-        topBar = { TopBar("Recompenses", userState.value, navController)},
+        topBar = { TopBar("Recompenses", userViewModel.user.collectAsState().value, navController)},
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
 
@@ -85,7 +88,7 @@ fun RecompensesScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            items(recompensas) { recompensa ->
+            items(recompensas.reversed()) { recompensa ->
                 RecompensaItem(recompensa,navController)
             }
         }

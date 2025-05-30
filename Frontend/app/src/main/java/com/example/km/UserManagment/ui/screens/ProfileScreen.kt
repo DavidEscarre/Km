@@ -109,6 +109,9 @@ fun ProfileScreen(userViewModel: UserViewModel, rutaViewModel: RutaViewModel, re
     val coroutineScope = rememberCoroutineScope()
 
     val user = userState.value
+    if(user!=null){
+        userViewModel.findByEmail(user.email)
+    }
     val imageBitmap by userViewModel.profileImageBitmap.collectAsState()
 
     var selectedImageUri by remember { mutableStateOf<android.net.Uri?>(null) }
@@ -184,7 +187,7 @@ fun ProfileScreen(userViewModel: UserViewModel, rutaViewModel: RutaViewModel, re
         }
     ) {
         Scaffold(
-            topBar = { TopBar("Perfil", userState.value, navController)},
+            topBar = { TopBar("Perfil", userViewModel.user.collectAsState().value, navController)},
             bottomBar = { BottomNavigationBar(navController) }
         ) { paddingValues ->
 

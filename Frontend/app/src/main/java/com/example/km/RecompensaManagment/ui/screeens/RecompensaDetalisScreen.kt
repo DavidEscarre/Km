@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.km.R
 import com.example.km.RutaManagment.ui.viewmodels.RecompensaViewModel
+import com.example.km.UserManagment.ui.viewmodels.UserViewModel
 import com.example.km.core.models.Recompensa
 import com.example.km.core.models.User
 import com.example.km.core.ui.theme.errorMessageColor
@@ -42,6 +43,7 @@ fun RecompensaDetailScreen(
     recompensaId: Long?,
     recompensaViewModel: RecompensaViewModel,
     userState: State<User?>,
+    userViewModel: UserViewModel,
     navController: NavController
 ) {
     var showDialog by remember { mutableStateOf(false) }
@@ -59,8 +61,11 @@ fun RecompensaDetailScreen(
     if(recompensa?.estat==EstatRecompensa.RECOLLIDA){
         showEntregatImage = true
     }
+    if(userState !=null){
+        userState.value?.let { userViewModel.findByEmail(it.email) }
+    }
     Scaffold(
-        topBar = { TopBar("Detalls de Recompensa", userState.value, navController) },
+        topBar = { TopBar("Detalls de Recompensa", userState.value,  navController) },
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
 

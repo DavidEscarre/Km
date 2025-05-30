@@ -25,6 +25,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -35,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -49,6 +53,7 @@ import com.example.km.RutaManagment.ui.screens.RutesScreen
 import com.example.km.RutaManagment.ui.viewmodels.RecompensaViewModel
 import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
 import com.example.km.SistemaManagment.ui.viewmodels.SistemaViewModel
+import com.example.km.UserManagment.data.repositories.UserRepositoryImpl
 import com.example.km.UserManagment.ui.screens.LoginScreen
 import com.example.km.UserManagment.ui.screens.PasswordRecoverScreen
 import com.example.km.UserManagment.ui.screens.ProfileScreen
@@ -57,27 +62,44 @@ import com.example.km.UserManagment.ui.viewmodels.LoginViewModel
 import com.example.km.UserManagment.ui.viewmodels.UserViewModel
 import com.example.km.core.models.User
 import com.example.km.main.screens.MainScreen
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
 
-@RequiresApi(Build.VERSION_CODES.O)
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
-fun AppNavigation(recompensaViewModel: RecompensaViewModel, userViewModel :UserViewModel ,sistemaViewModel: SistemaViewModel, puntGPSViewModel: PuntGPSViewModel, rutaViewModel: RutaViewModel, navController: NavController, loginViewModel: LoginViewModel, userState: State<User?>) {
-    val navController = rememberNavController()
+fun AppNavigation(
+    recompensaViewModel: RecompensaViewModel,
+    userViewModel :UserViewModel,
+    sistemaViewModel: SistemaViewModel,
+    puntGPSViewModel: PuntGPSViewModel,
+    rutaViewModel: RutaViewModel,
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    userState: State<User?>) {
+
+
     val context = LocalContext.current
-   // val rutaViewModel: RutaViewModel = viewModel()
+     //val navController = rememberNavController()
+     // val rutaViewModel: RutaViewModel = viewModel()
     //val puntGPSViewModel: PuntGPSViewModel = viewModel()
-    NavHost(navController = navController, startDestination = "login") {
+
+   // val user by loginViewModel.userState.collectAsState()
+    val startDest = if (userState.value != null) "home" else "login"
+
+    NavHost(navController = navController, startDestination = startDest) {
         composable("login") { LoginScreen(navController, loginViewModel, userState ) }
         composable("passwordRecover") { PasswordRecoverScreen(loginViewModel,navController, userViewModel, userState) }
 
 
         // Pantalla Home amb Bottom Navigation
-        composable("home") { MainScreen(sistemaViewModel, rutaViewModel, puntGPSViewModel, navController, userState) }
+        composable("home") { MainScreen(sistemaViewModel, rutaViewModel, puntGPSViewModel, navController,userViewModel, userState) }
 
-        composable("rutes") { RutesScreen(rutaViewModel, puntGPSViewModel, navController, userState) }
-        composable("recompenses") { RecompensesScreen(navController, userState, recompensaViewModel) }
+        composable("rutes") { RutesScreen(rutaViewModel, puntGPSViewModel, navController,userViewModel, userState) }
+        composable("recompenses") { RecompensesScreen(navController, userState,userViewModel, recompensaViewModel) }
         composable("profile") { ProfileScreen(userViewModel, rutaViewModel, recompensaViewModel, context, loginViewModel, navController, userState) }
         composable("updateProfile") { EditProfileScreen(userViewModel, rutaViewModel, recompensaViewModel, context, loginViewModel, navController, userState) }
 
@@ -92,6 +114,7 @@ fun AppNavigation(recompensaViewModel: RecompensaViewModel, userViewModel :UserV
                     rutaViewModel = rutaViewModel,
                     puntGPSViewModel = puntGPSViewModel,
                     navController = navController,
+                    userViewModel= userViewModel,
                     userState = userState
                 )
             }
@@ -106,6 +129,7 @@ fun AppNavigation(recompensaViewModel: RecompensaViewModel, userViewModel :UserV
                     recompensaId = it,
                     recompensaViewModel = recompensaViewModel,
                     userState = userState,
+                    userViewModel= userViewModel,
                     navController = navController
                 )
             }
@@ -189,10 +213,12 @@ fun BottomNavigationBar(navController: NavController) {
     }
 }
 
-
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(title: String, user: User?, navController: NavController) {
+
+
     Row {
         TopAppBar(
             title = { Text(title, color = Color.White, fontWeight = FontWeight.Bold) },
@@ -209,6 +235,7 @@ fun TopBar(title: String, user: User?, navController: NavController) {
             },
             actions = {
 
+             //   user?.let { userViewModel.findByEmail(it.email) }
                 val saldo = user?.saldoDisponible ?: 0.00
                 Card(
                     modifier = Modifier

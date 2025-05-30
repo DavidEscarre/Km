@@ -63,7 +63,7 @@ public class RutaLogic {
                 ret.setEstat(EstatRuta.NO_VALIDA);
                 User ciclista = ret.getCiclista();
                 if(ciclista.getSaldoDisponible()>= ret.getSaldo()){
-                    ciclista.setSaldoDisponible(Math.round(ciclista.getSaldoDisponible()-ret.getSaldo()));
+                    ciclista.setSaldoDisponible(ciclista.getSaldoDisponible()-ret.getSaldo());
                 }else{
                      ciclista.setSaldoDisponible(0);
                 }
@@ -88,7 +88,7 @@ public class RutaLogic {
                 ret.setEstat(EstatRuta.VALIDA);
                 User ciclista = ret.getCiclista();
                
-                ciclista.setSaldoDisponible(Math.round(ciclista.getSaldoDisponible()+ret.getSaldo()));
+                ciclista.setSaldoDisponible(ciclista.getSaldoDisponible()+ret.getSaldo());
                 
                 userRepo.save(ciclista);
                 rutaRepo.save(ret);

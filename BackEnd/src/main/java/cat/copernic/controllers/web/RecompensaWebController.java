@@ -52,7 +52,7 @@ public class RecompensaWebController {
            List<Recompensa> recompenses = recompensaLogic.findAllRecompenses();
 
       
-            model.addAttribute("recompenses", recompenses);
+            model.addAttribute("recompenses", recompenses.reversed());
             return "recompenses-list"; // Página que muestra la lista de clientes
         } catch (Exception e) {
             // Registra el error para depuración

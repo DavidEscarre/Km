@@ -9,6 +9,9 @@ import cat.copernic.controllers.API.UserApiController;
 import cat.copernic.enums.Rol;
 import cat.copernic.repository.UserRepo;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +53,16 @@ public class UserLogic {
         
         User ret = userRepo.findById(email).orElse(null);
         
+        if (ret != null) {
+            // Tomamos el saldo original…
+            double saldoOriginal = ret.getSaldoDisponible();
+            // …lo convertimos a BigDecimal y redondeamos a 2 decimales
+            BigDecimal bd = BigDecimal.valueOf(saldoOriginal)
+                                     .setScale(2, RoundingMode.HALF_UP);
+            // Lo volvemos a double y lo seteamos
+            ret.setSaldoDisponible(bd.doubleValue());
+        }
+
         return ret;
     }
     public boolean existsByEmail(String email)

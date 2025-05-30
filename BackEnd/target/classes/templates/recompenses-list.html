@@ -67,7 +67,11 @@
                 <strong>Punt bescanvi:</strong> 
                 <span th:text="${recompensa.puntBescanvi}">Restaurant Cal Tony, nº 23</span>
              </div>
-            
+             <div class="recompensa-puntbescanvi">
+               <strong>Data creació: </strong> 
+                <span th:text="${recompensa.getDataFormategada(recompensa.dataCreacio)}">Restaurant Cal Tony, nº 23</span>
+             </div>
+             
           </div>
           
           <div class="recompensa-card-section2">

@@ -1,0 +1,28 @@
+services:
+
+  mysqldb:
+    image: mysql:8.0
+    restart: no
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+    ports:
+      - 3307:3306
+    volumes:
+      - db:/var/lib/mysql
+    command: --bind-address=0.0.0.0
+
+  app:
+    image: kmdb-backend:v1
+    restart: no
+    depends_on:
+      - mysqldb
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      SPRING_APPLICATION_JSON: '{"spring.datasource.url"  : "jdbc:mysql://mysqldb:3306/kmdb?createDatabaseIfNotExist=true"}'
+
+volumes:
+  db:

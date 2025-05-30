@@ -56,6 +56,7 @@ import androidx.navigation.NavController
 import com.example.km.PuntGPSManagment.ui.viewmodels.PuntGPSViewModel
 import com.example.km.R
 import com.example.km.RutaManagment.ui.viewmodels.RutaViewModel
+import com.example.km.UserManagment.ui.viewmodels.UserViewModel
 import com.example.km.core.models.User
 import com.example.km.core.utils.bitmapDescriptorFromVectorDp
 import com.example.km.core.utils.enums.EstatRuta
@@ -80,6 +81,7 @@ fun RutaDetailsScreen(
     rutaViewModel: RutaViewModel,
     puntGPSViewModel: PuntGPSViewModel,
     navController: NavController,
+    userViewModel: UserViewModel,
     userState: State<User?>
 ) {
     val user: User? = userState.value
@@ -110,7 +112,9 @@ fun RutaDetailsScreen(
     // Observamos ruta y puntos
     val ruta by rutaViewModel.ruta.collectAsState()
     val punts by puntGPSViewModel.puntGPSRutaList.collectAsState()
-
+    if(user !=null) {
+        userViewModel.findByEmail(user.email)
+    }
     // Al cambiar rutaId, limpiamos datos previos y cargamos nuevos
     LaunchedEffect(rutaId) {
         rutaId?.let {
@@ -142,7 +146,7 @@ fun RutaDetailsScreen(
     }
 
     Scaffold(
-        topBar = { TopBar("Detalls Ruta", user, navController) },
+        topBar = { TopBar("Detalls Ruta", userViewModel.user.collectAsState().value,navController) },
         bottomBar = { BottomNavigationBar(navController) })
     { paddingValues ->
         if (ruta == null) {
