@@ -526,10 +526,11 @@ image::tascasCompletadasSprint5.png[]
 === *Nova planificació*
 Només queden les tasques del Sprint 6.
 
-
-Sprint 6
+[[sprint6]]
+== *15. Sprint 6*
 
 image::Sprint6_tasques3_1.png[]
 image::Sprint6_tasques3_2.png[]
+
 
 
