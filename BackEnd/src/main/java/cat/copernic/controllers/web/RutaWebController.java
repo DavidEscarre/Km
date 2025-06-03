@@ -10,7 +10,9 @@ import cat.copernic.logica.RutaLogic;
 import cat.copernic.logica.SistemaLogic;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -47,12 +49,33 @@ public class RutaWebController {
     @GetMapping
     public String ListAllRutes(Model model, Authentication authentication) {
         try {
-           Sistema sistema = sistemaLogic.findAllSistemas().getFirst();
-           double velMax = sistema.getVelMaxValida();
            
+            List<Sistema> sistemas = sistemaLogic.findAllSistemas();
+            Sistema sistema ;
+            if(sistemas.size() == 1 ){
+                sistema = sistemas.getFirst();
+            }else {
+                sistema = new Sistema();
+                sistema.setTempsMaxAtur(300000L);  
+                sistema.setTempsMaxRec(259200000L); 
+                sistema.setPrecisioPunts(2000L); 
+                sistema.setPuntsKm(1.00);
+                sistema.setVelMaxValida(60.00);
+
+               // sistema.setId(sistemaLogic.findAllSistemas().getFirst().getId());
+            }
+            double velMax = sistema.getVelMaxValida();
            
+            List<Ruta> rutas = rutaLogic.findAllRutes();
+    
+            if (rutas.isEmpty()) {
+                // Si está vacía, puedes pasar un mensaje y devolver otra plantilla, por ejemplo "sin-rutas.html"
+                model.addAttribute("mensajeError", "No hay rutas registradas para tu usuario.");
+                return "rutes-list"; // Ahora existe la plantilla error-page.html
+            }
+            
             model.addAttribute("sistemaMaxVel", velMax);
-            model.addAttribute("rutes", rutaLogic.findAllRutes().reversed());
+            model.addAttribute("rutes", rutas);
             return "rutes-list"; 
         } catch (Exception e) {
        

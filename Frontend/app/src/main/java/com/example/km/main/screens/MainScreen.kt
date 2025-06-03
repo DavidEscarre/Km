@@ -149,7 +149,7 @@ fun MainScreen(
                 Modifier
                     .border(2.dp, Color.Black, RoundedCornerShape(4.dp))
                     .fillMaxWidth()
-                    .height(600.dp)
+                    .height(420.dp)
             ) {
                 if (fineGranted) {
                     LaunchedEffect(Unit) {

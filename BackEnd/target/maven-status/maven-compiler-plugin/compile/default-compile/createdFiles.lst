@@ -2,6 +2,7 @@ cat\copernic\logica\PuntGPSLogic.class
 cat\copernic\controllers\web\RecompensaWebController.class
 cat\copernic\repository\UserRepo.class
 cat\copernic\logica\SistemaLogic.class
+cat\copernic\controllers\web\auth.class
 cat\copernic\config\SecurityConfig.class
 cat\copernic\Entity\User.class
 cat\copernic\config\ValidadorUsuaris.class
