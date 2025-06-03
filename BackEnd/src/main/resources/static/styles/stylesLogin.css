@@ -1,0 +1,157 @@
+  /* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Fuente y cuerpo */
+html, body {
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(180deg, #1E1E1E 0%, #2C2C2C 100%);
+  color: #FFFFFF;
+}
+
+/* Contenedor principal de login */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}
+
+/* Logo y título */
+.login-logo {
+  margin-bottom: 1.5rem;
+}
+.login-logo img {
+  width: 300px;
+  height: 300px;
+  margin-bottom: 0.5rem;
+}
+.login-logo h1 {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+/* Formulario de login */
+.login-form {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Labels e Inputs */
+.form-group {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+.form-group label {
+  margin-bottom: 0.3rem;
+  display: inline-block;
+  font-size: 0.9rem;
+}
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  outline: none;
+  color: #333;
+}
+
+/* Botón de inicio de sesión */
+.btn-login {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 25px;
+  background-color: #FFF;
+  color: #000;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: background-color 0.2s ease;
+}
+.btn-login:hover {
+  background-color: #E6E6E6;
+}
+
+/* Enlace de recuperación */
+.forgot-password {
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: #FFFFFF;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+.forgot-password:hover {
+  opacity: 1;
+}
+
+/* Oculta el header que tenías antes (opcional si no quieres mostrarlo en login) */
+.header {
+  display: none;
+}
+
+.error {
+  background-color: #ff4d4d; /* rojo más suave que #ff5959 */
+  color: white;
+  padding: 0px 24px;
+  border-radius: 8px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 16px;
+  box-shadow: 0 0 12px rgba(255, 77, 77, 0.4);
+  /* border-left: 6px solid #ff1a1a; */
+  margin: 16px 0;
+  max-width: 600px;
+  line-height: 1.4;
+}
+
+
+.errorMsg {
+  background-color: #ff4d4d; /* rojo más suave que #ff5959 */
+  color: white;
+  padding: 0px 24px;
+  border-radius: 8px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 16px;
+  box-shadow: 0 0 12px rgba(255, 77, 77, 0.4);
+  /* border-left: 6px solid #ff1a1a; */
+  margin: 16px 0;
+  max-width: 600px;
+  line-height: 1.4;
+}
+
+/* Contenedor SVG centrado */
+#succesPassRecover-img {
+  display: block;
+  margin: 40px auto;
+  min-width: 600px; /* ajusta según necesites */
+  max-width: 900px;
+  min-height: auto;
+  max-height: auto;
+}
+
+/* Estilo base de trazos y formas */
+#succesPassRecover-img circle,
+#succesPassRecover-img path {
+  stroke: #00ff99;    /* verde moderno */
+  fill: none;
+  /* aplica un halo al trazo del SVG, no al contenedor */
+  filter: drop-shadow(0 0 4px #00ff99);
+  transition: filter 0.25s ease-out, transform 0.25s ease-out;
+}
+
+/* Efecto hover/entrada suave */
+#succesPassRecover-img:hover circle,
+#succesPassRecover-img:hover path {
+  /* intensifica el brillo al posar el ratón */
+  filter: drop-shadow(0 0 6px #00ff99);
+  transform: scale(1.01);
+}

@@ -60,16 +60,29 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
+
+dependencies {
+    implementation(libs.androidx.navigation.compose)
+}
+
 dependencies{
+    implementation("com.jakewharton.timber:timber:5.0.1") //Para Logs en fixeros
+
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
     implementation("com.google.maps.android:maps-ktx:3.4.0") // Extensiones KTX
     implementation("com.google.maps.android:maps-utils-ktx:3.4.0") // Utilidades de Google Maps
 
 
 }
 dependencies {
+
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2") // Verifica la última versión disponible
     implementation("com.google.android.gms:play-services-location:21.0.1") // Ubicación
     implementation("com.google.android.gms:play-services-maps:18.2.0")// Google Maps SDK
     implementation("com.google.maps.android:maps-compose:2.14.0")// Jetpack Compose Maps
+
 }

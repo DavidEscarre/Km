@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Rutes</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet" href="/styles/stylesList.css"> <!-- Enlaza el CSS externo -->
+</head>
+<body>
+    <header class="header">
+        <h1>RUTES</h1>
+        <nav>
+                <a href="/">
+                    <button class="nav-button " href="/">SISTEMA</button>
+                </a>
+                <a href="/rutes">
+                    <button class="nav-button active" href="/rutes">RUTES</button>
+                </a>
+                <a href="/users">
+                    <button class="nav-button " href="/users">USUARIS</button>
+                </a>
+                <a href="/recompenses">
+                    <button class="nav-button" href="/recompenses">RECOMPENSES</button>
+                </a>   
+                <a href="/logout" class="logout-container">
+                    <img  class="logout-icon" src="/images/logout.svg" alt="Cerrar sesión">
+                </a>
+        </nav>
+    </header>
+    <main class="container">
+        
+          <section class="recompenses-list">
+            <div class="ruta-card" th:each="ruta : ${rutes}">
+                
+                
+              
+                  <div class="ruta-card-section1">
+                     
+                      <!--  <h3 class="ruta-ciclista" th:text="${ruta.ciclista}"></h3> -->
+                    <p>
+                      <strong>Data i hora</strong> <span class="ruta-data" th:text="${ruta.getDataFormategada(ruta.dataInici)}"></span> 
+                    </p>
+                    <p>
+                      <strong>Ciclista:</strong> <span class="ruta-ciclista" th:text="${ruta.ciclista.nom +', '+ ruta.ciclista.email}"></span> 
+                    </p>
+                    <p>
+                      <strong>Distancia:</strong> <span class="ruta-distancia" th:text="${ruta.distancia} +' '+ km"></span> 
+                    </p>
+                    <p>
+                      <strong>Durada:</strong> <span class="ruta-temps" th:text="${ruta.durada}"></span> 
+                    </p>
+                  
+                    <div class="ruta-estat">
+                                <strong>Estat:</strong>
+                                <span class="status"
+                                      th:classappend="${(ruta.estat.name() == 'NO_VALIDA') ? 'No_valida' :
+                                      (ruta.estat.name() == 'VALIDA') ? 'Valida' : 'Pendent' }">
+                                    <span th:text="${ruta.estat}"></span>
+                                </span>
+
+                            </div>
+                    
+                 </div>
+                  <div class="ruta-card-section2">
+                     
+                     <div class="ruta-saldo-container">
+                        <span class="ruta-saldo" th:text="${ruta.saldo}">500</span>
+                        <img class="price-icon" src="/images/coins_icon.svg" alt="">               
+                    </div>
+                  
+                    <p><strong>Velocitat Mitjana</strong> <span th:text="${ruta.velocitatMitjana + ' km/h'}">km/h</span></p>
+                    <p><strong>Velocitat Maxima</strong> <span th:text="${ruta.velocitatMax + ' km/h'}"></span></p>
+                    <p th:if="${ruta.velocitatMax >= sistemaMaxVel}"
+                       style="color: red; font-weight: bold;">
+                        Atenció: aquesta ruta supera la velocitat màxima permesa de <span th:text="${sistemaMaxVel}"></span> km/h!
+                    </p>
+                    
+                 </div>
+                 
+                    
+                    
+                
+                <div class="ruta-actions">
+                     <form th:action="@{/rutes/getById/{id}(id=${ruta.id})}" method="get">
+                        <button class="detail-button" type="submit">Veure detalls</button>
+                    </form>
+                    <button class="delete-button">Eliminar</button>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Usuarios</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/stylesList.css"> <!-- Enlaza el CSS externo -->
+</head>
+<body>
+    <header class="header">
+        <h1>USUARIS</h1>
+        <nav>
+                <a href="/">
+                    <button class="nav-button " href="/">SISTEMA</button>
+                </a>
+                <a href="/rutes">
+                    <button class="nav-button" href="/rutes">RUTES</button>
+                </a>
+                <a href="/users">
+                    <button class="nav-button active" href="/users">USUARIS</button>
+                </a>
+                <a href="/recompenses">
+                    <button class="nav-button" href="/recompenses">RECOMPENSES</button>
+                </a>  
+               
+                <a href="/logout" class="logout-container">
+                    <img  class="logout-icon" src="/images/logout.svg" alt="Cerrar sesión">
+                </a>
+      
+        </nav>
+    </header>
+    
+    <main class="container">
+        
+        <form th:action="@{/users/create}" method="get">
+            <button id="create-button" type="submit" class="create-button">Crear Usuari</button>
+        </form>
+
+        
+        <section class="user-list">
+            <div class="user-card" th:each="user : ${users}">
+                
+                 <div class="user-img">
+                    <img th:src="|data:image/jpeg;base64,${userImages[user.email]}|"/>
+                 </div>
+                <div class="user-info">
+                    <h3 class="user-name" th:text="${user.nom}"></h3>
+                    <p class="user-email" th:text="${user.email}"></p>
+                    <p><strong>Estat:</strong> <span class="status active">Actiu</span></p>
+                    <p><strong>Rol:</strong> <span th:text="${user.rol}"></span></p>
+                </div>
+                <div class="details-button">
+                    <form th:action="@{/users/getByEmail/{email}(email=${user.email})}" method="get">
+                        <button class="detail-button" type="submit">Ver Detalles</button>
+                    </form>
+                    <a th:href="@{/users/update/{email}(email=${user.email})}">
+                        <button class="edit-button">Editar</button>
+                    </a>
+                    <button class="delete-button">Eliminar</button>
+                </div>
+            </div>
+        </section>
+    </main>
+        <script src="/scripts/main.js"></script>
+</body>
+</html>

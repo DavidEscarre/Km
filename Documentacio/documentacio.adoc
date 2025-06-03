@@ -399,3 +399,138 @@ image::Trello6.png[]
 
 
 https://trello.com/invite/b/67d2bb31bdeeafab5739043d/ATTI01a1de41486edc7420d39504157a257eDFF8C943/proyecte4km[*Enllaç al Trello*]
+
+[[sprint1]]
+== *11. Sprint 1*
+
+En aquest primer Sprint s'han reorganitzat les tasques de cada sprint, aprofitant l'experiència obtinguda durant el desenvolupament del sprint.
+
+=== *Nova planificació*
+Sprint 1
+
+image::Sprint1_tasques1.png[]
+image::Sprint1_tasques2.png[]
+
+Sprint 2
+
+image::Sprint2_tasques.png[]
+
+Sprint 3
+
+image::Sprint3_tasques.png[]
+
+Sprint 4
+
+image::Sprint4_tasques.png[]
+
+Sprint 5
+
+image::Sprint5_tasques.png[]
+
+
+Sprint 6
+
+Es deixarà per les tasques que no s'acabin en els anteriors sprints.
+
+
+
+[[sprint2]]
+== *12. Sprint 2*
+
+En aquest Sprint he trobat alguns problemes durant el desenvolupament del codi i les diferents tasques del sprint, per aquesta raó, s'han tornat a reorganitzar les tasques de cada sprint, aprofitant com sempre l'experiència obtinguda durant el desenvolupament del sprint.
+
+=== *Tasques completades*
+image::tascasCompletadas.png[]
+
+=== *Nova planificació*
+
+
+Sprint 3
+
+image::Sprint3_tasques2.png[]
+
+Sprint 4
+
+image::Sprint4_tasques2_1.png[]
+
+image::Sprint4_tasques2_2.png[]
+
+Sprint 5
+
+image::Sprint5_tasques2.png[]
+
+
+Sprint 6
+
+Es deixarà per les tasques que no s'acabin en els anteriors sprints.
+
+
+=== *Problemes durant el Sprint 2*
+El principal problema que m'he trobat al Sprint 2 ha sigut un error que no deixava crear cap objecte al Frontend app, l'error era un "Malformed JSON", aquest problema encara persisteix i encara intento ressoldareu.
+
+[[sprint3]]
+== *12. Sprint 3*
+
+En aquest Sprint vaig poder solucionar els problemes de l'anterior Sprint i avançar més feina que de costum.
+
+=== *Tasques completades*
+image::tascasCompletadasSprint3.png[]
+
+=== *Nova planificació*
+Algunes tasques han sigut replanificades i mogudes a altres Sprints per optimització del desenvolupament del projecte.
+
+Sprint 4
+
+image::Sprint4_tasques3.png[]
+
+
+Sprint 5
+
+image::Sprint5_tasques3.png[]
+
+
+Sprint 6
+
+image::Sprint6_tasques.png[]
+
+
+[[sprint4]]
+== *13. Sprint 4*
+
+En aquest Sprint m'he centrat en els requisits funcionals que més problemes em podien donar, com els paràmetres del sistema, i el sistema de visualització de detalls ampliats d'una ruta (el mapa d'aquest).
+
+=== *Tasques completades*
+image::tascasCompletadasSprint4.png[]
+
+=== *Nova planificació*
+Algunes tasques han sigut replanificades i mogudes a altres Sprints per optimització del desenvolupament del projecte.
+
+Sprint 5
+
+image::Sprint5_tasques4.png[]
+
+
+Sprint 6
+
+image::Sprint6_tasques2.png[]
+
+
+
+[[sprint5]]
+== *14. Sprint 5*
+En aquest penúltim Sprint he fet diverses parts de l'aplicació, a més de resoldre molts bugs de l'app. 
+
+=== *Tasques completades*
+image::tascasCompletadasSprint5.png[]
+
+=== *Nova planificació*
+Només queden les tasques del Sprint 6.
+
+[[sprint6]]
+== *15. Sprint 6*
+
+image::Sprint6_tasques3_1.png[]
+image::Sprint6_tasques3_2.png[]
+
+
+

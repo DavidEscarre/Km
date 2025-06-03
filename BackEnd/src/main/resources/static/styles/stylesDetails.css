@@ -1,0 +1,502 @@
+/* ==== RESETEO BÁSICO ==== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: sans-serif;
+    }
+
+    body {
+      background-color: #fff;
+      color: #333;
+    }
+
+    /* ==== CABECERA Y NAVEGACIÓN ==== */
+    header {
+      background-color: #2b2b2b;
+      color: #fff;
+      padding: 1rem;
+    }
+    header h1 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    nav {
+      display: flex;
+      gap: 1rem;
+    }
+    .nav-button {
+      background-color: #444;
+      border: none;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      border-radius: 4px;
+    }
+    .nav-button:hover {
+      background-color: #666;
+    }
+    .nav-button.active {
+      background-color: #f9c00c; /* Color resaltado para la sección activa */
+      color: #000;
+    }
+    
+      .logout-container {
+        position: absolute;  /* Posiciona el icono */
+        top: 50px; /* Ajusta la distancia desde arriba */
+        right: 10px; /* Lo alinea a la derecha */
+    }
+     .logout-icon {
+        width: 32px;
+        height: 32px;
+        filter: drop-shadow(0 0 2px white); /* Simula grosor extra */
+        filter: invert(1); /*Convierte el color del SVG a blanco */
+        cursor: pointer; /* Cambia el cursor para indicar que es clickeable */
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .logout-icon:hover {
+        transform: scale(1.1); /* Efecto de zoom al pasar el mouse */
+    }
+    /* ==== CONTENEDOR PRINCIPAL ==== */
+    .container {
+      max-width: 1200px;
+      margin: 1rem auto;
+      padding: 0 1rem;
+    }
+
+
+.card {
+    background-color: #333;
+    color: white;
+    border-radius: 15px;
+    padding: 25px;
+    width: 90%;
+    height: 90%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.user-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-avatar img {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #ccc;
+}
+   /* Contenedor del precio */
+.recompensa-preu-container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        width: 50%;
+        background-color: #333232;
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #444;
+        filter: drop-shadow(0 0 2px white)
+}
+/* Precio */
+    .recompensa-preu {
+        color: #fff;
+        
+        
+        /* Se puede poner un color distintivo para resaltar el precio */
+    }
+
+
+.saldo {
+   
+    display: flex;
+    align-items: center;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.coin-icon {
+    display: inline-block;
+    width: 38px;
+    height: 38px;
+    filter: drop-shadow(0 0 2px white); /* Simula grosor extra */
+}
+
+.user-info {
+    margin-top: 20px;
+    line-height: 1.8;
+}
+
+.status-actiu {
+    background-color: #90ee90;
+    padding: 4px 12px;
+    border-radius: 12px;
+    color: black;
+    font-weight: bold;
+}
+
+.status-desactivat {
+    background-color: #e57373;
+    padding: 4px 12px;
+    border-radius: 12px;
+    color: white;
+    font-weight: bold;
+}
+.user-nom{
+    font-weight: bold;
+    font-size: 55px
+}
+.actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+}
+.recompensa-actions {
+     margin-top: 20px;
+    display: flex;
+    gap: 15px;
+}
+
+.recompensa-actions button{
+    
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+.recompensa-actions button:hover{
+     background-color: #bbb;
+}
+
+.assign-button {
+     background-color: #99ff94;
+     
+}
+.actions button {
+    background-color: #999;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.actions button:hover {
+    background-color: #bbb;
+}
+
+/* Pestañas */
+.tabs {
+    margin-top: 20px;
+    border-bottom: 2px solid #ddd;
+    
+}
+
+.tab-button {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+.tab-button.active {
+    background: #fafafa;
+    border: 5px;
+    border-color: #ffffff;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    color: #333;
+}
+
+.back-container{
+}
+.arrow-back-icon{
+     width: 32px;
+        height: 32px;
+        filter: drop-shadow(0 0 2px white); /* Simula grosor extra */
+        filter: invert(1); /*Convierte el color del SVG a blanco */
+        cursor: pointer; /* Cambia el cursor para indicar que es clickeable */
+        transition: transform 0.2s ease-in-out;
+}
+.arrow-back-icon:hover{
+     transform: scale(1.1); 
+}
+
+
+/* Secciones */
+.tab-section {
+    margin-top: 20px;
+}
+
+/* Cards rutas */
+.ruta-card, .recompensa-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.ruta-card-section1 p,
+.recompensa-card-section1 div {
+    margin: 4px 0;
+}
+
+.details-card-section1 {
+   
+    align-self: center;
+    
+}
+.details-ruta-info p{
+    font-size: 20px;
+    line-height: 1.8;
+    margin-bottom: .5rem;
+}
+.ruta-saldo-container, .recompensa-preu-container {
+    display: flex;
+    align-items: center;
+}
+
+
+/* INFO RUTA */
+
+.user-info { line-height: 1.8; }
+.user-info p { margin-bottom: .5rem; }
+.highlight { color: #e57373; font-weight: bold; }
+
+/* MAPA */
+.map-container {
+  color: #000; 
+  align-content: center;
+  align-self: end;
+  margin-top: 20px;
+  border: 2px solid #555;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 80%;
+  width: 33%;
+}
+#map {
+  width: 100%;
+  height: 100%;
+}
+.details-card-section1-horizontal {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+/* Contenedor de toda la info a la izquierda del mapa */
+.details-ruta-info {
+  display: flex;
+  justify-content: space-between;
+  width: 55%;
+  gap: 2rem;
+}
+
+/* Parte izquierda de la info (fecha, velocitats...) */
+.details-ruta-info-left {
+  flex: 2;
+}
+
+/* Parte derecha de la info (estat i saldo) */
+.details-ruta-info-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 1rem;
+  padding-top: 0.5rem;
+}
+
+.ruta-saldo-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    width: 100%;
+    background-color: #333232;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #444;
+    filter: drop-shadow(0 0 2px white)
+
+}
+
+.ruta-saldo {
+    color: #fff
+}
+.status {
+    background-color: #fff; /* Verde claro */
+    color: #000; /* Por defecto en blanco */
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-left: 0.3rem;
+}
+
+.status.No_valida {
+    background-color: #ff7f50; /* coral */
+    color: #fff; /* Por defecto en blanco */
+}
+
+.status.Valida {
+    background-color: #71e376; /* color verde */
+    color: #fff; /* Por defecto en blanco */
+}
+
+.status.Pendent {
+    background-color: #999; /* gris */
+    color: #fff; /* Por defecto en blanco */
+}
+/* Estado: ejemplo de estilos condicionales */
+.status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    color: #fff; /* Por defecto en blanco */
+}
+.status.disponible {
+    background-color: #e6e6e6; /* blanco (un poco gris xd) */
+    color: #2b2b2b
+}
+.status.reservada {
+    background-color: #ff7f50; /* color coral*/
+}
+
+.status.assignada {
+    background-color: #71e376; /* verde */
+}
+
+.status.recollida {
+    background-color: #2b2b2b; /* color negro */
+}
+
+.ruta-estat {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.95rem;
+    }
+.details-ruta-info {
+  width: 50%;
+  line-height: 1.8;
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.map-container {
+  width: 45%;
+  height: 450px;
+  border: 2px solid #555;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+/* Botones abajo */
+.actions-ruta {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 30px;
+}
+    /* Botón Asignar */
+    .assign-button {
+        background-color: #79c879; /* verde suave */
+        color: #fff;
+    }
+    .assign-button:hover {
+        background-color: #5dac5a; /* verde más oscuro */
+    }
+
+    /* Botón Eliminar */
+    .delete-button {
+        background-color: #f44336; /* rojo */
+        color: #fff;
+    }
+    .delete-button:hover {
+        background-color: #d32f2f; /* rojo más oscuro */
+    }
+.btn-validar,
+.btn-invalidar {
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-validar {
+  background-color: #4caf50;
+  color: white;
+}
+
+.btn-validar:hover {
+  background-color: #45a049;
+}
+
+.btn-invalidar {
+  background-color: #f44336;
+  color: white;
+}
+
+.btn-invalidar:hover {
+  background-color: #e53935;
+}
+
+.error-box {
+    position: relative;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 16px 40px 16px 16px;
+    border-radius: 8px;
+    width: 300px;
+    margin: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.close-btn {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: #721c24;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: #491217;
+}

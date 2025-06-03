@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Recompenses</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/stylesList.css"> <!-- Enlaza el CSS externo -->
+</head>
+<body>
+    <header class="header">
+        <h1>RECOMPENSES</h1>
+        <nav>
+                <a href="/">
+                    <button class="nav-button " href="/">SISTEMA</button>
+                </a>
+                <a href="/rutes">
+                    <button class="nav-button" href="/rutes">RUTES</button>
+                </a>
+                <a href="/users">
+                    <button class="nav-button" href="/users">USUARIS</button>
+                </a>
+                <a href="/recompenses">
+                    <button class="nav-button active" href="/recompenses">RECOMPENSES</button>
+                </a>  
+               
+                <a href="/logout" class="logout-container">
+                    <img  class="logout-icon" src="/images/logout.svg" alt="Cerrar sesión">
+                </a>
+      
+        </nav>
+    </header>
+    
+    <main class="container">
+
+    <!-- Botón para crear un nuevo usuario -->
+    <div class="crear-wrapper">
+        <form th:action="@{/recompenses/create}" method="get">
+            <button id="create-button" type="submit" class="create-button">
+                Crear
+            </button>
+        </form>
+    </div>
+    
+    <!-- Lista de recompenses -->
+    <section class="recompensa-list">
+        <div class="recompensa-card" th:each="recompensa : ${recompenses}">
+           
+          <div class="recompensa-card-section1">
+               <!-- Nombre de la recompensa -->
+              <div class="recompensa-title" th:text="${recompensa.nom}">Visita museo</div>
+               
+              <!-- Estado de la recompensa usando expresión anidada -->
+              <div class="recompensa-estat">
+                <strong>Estat:</strong>
+                <span class="status"
+                    th:classappend="${(recompensa.estat.name() == 'DISPONIBLE') ? ' disponible' :
+                      (recompensa.estat.name() == 'RESERVADA') ? ' reservada' :
+                      (recompensa.estat.name() == 'ASSIGNADA') ? ' assignada' :
+                      (recompensa.estat.name() == 'RECOLLIDA') ? ' recollida' : ' pendent'}">
+                    <span th:text="${recompensa.estat}"></span>
+                </span>
+                
+              </div>
+            
+             <!-- Punto de bescanvi -->
+             <div class="recompensa-puntbescanvi">
+                <strong>Punt bescanvi:</strong> 
+                <span th:text="${recompensa.puntBescanvi}">Restaurant Cal Tony, nº 23</span>
+             </div>
+             <div class="recompensa-puntbescanvi">
+               <strong>Data creació: </strong> 
+                <span th:text="${recompensa.getDataFormategada(recompensa.dataCreacio)}">Restaurant Cal Tony, nº 23</span>
+             </div>
+             
+          </div>
+          
+          <div class="recompensa-card-section2">
+            
+              <!-- Contenedor del precio -->
+              <div class="recompensa-preu-container">
+                <span class="recompensa-preu" th:text="${recompensa.preu}">500</span>
+                <img class="price-icon" src="/images/coins_icon.svg" alt="">               
+              </div>
+            
+              <!-- Usuario -->
+              <div class="recompensa-user">
+                  <strong>Usuari:</strong>
+                  <span th:text="${recompensa.ciclista?.email}">ciclista@gmail.com</span>
+              </div>
+          </div>
+            
+            <!-- Botones de acción -->
+            <div class="recompensa-actions">
+                <!-- Sustituimos "Editar" por "Asignar" según la imagen -->
+                
+                <form th:action="@{/recompenses/getById/{id}(id=${recompensa.id})}" method="get">
+                    <button class="detail-button" type="submit">Veure detalls</button>
+                </form>
+                
+                <button
+                    class="delete-button"
+                    th:disabled="${recompensa.estat.name() != 'DISPONIBLE'}"
+                    th:text="${recompensa.estat.name() != 'DISPONIBLE'} ? 'No disponible' : 'Eliminar'"
+                    th:onclick="|if(confirm('Estàs segur?')) window.location.href='@{/recompenses/delete/{id}(id=${recompensa.id})}';|">
+                    Eliminar
+                </button>
+            </div>
+            
+        </div>
+    </section>
+</main>
+
+<script src="/scripts/main.js"></script>
+</body>
+</html>

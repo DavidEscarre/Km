@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+     <title>Formulari d'Usuari</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/stylesForm.css">
+</head>
+<body>
+    <header class="header">
+        <h1>PANEL ADMINISTRATIU KM+</h1>
+        <nav>
+                <a href="/">
+                    <button class="nav-button" href="/">SISTEMA</button>
+                </a>
+                <a href="/rutes">
+                    <button class="nav-button" href="/rutes">RUTES</button>
+                </a>
+                <a href="/users">
+                    <button class="nav-button active" href="/users">USUARIS</button>
+                </a>
+                <a href="/recompenses">
+                    <button class="nav-button" href="/recompenses">RECOMPENSES</button>
+                </a>    
+                <a href="/logout" class="logout-container">
+                    <img  class="logout-icon" src="/images/logout.svg" alt="Cerrar sesión">
+                </a>
+        </nav>
+    </header>
+    
+ <!-- CONTENEDOR PRINCIPAL -->
+    <main class="container">
+        <h2 class="form-title">Crear usuari</h2>
+        <!-- WRAPPER DEL FORMULARIO (2 columnas) -->
+        <form class="form-wrapper" th:action="@{/users/create}" th:object="${user}" method="post" enctype="multipart/form-data" onsubmit="return validatePasswords()">
+            
+            <!-- COLUMNA IZQUIERDA -->
+            <div class="form-left">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correu electrónic</label>
+                    <input type="email" id="email" th:field="*{email}" class="form-control" maxlength="40" required placeholder="Introduce tu email">
+                </div>
+                <div class="mb-3">
+                    <label for="nom" class="form-label">Nom complet</label>
+                    <input type="text" id="nom" th:field="*{nom}" class="form-control" maxlength="35" required placeholder="Introduce tu nombre">
+                </div>
+                <div class="mb-3">
+                    <label for="telefon" class="form-label">Teléfon</label>
+                    <input type="text" id="telefon" th:field="*{telefon}" class="form-control" pattern="\d{9}" placeholder="Introduce tu teléfono">
+                </div>
+                <div class="mb-3">
+                    <label for="adreca" class="form-label">Direcció</label>
+                    <input type="text" id="adreca" th:field="*{adreca}" class="form-control" maxlength="120" placeholder="Introduce tu dirección">
+                </div>
+                <div class="mb-3">
+                    <label for="word" class="form-label">Contrasenya</label>
+                    <input type="password" id="word" th:field="*{word}" class="form-control" required placeholder="Introduce tu contraseña">
+                </div>
+
+                <div class="mb-3">
+                    <label for="confirmWord" class="form-label">Confirmar contrasenya</label>
+                    <input type="password" id="confirmWord" name="confirmWord" class="form-control" required placeholder="Repite tu contraseña">
+                    <div id="passwordError" class="form-text text-danger" style="display: none;">
+                      Les contrasenyes no coincideixen.
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="observacions" class="form-label">Observacions</label>
+                    <textarea id="observacions" th:field="*{observacions}" class="form-control"  maxlength="100" placeholder="Introduce observaciones"></textarea>
+                </div>
+
+                <!-- MENSAJE DE ERROR -->
+                <div th:if="${errorMessage}" class="errorMsg" th:text="${errorMessage}"></div>
+                
+                <!-- BOTÓN DE ENVIAR (ancho 100%) -->
+              
+                    <button type="submit" class="btn-primary w-100">Crear</button>
+                    
+               
+                
+                
+                
+            </div>
+            
+            <!-- COLUMNA DERECHA -->
+            <div class="form-right">
+                <!-- Círculo para previsualizar imagen (placeholder) -->
+                <div class="image-preview">
+                    <img id="preview" src="" alt="Previsualización de la imagen" />
+                </div>
+
+                <!-- Input file (obligatorio) -->
+                <div class="mb-3">
+                    <label for="image" class="form-label">Selecciona una imagen:</label>
+                    <input type="file" id="image" name="image" accept="image/*">
+                </div>
+                
+                <!-- Campo opcional para rol (si lo necesitas) -->
+                
+                <div class="rol-switch">
+                    <label>Rol:</label>
+                    <div class="rol-options">
+                        <label>
+                            <input type="radio" th:field="*{rol}" value="ADMIN" /> Admin
+                        </label>
+                        <label>
+                            <input type="radio" th:field="*{rol}" value="CICLISTA" /> Ciclista
+                        </label>
+                    </div>
+                </div>
+                
+            </div>
+        </form>
+        <a class="btn-cancel"  href="/users">
+                        <button  class="btn-cancel" href="/users">Cancelar</button>
+        </a>
+    </main>
+    <script src="/scripts/main.js"></script>
+</body>
+</html>

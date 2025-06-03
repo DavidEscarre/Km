@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalls de l'Usuari</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/stylesDetails.css">
+</head>
+
+<body>
+<header class="header">
+    <h1>USUARIS</h1>
+    <nav>
+        <a href="/"><button class="nav-button">SISTEMA</button></a>
+        <a href="/rutes"><button class="nav-button">RUTES</button></a>
+        <a href="/users"><button class="nav-button active">USUARIS</button></a>
+        <a href="/recompenses"><button class="nav-button">RECOMPENSES</button></a>
+        <a href="/logout" class="logout-container">
+            <img class="logout-icon" src="/images/logout.svg" alt="Cerrar sesión">
+        </a>
+    </nav>
+</header>
+
+<main class="container">
+    <div class="card">
+         <a href="/users" class="back-container">
+                    <img  class="arrow-back-icon" src="/images/arrow-back.svg" alt="Cerrar sesión">
+                </a>
+        <!-- CABECERA USUARI -->
+        <div class="user-header">
+            <div>
+                <h2 class="user-nom" th:text="${usuari.nom}">Nom Usuari</h2>
+                <p th:text="${usuari.email}">correu@example.com</p>
+            </div>
+            <div class="recompensa-preu-container">
+                <span class="recompensa-preu" th:text="${usuari.saldoDisponible}">500</span>
+                <img class="price-icon" src="/images/coins_icon.svg" alt="">
+            </div>
+            <div class="user-avatar">
+                <img th:src="|data:image/jpeg;base64,${userImage}|" alt="Avatar"/>
+            </div>
+        </div>
+
+        <!-- INFO USUARI -->
+        <div class="user-info">
+            <p><strong>Estat:</strong>
+                <span th:classappend="${usuari.estat} ? 'status-actiu' : 'status-desactivat'"
+                      th:text="${usuari.estat} ? 'Actiu' : 'Desactivat'">Actiu</span>
+            </p>
+            <p><strong>Rol:</strong> <span th:text="${usuari.rol}">Ciclista</span></p>
+            <p><strong>Telèfon:</strong> <span th:text="${usuari.telefon}">64567643</span></p>
+            <p><strong>Població:</strong> <span th:text="${usuari.adreca}">Vilafranca</span></p>
+            <p><strong>Observacions:</strong> <span th:text="${usuari.observacions}">Cap</span></p>
+        </div>
+
+        <!-- PESTAÑAS -->
+        <div class="tabs">
+            <button id="tab-rutes" class="tab-button active">Historial de Rutes</button>
+            <button id="tab-recompenses" class="tab-button">Historial de Recompenses</button>
+        </div>
+
+        <!-- LISTA RUTES -->
+        <section id="section-rutes" class="tab-section">
+            <div th:each="ruta : ${rutas}" class="ruta-card">
+                <div class="ruta-card-section1">
+                    <p><strong>Distància:</strong> <span th:text="${ruta.distancia} + ' km'">10 km</span></p>
+                    <p><strong>Durada:</strong> <span th:text="${ruta.durada}">00:45</span></p>
+                    <p><strong>Estat:</strong> <span th:text="${ruta.estat}">Validada</span></p>
+                </div>
+                <div class="ruta-card-section2">
+                    <div class="ruta-saldo-container">
+                        <span class="ruta-saldo" th:text="'+' + ${ruta.saldo}">100</span>
+                        <img class="price-icon" src="/images/coins_icon.svg" alt="">
+                    </div>
+                    <p><strong>Vel. Mitja:</strong> <span th:text="${ruta.velocitatMitjana}">15 km/h</span></p>
+                    <p><strong>Vel. Màx.:</strong> <span th:text="${ruta.velocitatMax}">25 km/h</span></p>
+                </div>
+            </div>
+            <p th:if="${#lists.isEmpty(usuari.rutes)}">No hi ha rutes per mostrar.</p>
+        </section>
+
+        <!-- LISTA RECOMPENSES -->
+        <section id="section-recompenses" class="tab-section" style="display:none;">
+            <div th:each="rec : ${recompensas}" class="recompensa-card">
+                <div class="recompensa-card-section1">
+                    <div class="recompensa-title" th:text="${rec.nom}">Nom Recompensa</div>
+                    <div class="recompensa-estat">
+                        <strong>Estat:</strong>
+                        <span th:text="${rec.estat}">RESERVADA</span>
+                    </div>
+                    <div class="recompensa-puntbescanvi">
+                        <strong>Punt bescanvi:</strong> <span th:text="${rec.puntBescanvi}">500</span>
+                    </div>
+                </div>
+                <div class="recompensa-card-section2">
+                    <div class="recompensa-preu-container">
+                        <span class="recompensa-preu" th:text="'-' + ${rec.preu}">300</span>
+                        <img class="price-icon" src="/images/coins_icon.svg" alt="">
+                    </div>
+                    <div><strong>Usuari:</strong> <span th:text="${rec.ciclista.email}">user@example.com</span></div>
+                </div>
+            </div>
+            <p th:if="${#lists.isEmpty(usuari.recompensas)}">No hi ha recompenses per mostrar.</p>
+        </section>
+    </div>
+</main>
+
+<script>
+    const tabRutes = document.getElementById('tab-rutes');
+    const tabRec = document.getElementById('tab-recompenses');
+    const secRutes = document.getElementById('section-rutes');
+    const secRec = document.getElementById('section-recompenses');
+
+    tabRutes.addEventListener('click', () => {
+        tabRutes.classList.add('active');
+        tabRec.classList.remove('active');
+        secRutes.style.display = 'block';
+        secRec.style.display = 'none';
+    });
+    tabRec.addEventListener('click', () => {
+        tabRec.classList.add('active');
+        tabRutes.classList.remove('active');
+        secRec.style.display = 'block';
+        secRutes.style.display = 'none';
+    });
+</script>
+</body>
+</html>

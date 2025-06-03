@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Iniciar Sessió - KM+</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/stylesLogin.css">
+</head>
+<body>
+    <main class="login-container">
+        <!-- Logo y título -->
+        <div class="login-logo">
+            <!-- Ajusta la ruta de tu logo -->
+            <img src="/images/logo.svg">
+            <h1>Km+</h1>
+        </div>
+         <!-- Formulario de inicio de sesión -->
+        <form th:action="@{/login}" method="post" class="login-form">
+            <!-- Correo -->
+            <div class="form-group">
+                <label for="username">Correu electrònic</label>
+                <input type="email" id="username" name="username" placeholder="Ingresa tu correo" required>
+            </div>
+
+            <!-- Contraseña -->
+            <div class="form-group">
+                <label for="password">Contrasenya</label>
+                <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
+            </div>
+            <p th:if="${param.error}" class="error">Usuari o contrasenya incorrectes.</p>
+            <!-- Botón de inicio de sesión -->
+            <button type="submit" class="btn-login">Iniciar sessió</button>
+
+            <!-- Enlace para recuperar contraseña -->
+            <a class="forgot-password" href="login/forgotPassword">Recuperar contrasenya</a>
+        </form> 
+       
+    </main>
+</body>
+</html>
+
